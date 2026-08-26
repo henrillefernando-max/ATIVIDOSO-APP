@@ -73,6 +73,22 @@
       { act: 32, date: "04/12/2026", title: "Encerramento do semestre", resp: "Todos" }
     ];
 
+    const DEFAULT_PARTICIPANTS = [
+      { id: '1', name: 'Alice Maria da Silva Pereira' }, { id: '2', name: 'Anaide Pereira Alves' }, { id: '3', name: 'Angelita Alves de Lima' },
+      { id: '4', name: 'Angelita Maria dos Santos' }, { id: '5', name: 'Cicero Cruz Neves' }, { id: '6', name: 'Darci Sobral de Luna' },
+      { id: '7', name: 'Doralice Farias da Anunciação' }, { id: '8', name: 'Francisca Araújo Carvalho' }, { id: '9', name: 'Francisca De Andrade Rodrigues Souza' },
+      { id: '10', name: 'Izaura Brandão Neves' }, { id: '11', name: 'Jacira Gustavo de Almeida' }, { id: '12', name: 'Joaquim Chaves dos Santos' },
+      { id: '13', name: 'João Teles Bandeira' }, { id: '14', name: 'Joselia Maria da Silva Lima' }, { id: '15', name: 'Luiz de Medeiros Lima' },
+      { id: '16', name: 'Luiza Pereira do Nascimento' }, { id: '17', name: 'Magnólia Pires de Melo' }, { id: '18', name: 'Manoel Francisco Neto' },
+      { id: '19', name: 'Marcos Claudino da Silva' }, { id: '20', name: 'Maria das Graças Lopes Borges' }, { id: '21', name: 'Maria das Mercês Carvalho' },
+      { id: '22', name: 'Maria de Fátima Araújo Coelho' }, { id: '23', name: 'Maria do Socorro Ramos Patriota' }, { id: '24', name: 'Maria Helena de Araujo Castro' },
+      { id: '25', name: 'Maria Hilda dos Santos Freire' }, { id: '26', name: 'Maria José da Silva' }, { id: '27', name: 'Maria Leonilde da Silva Gomes' },
+      { id: '28', name: 'Maria Nilza Guimarães Soares' }, { id: '29', name: 'Maria Socorro de Sousa Campos' }, { id: '30', name: 'Maria Socorro Souza Dias' },
+      { id: '31', name: 'Maria Soledade Barros Seki' }, { id: '32', name: 'Maurício Antônio da Silva Matos' }, { id: '33', name: 'Milton Soares de Souza' },
+      { id: '34', name: 'Natalina Sumie Eguchi' }, { id: '35', name: 'Orismaria Mendonça Barboza' }, { id: '36', name: 'Rubinalva Ferreira Lima de Miranda' },
+      { id: '37', name: 'Vera Lúcia de Jesus' }, { id: '38', name: 'Wilson Barbosa Soares' }, { id: '39', name: 'Zélia Aguiar da Silva' }
+    ];
+
     const LoginPage = ({ onLogin }) => {
       const [isLogin, setIsLogin] = useState(true);
       const [name, setName] = useState('');
@@ -119,7 +135,6 @@
         </div>
       );
     };
-
     const Dashboard = ({ session, onLogout, updateSessionData }) => {
       const isAdmin = session.role === 'admin' || session.role === 'Coordenador / Admin';
 
@@ -134,7 +149,7 @@
       const [exercises, setExercises] = useState([]);
       const [savedCircuits, setSavedCircuits] = useState([]);
       const [announcements, setAnnouncements] = useState([]);
-      const [participantsList, setParticipantsList] = useState([]);
+      const [participantsList, setParticipantsList] = useState(DEFAULT_PARTICIPANTS);
       
       // Cadastro Forms
       const [formCat, setFormCat] = useState('');
@@ -164,7 +179,8 @@
             supabaseClient.from('announcements').select('*').order('created_at', { ascending: false }),
             supabaseClient.from('participants').select('*').order('name', { ascending: true })
           ]);
-          if(ex) setExercises(ex); if(ci) setSavedCircuits(ci); if(an) setAnnouncements(an); if(pa) setParticipantsList(pa);
+          if(ex) setExercises(ex); if(ci) setSavedCircuits(ci); if(an) setAnnouncements(an); 
+          if(pa && pa.length > 0) setParticipantsList(pa);
         };
         fetchAll();
       }, [currentView, circuitMode]);
@@ -183,6 +199,13 @@
 
       const approvedExercises = exercises.filter(ex => ex.status === 'approved');
       const filteredExercises = approvedExercises.filter(ex => (filterCat === 'all' || ex.category === filterCat) && (filterSub === 'Todos' || ex.muscleGroup === filterSub) && (ex.title.toLowerCase().includes(searchQuery.toLowerCase())));
+      const pendingCount = exercises.filter(ex => ex.status === 'pending').length;
+
+      const getYouTubeId = (url) => {
+        if (!url) return null;
+        const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+        return match ? match[1] : null;
+      };
 
       // PERFIL
       const handleSaveProfile = async (e) => {
@@ -222,43 +245,73 @@
       const handleReject = async (id) => { await supabaseClient.from('exercises').delete().eq('id', id); setExercises(exercises.filter(ex => ex.id !== id)); };
       const handleDeleteExercise = async (id) => { if(window.confirm("Apagar exercício?")) { await supabaseClient.from('exercises').delete().eq('id', id); setExercises(exercises.filter(ex => ex.id !== id)); setCurrentView('library'); } };
 
-      // AULAS / RELATÓRIOS
+      // AULAS E RELATÓRIOS
       const handleAddParticipant = async () => {
-        const name = prompt('Nome do idoso:');
-        if(name) { const { data } = await supabaseClient.from('participants').insert([{ name }]).select(); if(data) setParticipantsList([...participantsList, data[0]].sort((a,b)=>a.name.localeCompare(b.name))); }
+        const name = prompt('Nome completo do idoso:');
+        if(name) {
+          // Salva no banco de dados se a tabela existir, caso contrário só adiciona localmente no estado
+          const { data, error } = await supabaseClient.from('participants').insert([{ name }]).select();
+          if(!error && data) {
+            setParticipantsList([...participantsList, data[0]].sort((a,b)=>a.name.localeCompare(b.name)));
+            // Se estivermos editando um relatório agora, já injeta ele na lista do relatório!
+            if (circuitMode === 'report_edit') {
+               const newP = { id: data[0].id, name: data[0].name, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' };
+               setPlanDetails({...planDetails, attendanceList: [...planDetails.attendanceList, newP].sort((a,b)=>a.name.localeCompare(b.name))});
+            }
+          } else {
+             // Fallback caso a tabela participants não exista ainda
+             const fallbackId = Date.now().toString();
+             const newP = { id: fallbackId, name: name };
+             setParticipantsList([...participantsList, newP].sort((a,b)=>a.name.localeCompare(b.name)));
+             if (circuitMode === 'report_edit') {
+               setPlanDetails({...planDetails, attendanceList: [...planDetails.attendanceList, { ...newP, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' }].sort((a,b)=>a.name.localeCompare(b.name))});
+             }
+          }
+        }
       };
+
       const updateAttendance = (idx, field, val) => {
          const list = [...planDetails.attendanceList]; list[idx][field] = val;
          setPlanDetails({...planDetails, attendanceList: list, attendanceCount: field==='present' ? list.filter(p=>p.present).length.toString() : planDetails.attendanceCount});
       };
+
       const startPlanning = () => { setPlanDetails({ activityNum: '', theme: '', date: '', students: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['','','','',''], proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', developmentNarrative: '', dailyEvolution: '', resultObtained: '', attendanceCount: '', attendanceList: [] }); setCircuit([[],[],[],[],[]]); setCircuitMode('plan'); };
+      
       const startEditingReport = () => { 
         let list = viewingCircuit.details.attendanceList || [];
         if (list.length === 0) list = participantsList.map(p => ({ id: p.id, name: p.name, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' }));
         else { const ids = list.map(c=>c.id); list = [...list, ...participantsList.filter(p=>!ids.includes(p.id)).map(p=>({ id: p.id, name: p.name, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' }))].sort((a,b)=>a.name.localeCompare(b.name)); }
         setPlanDetails({ ...viewingCircuit.details, attendanceList: list }); setCircuitMode('report_edit'); 
       };
+
       const handleSavePlan = async () => {
         if (!planDetails.date || !planDetails.theme || !planDetails.activityNum) return alert('Preencha Número, Tema e Data!');
         const { data, error } = await supabaseClient.from('circuits').insert([{ activity_date: planDetails.date, stations: circuit, details: planDetails, author: session.full_name }]).select();
         if (!error) { alert('Salvo!'); setSavedCircuits([data[0], ...savedCircuits]); setCircuitMode('history'); }
       };
+
       const handleUpdateReport = async () => {
         const { error } = await supabaseClient.from('circuits').update({ details: planDetails }).eq('id', viewingCircuit.id);
         if (!error) { alert('Relatório Salvo!'); setSavedCircuits(savedCircuits.map(c => c.id === viewingCircuit.id ? { ...c, details: planDetails } : c)); setViewingCircuit({ ...viewingCircuit, details: planDetails }); setCircuitMode('view'); }
       };
+
+      const handleDeleteCircuit = async (id) => { if(window.confirm("Apagar permanentemente?")) { await supabaseClient.from('circuits').delete().eq('id', id); setSavedCircuits(savedCircuits.filter(c => c.id !== id)); setCircuitMode('history'); } };
+      
+      const addToCircuit = (stationIndex, exerciseId) => { if (!exerciseId) return; const exercise = approvedExercises.find(ex => ex.id === exerciseId); if (!exercise) return; const newCircuit = [...circuit]; if (!newCircuit[stationIndex].find(ex => ex.id === exerciseId)) { newCircuit[stationIndex] = [...newCircuit[stationIndex], exercise]; setCircuit(newCircuit); } };
+      const removeFromCircuit = (stationIndex, exerciseId) => { const newCircuit = [...circuit]; newCircuit[stationIndex] = newCircuit[stationIndex].filter(ex => ex.id !== exerciseId); setCircuit(newCircuit); };
+
       const handleGeneratePDF = (circuitData) => {
         const d = circuitData.details;
         let stHtml = ''; circuitData.stations.forEach((st, i) => { stHtml += `<div style="margin-bottom:10px;"><strong>Estação ${i+1}</strong> (Resp: ${d.stationResponsibles?.[i]||'-'}): ${st.length===0?'Sem ex.':st.map(e=>e.title).join(', ')}</div>`; });
         let vitHtml = ''; if(d.attendanceList && d.attendanceList.some(p=>p.present)) {
-          vitHtml = `<table style="width:100%;border-collapse:collapse;font-size:11px;margin:20px 0;text-align:center;"><tr style="background:#f1f5f9;border-bottom:2px solid #cbd5e1;"><th style="padding:4px;text-align:left;">NOME</th><th>FC (I/F)</th><th>SpO2 (I/F)</th><th>PA (I/F)</th></tr>` + d.attendanceList.filter(p=>p.present).map(p=>`<tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px;text-align:left;">${p.name}</td><td>${p.fc_in||'-'} / ${p.fc_out||'-'}</td><td>${p.spo2_in||'-'} / ${p.spo2_out||'-'}</td><td>${p.pa_in||'-'} / ${p.pa_out||'-'}</td></tr>`).join('') + `</table>`;
+          vitHtml = `<br><p><strong>QUADRO CLÍNICO E FREQUÊNCIA NOMINAL:</strong></p><table style="width:100%;border-collapse:collapse;font-size:11px;margin:10px 0;text-align:center;"><tr style="background:#f1f5f9;border-bottom:2px solid #cbd5e1;"><th style="padding:4px;text-align:left;">NOME</th><th>FC (I/F)</th><th>SpO2 (I/F)</th><th>PA (I/F)</th></tr>` + d.attendanceList.filter(p=>p.present).map(p=>`<tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px;text-align:left;">${p.name}</td><td>${p.fc_in||'-'} / ${p.fc_out||'-'}</td><td>${p.spo2_in||'-'} / ${p.spo2_out||'-'}</td><td>${p.pa_in||'-'} / ${p.pa_out||'-'}</td></tr>`).join('') + `</table>`;
         }
         const element = document.createElement('div');
-        element.innerHTML = `<div style="font-family:Arial;font-size:14px;color:#333;line-height:1.5;padding:30px;"><h2 style="text-align:center;text-transform:uppercase;">ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</h2><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES:</strong> ${d.students||'-'}</p><br><p><strong>OBJETIVOS:</strong> ${d.objectives||'-'}</p><p><strong>PROPOSTAS:</strong> ${d.proposedActivities||'-'}</p><p><strong>MATERIAIS:</strong> ${d.materials||'-'}</p><p><strong>OPERAÇÃO (SV, Som, Cuid.):</strong> ${d.vitalSigns||'-'} | ${d.soundAndPhotos||'-'} | ${d.specialCare||'-'}</p><br><p><strong>AQUECIMENTO:</strong> ${d.warmUp||'-'}</p>${stHtml}<p><strong>DESAQUECIMENTO:</strong> ${d.coolDown||'-'}</p><br>${vitHtml}<p><strong>RELATO NARRATIVO:</strong> ${d.developmentNarrative||'-'}</p><p><strong>EVOLUÇÃO:</strong> ${d.dailyEvolution||'-'}</p><p><strong>RESULTADOS:</strong> ${d.resultObtained||'-'}</p><p><strong>TOTAL PRESENTES:</strong> ${d.attendanceCount||'-'}</p></div>`;
-        html2pdf().set({ margin: 0.4, filename: `Relatorio_ATIV_${d.activityNum||'00'}.pdf` }).from(element).save();
+        element.innerHTML = `<div style="font-family:Arial;font-size:14px;color:#333;line-height:1.5;padding:30px;"><div style="text-align:center;margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px;margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0;font-size:18px;color:#161E42;text-transform:uppercase;">ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</h2></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES:</strong> ${d.students||'-'}</p><br><p><strong>OBJETIVOS:</strong> ${d.objectives||'-'}</p><p><strong>PROPOSTAS:</strong> ${d.proposedActivities||'-'}</p><p><strong>MATERIAIS:</strong> ${d.materials||'-'}</p><p><strong>OPERAÇÃO (SV, Som, Cuid.):</strong> ${d.vitalSigns||'-'} | ${d.soundAndPhotos||'-'} | ${d.specialCare||'-'}</p><br><p><strong>AQUECIMENTO:</strong> ${d.warmUp||'-'}</p>${stHtml}<p><strong>DESAQUECIMENTO:</strong> ${d.coolDown||'-'}</p>${vitHtml}<br><p><strong>RELATO NARRATIVO:</strong> ${d.developmentNarrative||'-'}</p><br><p><strong>EVOLUÇÃO E INTERCORRÊNCIAS:</strong> ${d.dailyEvolution||'Sem intercorrências.'}</p><br><p><strong>RESULTADOS:</strong> ${d.resultObtained||'-'}</p><br><p><strong>TOTAL PRESENTES:</strong> ${d.attendanceCount||'-'}</p></div>`;
+        html2pdf().set({ margin: 0.4, filename: `Relatorio_ATIV_${d.activityNum||'00'}.pdf`, html2canvas: { scale: 2, useCORS: true } }).from(element).save();
       };
 
-      const NavBtn = ({v, icon, text}) => <button onClick={()=>setCurrentView(v)} className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold w-full transition-all ${currentView===v ? 'bg-brand-blue text-white shadow-md' : 'text-slate-600 hover:bg-slate-50'}`}><i className={`fa-solid ${icon} w-5`}></i> {text}</button>;
+      const NavBtn = ({v, icon, text}) => <button onClick={()=>{setCurrentView(v);setIsMobileMenuOpen(false);}} className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold w-full transition-all ${currentView===v ? 'bg-brand-blue text-white shadow-md' : 'text-slate-600 hover:bg-slate-50'}`}><i className={`fa-solid ${icon} w-5`}></i> {text}</button>;
 
       return (
         <div className="min-h-screen flex bg-slate-50 relative">
@@ -266,28 +319,28 @@
           
           <aside className={`w-72 bg-white flex flex-col h-screen fixed md:relative z-50 transition-transform duration-300 border-r border-slate-200 ${isMobileMenuOpen?'translate-x-0':'-translate-x-full'} md:translate-x-0`}>
             <div className="p-6 text-center"><h1 className="text-2xl font-black text-brand-blue">ATIV<span className="text-brand-red">IDOSO</span></h1></div>
-            <div className="px-6 pb-4 border-b flex items-center gap-3 cursor-pointer" onClick={()=>setCurrentView('perfil')}>
+            <div className="px-6 pb-4 border-b flex items-center gap-3 cursor-pointer hover:bg-slate-50" onClick={()=>{setCurrentView('perfil');setIsMobileMenuOpen(false);}}>
               {session.avatar_url ? <img src={session.avatar_url} className="w-10 h-10 rounded-full object-cover shadow-sm"/> : <div className="w-10 h-10 bg-brand-red text-white flex items-center justify-center rounded-full font-bold">{session.full_name[0]}</div>}
               <div className="overflow-hidden"><p className="text-sm font-bold text-slate-800 truncate">{session.full_name}</p><p className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 rounded-full inline-block">{session.team_group || 'Sem Grupo'}</p></div>
             </div>
             <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
               <NavBtn v="home" icon="fa-home" text="Início & Mural" />
               <NavBtn v="library" icon="fa-dumbbell" text="Acervo de Exercícios" />
-              <NavBtn v="circuito" icon="fa-clipboard-list" text="Aulas e Relatórios" />
+              <NavBtn v="circuito" icon="fa-clipboard-list" text="Aulas e Diário Clínico" />
               <NavBtn v="cadastro" icon="fa-circle-plus" text="Criar Exercício" />
-              {isAdmin && <button onClick={()=>setCurrentView('aprovacoes')} className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-bold w-full transition-all ${currentView==='aprovacoes' ? 'bg-amber-500 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><div className="flex gap-3"><i className="fa-solid fa-check-double w-5"></i> Aprovações</div>{pendingCount>0 && <span className="bg-white text-amber-600 text-[10px] px-2 rounded-full">{pendingCount}</span>}</button>}
+              {isAdmin && <button onClick={()=>{setCurrentView('aprovacoes');setIsMobileMenuOpen(false);}} className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-bold w-full transition-all ${currentView==='aprovacoes' ? 'bg-amber-500 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><div className="flex gap-3"><i className="fa-solid fa-check-double w-5"></i> Aprovações</div>{pendingCount>0 && <span className="bg-white text-amber-600 text-[10px] px-2 rounded-full">{pendingCount}</span>}</button>}
             </nav>
-            <div className="p-4 border-t"><button onClick={onLogout} className="w-full text-slate-500 hover:text-rose-500 font-bold text-sm py-2"><i className="fa-solid fa-power-off mr-2"></i>Sair</button></div>
+            <div className="p-4 border-t"><button onClick={onLogout} className="w-full text-slate-500 hover:text-rose-500 font-bold text-sm py-2"><i className="fa-solid fa-power-off mr-2"></i>Sair do App</button></div>
           </aside>
 
           <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
             <header className="h-16 bg-white border-b px-6 flex items-center justify-between shrink-0">
-              <div className="flex items-center gap-3"><button onClick={()=>setIsMobileMenuOpen(true)} className="md:hidden text-slate-500"><i className="fa-solid fa-bars text-xl"></i></button><h2 className="font-black text-slate-800 uppercase tracking-widest text-sm">{currentView}</h2></div>
+              <div className="flex items-center gap-3"><button onClick={()=>setIsMobileMenuOpen(true)} className="md:hidden text-slate-500"><i className="fa-solid fa-bars text-xl"></i></button><h2 className="font-black text-slate-800 uppercase tracking-widest text-sm truncate">{currentView}</h2></div>
             </header>
             
             <div className="flex-1 overflow-y-auto p-4 sm:p-8">
               
-              {/* === PERFIL === */}
+              {/* PERFIL */}
               {currentView === 'perfil' && (
                 <div className="max-w-2xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
                   <h2 className="text-xl font-black mb-6 border-b pb-4">Meu Perfil</h2>
@@ -295,24 +348,24 @@
                   <form onSubmit={handleSaveProfile} className="space-y-4">
                     <div className="flex items-center gap-4 mb-4">{session.avatar_url && <img src={session.avatar_url} className="w-16 h-16 rounded-full object-cover"/>}<input type="file" onChange={e=>setProfileAvatarFile(e.target.files[0])} className="text-xs" /></div>
                     <input type="text" value={profileForm.full_name} onChange={e=>setProfileForm({...profileForm, full_name:e.target.value})} className="w-full p-3 rounded-xl bg-slate-50 border outline-none font-bold" />
-                    <select value={profileForm.team_group} onChange={e=>setProfileForm({...profileForm, team_group:e.target.value})} className="w-full p-3 rounded-xl bg-slate-50 border outline-none font-bold"><option value="Nenhum">Sem Grupo</option><option value="E1">E1</option><option value="E2">E2</option><option value="E3">E3</option><option value="E4">E4</option></select>
+                    <select value={profileForm.team_group} onChange={e=>setProfileForm({...profileForm, team_group:e.target.value})} className="w-full p-3 rounded-xl bg-slate-50 border outline-none font-bold"><option value="Nenhum">Sem Grupo</option><option value="E1">Grupo E1</option><option value="E2">Grupo E2</option><option value="E3">Grupo E3</option><option value="E4">Grupo E4</option></select>
                     <button className="bg-brand-blue text-white font-bold px-6 py-3 rounded-xl">Salvar Perfil</button>
                   </form>
                 </div>
               )}
 
-              {/* === HOME / MURAL === */}
+              {/* HOME / MURAL */}
               {currentView === 'home' && (
                 <div className="max-w-5xl mx-auto space-y-6">
                   {upcomingActivity && (
-                    <div className="bg-emerald-500 p-6 rounded-2xl text-white shadow-lg flex items-center justify-between">
-                      <div><h2 className="font-black text-xl mb-1"><i className="fa-solid fa-bell mr-2"></i> Atenção, Grupo {session.team_group}!</h2><p className="text-sm">Vocês darão aula em: <strong>{upcomingActivity.date}</strong> - {upcomingActivity.title}</p></div>
-                      <button onClick={()=>{setCurrentView('circuito');setCircuitMode('plan');}} className="bg-white text-emerald-600 px-4 py-2 font-bold rounded-lg shadow-sm">Planejar</button>
+                    <div className="bg-emerald-500 p-6 rounded-2xl text-white shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <div><h2 className="font-black text-xl mb-1"><i className="fa-solid fa-bell mr-2"></i> Atenção, Grupo {session.team_group}!</h2><p className="text-sm">Sua próxima aula: <strong>{upcomingActivity.date}</strong> - {upcomingActivity.title}</p></div>
+                      <button onClick={()=>{setCurrentView('circuito');setCircuitMode('plan');}} className="w-full sm:w-auto bg-white text-emerald-600 px-4 py-2 font-bold rounded-lg shadow-sm">Planejar Aula</button>
                     </div>
                   )}
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-                      <h3 className="font-black text-lg mb-4 border-b pb-2">Mural de Avisos</h3>
+                      <h3 className="font-black text-lg mb-4 border-b pb-2">Mural de Avisos da Coordenação</h3>
                       {isAdmin && ( <form onSubmit={handlePostAnnouncement} className="flex gap-2 mb-6"><input value={newAnnouncement.title} onChange={e=>setNewAnnouncement({...newAnnouncement, title:e.target.value})} placeholder="Aviso..." className="flex-1 p-2 bg-slate-50 border rounded-lg text-sm" required /><button className="bg-brand-blue text-white px-4 rounded-lg font-bold text-sm">+</button></form> )}
                       <div className="space-y-3">
                         {announcements.map(a => (<div key={a.id} className="p-4 bg-slate-50 rounded-xl relative">{isAdmin && <button onClick={()=>handleDeleteAnnouncement(a.id)} className="absolute top-3 right-3 text-rose-500"><i className="fa-solid fa-trash"></i></button>}<p className="font-bold text-slate-800">{a.title}</p><p className="text-sm text-slate-600">{a.content}</p></div>))}
@@ -326,28 +379,31 @@
                 </div>
               )}
 
-              {/* === BIBLIOTECA === */}
+              {/* BIBLIOTECA */}
               {currentView === 'library' && (
                 <div className="max-w-6xl mx-auto">
-                  <div className="mb-6 flex gap-2 overflow-x-auto p-1"><button onClick={()=>setFilterCat('all')} className={`px-4 py-2 rounded-full text-xs font-bold ${filterCat==='all'?'bg-slate-800 text-white':'bg-white'}`}>Todos</button>{Object.keys(CATEGORIES).map(k=><button key={k} onClick={()=>setFilterCat(k)} className={`px-4 py-2 rounded-full text-xs font-bold ${filterCat===k?'bg-brand-blue text-white':'bg-white'}`}>{CATEGORIES[k].shortTitle}</button>)}</div>
+                  <div className="mb-6 flex gap-2 overflow-x-auto p-1"><button onClick={()=>setFilterCat('all')} className={`px-4 py-2 rounded-full text-xs font-bold ${filterCat==='all'?'bg-slate-800 text-white':'bg-white'}`}>Todos</button>{Object.keys(CATEGORIES).map(k=><button key={k} onClick={()=>setFilterCat(k)} className={`px-4 py-2 rounded-full text-xs font-bold ${filterCat===k?'bg-brand-blue text-white':'bg-white shadow-sm border'}`}>{CATEGORIES[k].shortTitle}</button>)}</div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {filteredExercises.map(ex => (
-                      <div key={ex.id} className="bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer border hover:border-brand-blue transition" onClick={()=>{setSelectedExercise(ex);setCurrentView('detail');}}>
-                        <div className="h-32 bg-slate-100 flex items-center justify-center text-slate-300 text-3xl">{ex.mediaUrl||ex.videoUrl ? <i className="fa-solid fa-play text-brand-red"></i> : <i className="fa-solid fa-image"></i>}</div>
-                        <div className="p-4"><p className="text-[9px] uppercase font-black text-brand-red">{ex.muscleGroup}</p><h3 className="font-bold text-sm leading-tight mt-1 truncate">{ex.title}</h3></div>
+                      <div key={ex.id} className="bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer border hover:border-brand-blue transition flex flex-col" onClick={()=>{setSelectedExercise(ex);setCurrentView('detail');}}>
+                        <div className="h-32 bg-slate-100 flex items-center justify-center text-slate-300 text-3xl">{(ex.mediaUrl||ex.videoUrl)?(ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|webp)/i)?<img src={ex.mediaUrl} className="w-full h-full object-cover"/>:<i className="fa-solid fa-play text-brand-red"></i>):<i className="fa-solid fa-dumbbell"></i>}</div>
+                        <div className="p-4 flex-1 flex flex-col"><span className="text-[9px] uppercase font-black text-brand-red bg-red-50 inline-block self-start px-2 py-1 rounded">{ex.muscleGroup}</span><h3 className="font-bold text-sm leading-tight mt-2 line-clamp-2">{ex.title}</h3></div>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* === DETALHES DO EXERCÍCIO === */}
+              {/* DETALHES DO EXERCÍCIO */}
               {currentView === 'detail' && selectedExercise && (
                 <div className="max-w-3xl mx-auto bg-white rounded-3xl overflow-hidden shadow-md">
-                   <div className="p-6 border-b flex justify-between"><button onClick={()=>setCurrentView('library')} className="font-bold text-slate-500"><i className="fa-solid fa-arrow-left"></i> Voltar</button>{isAdmin && <button onClick={()=>handleDeleteExercise(selectedExercise.id)} className="text-rose-500"><i className="fa-solid fa-trash"></i></button>}</div>
-                   <div className="p-6 bg-slate-50"><h1 className="text-2xl font-black">{selectedExercise.title}</h1><p className="text-xs font-bold text-brand-red uppercase">{selectedExercise.muscleGroup}</p></div>
+                   <div className="p-6 border-b flex justify-between"><button onClick={()=>setCurrentView('library')} className="font-bold text-slate-500"><i className="fa-solid fa-arrow-left"></i> Voltar</button>{isAdmin && <button onClick={()=>handleDeleteExercise(selectedExercise.id)} className="text-rose-500"><i className="fa-solid fa-trash"></i> Remover</button>}</div>
+                   <div className="p-6 bg-slate-50"><h1 className="text-2xl font-black">{selectedExercise.title}</h1><p className="text-xs font-bold text-brand-red uppercase mt-1">{selectedExercise.muscleGroup}</p></div>
                    <div className="aspect-video bg-black flex items-center justify-center">
-                      {(selectedExercise.mediaUrl || selectedExercise.videoUrl) ? <a href={selectedExercise.videoUrl||selectedExercise.mediaUrl} target="_blank" className="text-white font-bold bg-brand-red px-6 py-3 rounded-full"><i className="fa-brands fa-youtube mr-2"></i> Abrir Mídia</a> : <span className="text-white">Sem mídia</span>}
+                      {(selectedExercise.mediaUrl || selectedExercise.videoUrl) ? (
+                         getYouTubeId(selectedExercise.videoUrl) ? <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${getYouTubeId(selectedExercise.videoUrl)}`} frameBorder="0" allowFullScreen></iframe> :
+                         selectedExercise.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i) ? <video src={selectedExercise.mediaUrl} controls className="w-full h-full object-contain"></video> : <img src={selectedExercise.mediaUrl} className="w-full h-full object-contain"/>
+                      ) : <span className="text-white">Sem mídia</span>}
                    </div>
                    <div className="p-6 space-y-4">
                       <p><strong>Equipamento:</strong> {selectedExercise.equipment}</p>
@@ -358,24 +414,24 @@
                 </div>
               )}
 
-              {/* === CADASTRO DE EXERCÍCIO === */}
+              {/* CADASTRO DE EXERCÍCIO */}
               {currentView === 'cadastro' && (
-                <div className="max-w-3xl mx-auto bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+                <div className="max-w-3xl mx-auto bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100">
                   <h2 className="text-2xl font-black mb-6 border-b pb-4">Cadastrar Exercício</h2>
                   {formStatus.success ? <div className="text-center p-10"><i className="fa-solid fa-check-circle text-5xl text-emerald-500 mb-4"></i><h3 className="font-bold text-xl">Enviado para aprovação!</h3><button onClick={()=>setFormStatus({success:false})} className="mt-4 bg-brand-blue text-white px-6 py-2 rounded-xl">Novo Cadastro</button></div> : 
                   <form onSubmit={handleFormSubmit} className="space-y-4">
                     <input type="text" placeholder="Título" value={formData.title} onChange={e=>setFormData({...formData,title:e.target.value})} required className="w-full p-3 bg-slate-50 rounded-xl outline-none font-bold"/>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <select required value={formCat} onChange={e=>{setFormCat(e.target.value);setFormMuscleSelect('');}} className="p-3 bg-slate-50 rounded-xl outline-none"><option value="">Categoria...</option>{Object.keys(CATEGORIES).map(k=><option key={k} value={k}>{CATEGORIES[k].title}</option>)}</select>
-                      <select required value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} disabled={!formCat} className="p-3 bg-slate-50 rounded-xl outline-none"><option value="">Músculo...</option>{formCat && CATEGORIES[formCat].subgroups.map(s=><option key={s} value={s}>{s}</option>)}</select>
+                      <select required value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} disabled={!formCat} className="p-3 bg-slate-50 rounded-xl outline-none"><option value="">Foco...</option>{formCat && CATEGORIES[formCat].subgroups.map(s=><option key={s} value={s}>{s}</option>)}</select>
                     </div>
                     {formMuscleSelect==='Outro' && <input type="text" placeholder="Qual músculo?" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className="w-full p-3 bg-red-50 rounded-xl outline-none"/>}
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <input type="text" placeholder="Dosagem (Ex: 3x10)" value={formData.dosage} onChange={e=>setFormData({...formData,dosage:e.target.value})} required className="p-3 bg-slate-50 rounded-xl outline-none"/>
                       <input type="text" placeholder="Equipamento" value={formData.equipment} onChange={e=>setFormData({...formData,equipment:e.target.value})} className="p-3 bg-slate-50 rounded-xl outline-none"/>
                     </div>
-                    <div className="flex gap-4">
-                      <input type="url" placeholder="Link YouTube" value={formData.videoUrl} onChange={e=>setFormData({...formData,videoUrl:e.target.value})} className="flex-1 p-3 bg-slate-50 rounded-xl outline-none"/>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <input type="url" placeholder="Link YouTube" value={formData.videoUrl} onChange={e=>setFormData({...formData,videoUrl:e.target.value})} className="p-3 bg-slate-50 rounded-xl outline-none"/>
                       <input type="file" accept="image/*,video/*" onChange={e=>setMediaFile(e.target.files[0])} className="p-3 bg-blue-50 text-xs rounded-xl"/>
                     </div>
                     <textarea rows="4" placeholder="Passo a Passo..." value={formData.instructions} onChange={e=>setFormData({...formData,instructions:e.target.value})} required className="w-full p-3 bg-slate-50 rounded-xl outline-none"></textarea>
@@ -385,46 +441,46 @@
                 </div>
               )}
 
-              {/* === APROVAÇÕES === */}
+              {/* APROVAÇÕES */}
               {currentView === 'aprovacoes' && isAdmin && (
                 <div className="max-w-3xl mx-auto space-y-4">
                   <h2 className="text-2xl font-black mb-6">Fila de Aprovação</h2>
                   {exercises.filter(ex=>ex.status==='pending').map(ex => (
                     <div key={ex.id} className="bg-white p-5 rounded-2xl shadow-sm border flex flex-col sm:flex-row justify-between items-center gap-4">
                       <div><p className="text-[10px] uppercase font-bold text-amber-500">Por: {ex.author}</p><h3 className="font-black text-lg">{ex.title}</h3></div>
-                      <div className="flex gap-2"><button onClick={()=>{setSelectedExercise(ex);setCurrentView('detail');}} className="px-3 py-2 bg-slate-100 rounded-lg text-xs font-bold">Ver</button><button onClick={()=>handleApprove(ex.id)} className="px-3 py-2 bg-emerald-100 text-emerald-600 rounded-lg text-xs font-bold">Aprovar</button><button onClick={()=>handleReject(ex.id)} className="px-3 py-2 bg-rose-100 text-rose-600 rounded-lg text-xs font-bold">Recusar</button></div>
+                      <div className="flex gap-2 w-full sm:w-auto"><button onClick={()=>{setSelectedExercise(ex);setCurrentView('detail');}} className="flex-1 sm:flex-none px-3 py-2 bg-slate-100 rounded-lg text-xs font-bold">Ver</button><button onClick={()=>handleApprove(ex.id)} className="flex-1 sm:flex-none px-3 py-2 bg-emerald-100 text-emerald-600 rounded-lg text-xs font-bold">Aprovar</button><button onClick={()=>handleReject(ex.id)} className="flex-1 sm:flex-none px-3 py-2 bg-rose-100 text-rose-600 rounded-lg text-xs font-bold">Recusar</button></div>
                     </div>
                   ))}
                   {pendingCount === 0 && <p className="text-center text-slate-400">Nenhum exercício pendente.</p>}
                 </div>
               )}
 
-              {/* === AULAS E RELATÓRIOS === */}
+              {/* AULAS E RELATÓRIOS */}
               {currentView === 'circuito' && (
                 <div className="max-w-5xl mx-auto">
-                  <div className="flex gap-2 p-1 bg-white rounded-full mb-6 w-max mx-auto shadow-sm border">
-                    <button onClick={()=>setCircuitMode('agenda')} className={`px-5 py-2 rounded-full text-xs font-bold ${circuitMode==='agenda'?'bg-slate-800 text-white':''}`}>Agenda</button>
-                    <button onClick={startPlanning} className={`px-5 py-2 rounded-full text-xs font-bold ${circuitMode==='plan'?'bg-emerald-500 text-white':''}`}>Planejar</button>
-                    <button onClick={()=>setCircuitMode('history')} className={`px-5 py-2 rounded-full text-xs font-bold ${circuitMode==='history'||circuitMode==='view'||circuitMode==='report_edit'?'bg-brand-blue text-white':''}`}>Relatórios</button>
+                  <div className="flex gap-2 p-1 bg-white rounded-full mb-6 w-max mx-auto shadow-sm border overflow-x-auto max-w-full">
+                    <button onClick={()=>setCircuitMode('agenda')} className={`px-4 sm:px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap ${circuitMode==='agenda'?'bg-slate-800 text-white':''}`}>Agenda</button>
+                    <button onClick={startPlanning} className={`px-4 sm:px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap ${circuitMode==='plan'?'bg-emerald-500 text-white':''}`}>Planejar</button>
+                    <button onClick={()=>setCircuitMode('history')} className={`px-4 sm:px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap ${circuitMode==='history'||circuitMode==='view'||circuitMode==='report_edit'?'bg-brand-blue text-white':''}`}>Diário Clínico</button>
                   </div>
 
                   {circuitMode === 'agenda' && (
-                    <div className="bg-white rounded-3xl shadow-sm p-6 overflow-x-auto"><table className="w-full text-sm text-left"><thead className="bg-slate-50 uppercase text-[10px]"><tr><th className="p-4">Data</th><th className="p-4">Tema</th></tr></thead><tbody>{AGENDA_DATA.map((item,i)=><tr key={i} className="border-b"><td className="p-4 font-bold whitespace-nowrap">{item.date}</td><td className="p-4">{item.title}<br/><span className="text-[10px] text-slate-400">{item.resp}</span></td></tr>)}</tbody></table></div>
+                    <div className="bg-white rounded-3xl shadow-sm p-4 sm:p-6 overflow-x-auto"><table className="w-full text-sm text-left"><thead className="bg-slate-50 uppercase text-[10px]"><tr><th className="p-3 sm:p-4">Data</th><th className="p-3 sm:p-4">Tema</th></tr></thead><tbody>{AGENDA_DATA.map((item,i)=><tr key={i} className="border-b"><td className="p-3 sm:p-4 font-bold whitespace-nowrap">{item.date}</td><td className="p-3 sm:p-4">{item.title}<br/><span className="text-[10px] text-slate-400">{item.resp}</span></td></tr>)}</tbody></table></div>
                   )}
 
                   {circuitMode === 'plan' && (
-                    <div className="bg-white p-8 rounded-3xl shadow-sm space-y-6">
+                    <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm space-y-6">
                       <h2 className="text-xl font-black border-b pb-4">Planejar Aula</h2>
-                      <div className="grid grid-cols-3 gap-4"><input type="text" placeholder="Nº (Ex: 39)" value={planDetails.activityNum} onChange={e=>setPlanDetails({...planDetails,activityNum:e.target.value})} className="p-3 bg-slate-50 rounded-xl" /><input type="date" value={planDetails.date} onChange={e=>setPlanDetails({...planDetails,date:e.target.value})} className="p-3 bg-slate-50 rounded-xl" /><input type="text" placeholder="Tema" value={planDetails.theme} onChange={e=>setPlanDetails({...planDetails,theme:e.target.value})} className="p-3 bg-slate-50 rounded-xl" /></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4"><input type="text" placeholder="Nº (Ex: 39)" value={planDetails.activityNum} onChange={e=>setPlanDetails({...planDetails,activityNum:e.target.value})} className="p-3 bg-slate-50 rounded-xl" /><input type="date" value={planDetails.date} onChange={e=>setPlanDetails({...planDetails,date:e.target.value})} className="p-3 bg-slate-50 rounded-xl" /><select value={planDetails.theme} onChange={e=>setPlanDetails({...planDetails,theme:e.target.value})} className="p-3 bg-slate-50 rounded-xl"><option value="">Tema...</option><option value="EXERCÍCIOS DE DUPLA TAREFA">Dupla Tarefa</option><option value="MOBILIDADE MMSS">Mobilidade MMSS</option><option value="MOBILIDADE MMII">Mobilidade MMII</option><option value="AERÓBICOS">Aeróbicos</option><option value="OUTRA">Outra</option></select></div>
                       <input type="text" placeholder="Responsáveis pela Aula" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails,students:e.target.value})} className="w-full p-3 bg-slate-50 rounded-xl" />
                       
                       <div className="pt-6 border-t">
                         <textarea placeholder="Aquecimento Coletivo" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails,warmUp:e.target.value})} className="w-full p-3 bg-slate-50 rounded-xl mb-4"></textarea>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {circuit.map((st, i) => (
-                            <div key={i} className="border rounded-xl p-4 bg-slate-50"><p className="font-black mb-2">Estação {i+1}</p><input placeholder="Responsável" value={planDetails.stationResponsibles[i]} onChange={e=>{let a=[...planDetails.stationResponsibles];a[i]=e.target.value;setPlanDetails({...planDetails,stationResponsibles:a})}} className="w-full p-2 text-xs mb-2 rounded border"/>
-                              {st.map(ex=><div key={ex.id} className="flex justify-between text-xs bg-white p-2 border mb-1 rounded"><span>{ex.title}</span><button onClick={()=>removeFromCircuit(i,ex.id)} className="text-rose-500"><i className="fa-solid fa-x"></i></button></div>)}
-                              <select onChange={e=>addToCircuit(i,e.target.value)} className="w-full p-2 text-xs bg-white border mt-2"><option value="">+ Exercício</option>{approvedExercises.map(e=><option key={e.id} value={e.id}>{e.title}</option>)}</select>
+                            <div key={i} className="border rounded-xl p-4 bg-slate-50"><p className="font-black mb-2">Estação {i+1}</p><input placeholder="Responsável" value={planDetails.stationResponsibles[i]} onChange={e=>{let a=[...planDetails.stationResponsibles];a[i]=e.target.value;setPlanDetails({...planDetails,stationResponsibles:a})}} className="w-full p-2 text-xs mb-2 rounded border outline-none"/>
+                              {st.map(ex=><div key={ex.id} className="flex justify-between items-center text-xs bg-white p-2 border mb-1 rounded"><span className="truncate pr-2">{ex.title}</span><button onClick={()=>removeFromCircuit(i,ex.id)} className="text-rose-500"><i className="fa-solid fa-x"></i></button></div>)}
+                              <select onChange={e=>addToCircuit(i,e.target.value)} className="w-full p-2 text-xs bg-white border mt-2 outline-none"><option value="">+ Exercício</option>{approvedExercises.map(e=><option key={e.id} value={e.id}>{e.title}</option>)}</select>
                             </div>
                           ))}
                         </div>
@@ -435,46 +491,52 @@
                   )}
 
                   {circuitMode === 'report_edit' && viewingCircuit && (
-                    <div className="bg-white p-8 rounded-3xl shadow-sm space-y-6">
+                    <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm space-y-6">
                       <h2 className="text-xl font-black border-b pb-4">Preencher Pós-Aula</h2>
                       
                       <div className="bg-slate-50 p-4 rounded-xl border">
-                        <div className="flex justify-between items-center mb-4"><h3 className="font-bold">Sinais Vitais e Presença</h3><button onClick={handleAddParticipant} className="text-xs bg-brand-blue text-white px-3 py-1 rounded">Novo Idoso</button></div>
-                        <div className="max-h-64 overflow-y-auto space-y-2 pr-2">
+                        <div className="flex justify-between items-center mb-4"><h3 className="font-bold">Sinais Vitais e Presença</h3><button onClick={handleAddParticipant} className="text-[10px] sm:text-xs bg-brand-blue text-white px-3 py-1 rounded">Novo Idoso</button></div>
+                        <div className="max-h-80 overflow-y-auto space-y-2 pr-2">
                           {planDetails.attendanceList.map((p, i) => (
-                            <div key={p.id} className="p-3 bg-white border rounded-xl"><label className="flex items-center gap-2 font-bold"><input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)}/>{p.name}</label>
-                              {p.present && <div className="mt-2 grid grid-cols-3 gap-2"><input placeholder="FC I/F" value={`${p.fc_in}/${p.fc_out}`} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="text-xs p-1 border text-center"/><input placeholder="SpO2 I/F" value={`${p.spo2_in}/${p.spo2_out}`} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="text-xs p-1 border text-center"/><input placeholder="PA I/F" value={`${p.pa_in}/${p.pa_out}`} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="text-xs p-1 border text-center"/></div>}
+                            <div key={p.id} className="p-3 bg-white border rounded-xl"><label className="flex items-center gap-2 font-bold cursor-pointer"><input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="w-5 h-5"/>{p.name}</label>
+                              {p.present && <div className="mt-2 grid grid-cols-3 gap-2"><input placeholder="FC I/F" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="text-xs p-1.5 border text-center rounded"/><input placeholder="SpO2 I/F" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="text-xs p-1.5 border text-center rounded"/><input placeholder="PA I/F" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="text-xs p-1.5 border text-center rounded"/></div>}
                             </div>
                           ))}
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4"><textarea placeholder="Objetivos..." value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails,objectives:e.target.value})} className="p-3 border rounded-xl"></textarea><textarea placeholder="Materiais..." value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails,materials:e.target.value})} className="p-3 border rounded-xl"></textarea></div>
-                      <div className="grid grid-cols-2 gap-4"><input placeholder="Resp. Sinais Vitais" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails,vitalSigns:e.target.value})} className="p-3 border rounded-xl" /><input placeholder="Resp. Som/Fotos" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails,soundAndPhotos:e.target.value})} className="p-3 border rounded-xl" /></div>
-                      <textarea rows="4" placeholder="Relato Narrativo..." value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails,developmentNarrative:e.target.value})} className="w-full p-3 border rounded-xl"></textarea>
-                      <textarea rows="3" placeholder="Evolução Clínica / Intercorrências..." value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails,dailyEvolution:e.target.value})} className="w-full p-3 border rounded-xl bg-amber-50"></textarea>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"><textarea placeholder="Objetivos..." value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails,objectives:e.target.value})} className="p-3 border rounded-xl outline-none"></textarea><textarea placeholder="Materiais..." value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails,materials:e.target.value})} className="p-3 border rounded-xl outline-none"></textarea></div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"><input placeholder="Resp. Sinais Vitais" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails,vitalSigns:e.target.value})} className="p-3 border rounded-xl outline-none" /><input placeholder="Resp. Som/Fotos" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails,soundAndPhotos:e.target.value})} className="p-3 border rounded-xl outline-none" /></div>
+                      <textarea rows="4" placeholder="Relato Narrativo da Dinâmica..." value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails,developmentNarrative:e.target.value})} className="w-full p-3 border rounded-xl outline-none"></textarea>
+                      <textarea rows="3" placeholder="Evolução Clínica / Intercorrências..." value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails,dailyEvolution:e.target.value})} className="w-full p-3 border rounded-xl bg-amber-50 outline-none font-bold text-amber-900"></textarea>
                       
-                      <div className="flex gap-4"><button onClick={()=>setCircuitMode('view')} className="px-6 py-3 border font-bold rounded-xl">Cancelar</button><button onClick={handleUpdateReport} className="flex-1 bg-brand-blue text-white font-black rounded-xl">Salvar e Gerar Relatório</button></div>
+                      <div className="flex flex-col sm:flex-row gap-4"><button onClick={()=>setCircuitMode('view')} className="px-6 py-3 border font-bold rounded-xl w-full sm:w-auto">Cancelar</button><button onClick={handleUpdateReport} className="flex-1 bg-brand-blue text-white font-black rounded-xl py-3 shadow-md">Salvar Diário Clínico</button></div>
                     </div>
                   )}
 
                   {circuitMode === 'history' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       {savedCircuits.map(c => (
-                        <div key={c.id} className="bg-white p-6 rounded-2xl border shadow-sm cursor-pointer" onClick={()=>{setViewingCircuit(c);setCircuitMode('view');}}>
+                        <div key={c.id} className="bg-white p-5 sm:p-6 rounded-2xl border shadow-sm cursor-pointer hover:border-brand-blue" onClick={()=>{setViewingCircuit(c);setCircuitMode('view');}}>
                           <span className="text-[10px] font-black bg-slate-100 px-2 py-1 rounded-full">{c.activity_date}</span>
-                          <h3 className="font-black mt-2">Ativ. {c.details?.activityNum}</h3><p className="text-xs text-slate-500 truncate">{c.details?.theme}</p>
+                          <h3 className="font-black mt-3">Ativ. {c.details?.activityNum}</h3><p className="text-xs text-slate-500 truncate">{c.details?.theme}</p>
+                          {c.details?.resultObtained && <span className="text-[10px] text-emerald-500 font-bold mt-2 block"><i className="fa-solid fa-check"></i> Relatório Preenchido</span>}
                         </div>
                       ))}
+                      {savedCircuits.length === 0 && <p className="text-slate-400 col-span-full text-center py-10">Nenhum relatório criado.</p>}
                     </div>
                   )}
 
                   {circuitMode === 'view' && viewingCircuit && (
-                    <div className="bg-white p-8 rounded-3xl shadow-sm space-y-4">
-                      <div className="flex gap-2"><button onClick={()=>setCircuitMode('history')} className="px-4 py-2 border rounded-xl text-sm font-bold">Voltar</button><button onClick={startEditingReport} className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold">Preencher</button><button onClick={()=>handleGeneratePDF(viewingCircuit)} className="px-4 py-2 bg-brand-blue text-white rounded-xl text-sm font-bold">PDF</button>{isAdmin && <button onClick={()=>handleDeleteCircuit(viewingCircuit.id)} className="px-4 py-2 text-rose-500 font-bold ml-auto"><i className="fa-solid fa-trash"></i></button>}</div>
+                    <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm space-y-4">
+                      <div className="flex flex-wrap gap-2"><button onClick={()=>setCircuitMode('history')} className="px-4 py-2 border rounded-xl text-sm font-bold flex-1 sm:flex-none text-center">Voltar</button><button onClick={startEditingReport} className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold flex-1 sm:flex-none text-center">Preencher</button><button onClick={()=>handleGeneratePDF(viewingCircuit)} className="px-4 py-2 bg-brand-blue text-white rounded-xl text-sm font-bold flex-1 sm:flex-none text-center">Gerar PDF</button>{isAdmin && <button onClick={()=>handleDeleteCircuit(viewingCircuit.id)} className="px-4 py-2 text-rose-500 font-bold sm:ml-auto w-full sm:w-auto text-center"><i className="fa-solid fa-trash"></i></button>}</div>
                       <div className="border-t pt-4">
                         <h2 className="font-black text-xl text-center">Atividade {viewingCircuit.details?.activityNum}</h2>
                         <p className="text-center text-sm">{viewingCircuit.details?.theme}</p>
+                      </div>
+                      <div className="bg-slate-50 p-4 rounded-xl mt-4">
+                         <p className="text-xs font-bold text-slate-400 uppercase">Resumo Clínico</p>
+                         <p className="text-sm mt-1 whitespace-pre-line">{viewingCircuit.details?.dailyEvolution || 'Sem anotações clínicas.'}</p>
                       </div>
                     </div>
                   )}
