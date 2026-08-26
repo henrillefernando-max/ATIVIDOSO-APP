@@ -100,6 +100,21 @@
       { act: 31, date: "27/11/2026", title: "Avaliação participativa dos participantes e planejamento", resp: "Todos" },
       { act: 32, date: "04/12/2026", title: "Atividade temática de integração/confraternização", resp: "Todos" }
     ];
+    const DEFAULT_PARTICIPANTS = [
+      { id: '1', name: 'Alice Maria da Silva Pereira' }, { id: '2', name: 'Anaide Pereira Alves' }, { id: '3', name: 'Angelita Alves de Lima' },
+      { id: '4', name: 'Angelita Maria dos Santos' }, { id: '5', name: 'Cicero Cruz Neves' }, { id: '6', name: 'Darci Sobral de Luna' },
+      { id: '7', name: 'Doralice Farias da Anunciação' }, { id: '8', name: 'Francisca Araújo Carvalho' }, { id: '9', name: 'Francisca De Andrade Rodrigues Souza' },
+      { id: '10', name: 'Izaura Brandão Neves' }, { id: '11', name: 'Jacira Gustavo de Almeida' }, { id: '12', name: 'Joaquim Chaves dos Santos' },
+      { id: '13', name: 'João Teles Bandeira' }, { id: '14', name: 'Joselia Maria da Silva Lima' }, { id: '15', name: 'Luiz de Medeiros Lima' },
+      { id: '16', name: 'Luiza Pereira do Nascimento' }, { id: '17', name: 'Magnólia Pires de Melo' }, { id: '18', name: 'Manoel Francisco Neto' },
+      { id: '19', name: 'Marcos Claudino da Silva' }, { id: '20', name: 'Maria das Graças Lopes Borges' }, { id: '21', name: 'Maria das Mercês Carvalho' },
+      { id: '22', name: 'Maria de Fátima Araújo Coelho' }, { id: '23', name: 'Maria do Socorro Ramos Patriota' }, { id: '24', name: 'Maria Helena de Araujo Castro' },
+      { id: '25', name: 'Maria Hilda dos Santos Freire' }, { id: '26', name: 'Maria José da Silva' }, { id: '27', name: 'Maria Leonilde da Silva Gomes' },
+      { id: '28', name: 'Maria Nilza Guimarães Soares' }, { id: '29', name: 'Maria Socorro de Sousa Campos' }, { id: '30', name: 'Maria Socorro Souza Dias' },
+      { id: '31', name: 'Maria Soledade Barros Seki' }, { id: '32', name: 'Maurício Antônio da Silva Matos' }, { id: '33', name: 'Milton Soares de Souza' },
+      { id: '34', name: 'Natalina Sumie Eguchi' }, { id: '35', name: 'Orismaria Mendonça Barboza' }, { id: '36', name: 'Rubinalva Ferreira Lima de Miranda' },
+      { id: '37', name: 'Vera Lúcia de Jesus' }, { id: '38', name: 'Wilson Barbosa Soares' }, { id: '39', name: 'Zélia Aguiar da Silva' }
+    ];
 
     // ==========================================
     // TELA DE LOGIN
@@ -200,9 +215,8 @@
       const [circuitMode, setCircuitMode] = useState('agenda');
       const [circuit, setCircuit] = useState([[], [], [], [], []]);
       const [viewingCircuit, setViewingCircuit] = useState(null);
-      const [planDetails, setPlanDetails] = useState({ activityNum: '', theme: '', date: '', students: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['', '', '', '', ''], proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', developmentNarrative: '', resultObtained: '', attendanceCount: '' });
-
-      // Avisos Formulário (Admin)
+     const [participantsList, setParticipantsList] = useState(DEFAULT_PARTICIPANTS);
+      const [planDetails, setPlanDetails] = useState({ activityNum: '', theme: '', date: '', students: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['', '', '', '', ''], proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', developmentNarrative: '', dailyEvolution: '', resultObtained: '', attendanceCount: '', attendanceList: [] });
       const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '', link_url: '' });
       const [isPostingAviso, setIsPostingAviso] = useState(false);
 
@@ -333,10 +347,28 @@
       const handleDeleteExercise = async (id) => { if(window.confirm("ATENÇÃO: Você vai apagar este exercício. Tem certeza?")) { await supabaseClient.from('exercises').delete().eq('id', id); setExercises(exercises.filter(ex => ex.id !== id)); setCurrentView('library'); } };
 
       // ======= FUNÇÕES DE RELATÓRIOS E AULA =======
+      const handleAddParticipant = () => {
+        const name = prompt('Nome completo do novo idoso:');
+        if(name) {
+          const newP = { id: Date.now().toString(), name: name };
+          setParticipantsList([...participantsList, newP].sort((a,b)=>a.name.localeCompare(b.name)));
+          if (circuitMode === 'report_edit') {
+            setPlanDetails({...planDetails, attendanceList: [...planDetails.attendanceList, { ...newP, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' }].sort((a,b)=>a.name.localeCompare(b.name))});
+          }
+        }
+      };
+
+      const updateAttendance = (idx, field, val) => {
+         const list = [...planDetails.attendanceList]; list[idx][field] = val;
+         setPlanDetails({...planDetails, attendanceList: list, attendanceCount: field==='present' ? list.filter(p=>p.present).length.toString() : planDetails.attendanceCount});
+      };
       const startPlanning = () => { setPlanDetails({ activityNum: '', theme: '', date: '', students: '', proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['', '', '', '', ''], developmentNarrative: '', resultObtained: '', attendanceCount: '' }); setCircuit([[], [], [], [], []]); setCircuitMode('plan'); };
-      const startEditingReport = () => { setPlanDetails(viewingCircuit.details); setCircuitMode('report_edit'); };
-      const handleDeleteCircuit = async (id) => { if(window.confirm("Deseja apagar este Relatório permanentemente?")) { await supabaseClient.from('circuits').delete().eq('id', id); setSavedCircuits(savedCircuits.filter(c => c.id !== id)); setCircuitMode('history'); } };
-      
+     const startEditingReport = () => { 
+        let list = viewingCircuit.details.attendanceList || [];
+        if (list.length === 0) list = participantsList.map(p => ({ id: p.id, name: p.name, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' }));
+        else { const ids = list.map(c=>c.id); list = [...list, ...participantsList.filter(p=>!ids.includes(p.id)).map(p=>({ id: p.id, name: p.name, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' }))].sort((a,b)=>a.name.localeCompare(b.name)); }
+        setPlanDetails({ ...viewingCircuit.details, attendanceList: list }); setCircuitMode('report_edit'); 
+      };
       const addToCircuit = (stationIndex, exerciseId) => {
         if (!exerciseId) return;
         const exercise = approvedExercises.find(ex => ex.id === exerciseId);
@@ -370,8 +402,11 @@
           let exercisesHtml = station.length === 0 ? '<p style="font-size: 13px; color: #555;"><i>Sem exercícios vinculados.</i></p>' : '<ul style="margin-top: 5px; padding-left: 20px; font-size: 13px;">' + station.map(ex => `<li><strong>${ex.title}</strong> (${ex.dosage})</li>`).join('') + '</ul>';
           stationsHtml += `<div style="margin-bottom: 15px; border-left: 2px solid #D12836; padding-left: 10px;"><strong>Estação ${idx + 1} ${idx === 4 ? '- Circuito Funcional' : ''}</strong><br/>Responsáveis: ${d.stationResponsibles?.[idx] || 'Não informado'}<br/>${exercisesHtml}</div>`;
         });
-
-        const element = document.createElement('div');
+        
+let vitHtml = ''; if(d.attendanceList && d.attendanceList.some(p=>p.present)) {
+          vitHtml = `<br><p><strong>QUADRO CLÍNICO E FREQUÊNCIA NOMINAL:</strong></p><table style="width:100%;border-collapse:collapse;font-size:11px;margin:10px 0;text-align:center;"><tr style="background:#f1f5f9;border-bottom:2px solid #cbd5e1;"><th style="padding:6px;text-align:left;">NOME DO PACIENTE</th><th>FC (I/F)</th><th>SpO2 (I/F)</th><th>PA (I/F)</th></tr>` + d.attendanceList.filter(p=>p.present).map(p=>`<tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:6px;text-align:left;font-weight:bold;">${p.name}</td><td>${p.fc_in\vert{}\vert{}'-'} /${p.fc_out||'-'}</td><td>${p.spo2_in\vert{}\vert{}'-'} /${p.spo2_out||'-'}</td><td>${p.pa_in\vert{}\vert{}'-'} /${p.pa_out||'-'}</td></tr>`).join('') + `</table>`;
+        }
+    const element = document.createElement('div');
         element.innerHTML = `
           <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333; line-height: 1.6; padding: 40px;">
             <div style="text-align: center; margin-bottom: 30px;"><img src="Logo_ATV_2024_Colorido_v2.png" alt="ATIVIDOSO" style="max-height: 80px; margin-bottom: 10px;" /><h2 style="margin: 0; font-size: 18px; color: #161E42; text-transform: uppercase;">ATIVIDADE ${d.activityNum || 'X'} – ${d.theme || 'TEMA NÃO INFORMADO'}</h2></div>
@@ -384,7 +419,7 @@
             <p><strong>DESENVOLVIMENTO DA ATIVIDADE:</strong></p>
             <p><strong>Aquecimento:</strong> ${d.warmUp || '-'}</p>
             <div style="margin-left: 10px; margin-top: 15px; margin-bottom: 15px;">${stationsHtml}</div>
-            <p><strong>Desaquecimento:</strong> ${d.coolDown || 'Todos'}</p><br/>
+            <p><strong>Desaquecimento:</strong> ${d.coolDown || 'Todos'}</p><br/> ${vitHtml}<br><p><strong>EVOLUÇÃO CLÍNICA / INTERCORRÊNCIAS:</strong><br/>${d.dailyEvolution||'Sem anotações clínicas.'}</p>
             <p><strong>Relato Completo da Dinâmica:</strong><br/>${d.developmentNarrative ? d.developmentNarrative.replace(/\n/g, '<br/>') : '-'}</p><br/>
             <p><strong>RESULTADO OBTIDO:</strong><br/>${d.resultObtained ? d.resultObtained.replace(/\n/g, '<br/>') : '-'}</p><br/>
             <p><strong>QUANTITATIVO DE IDOSOS:</strong> ${d.attendanceCount || '-'}</p>
@@ -713,8 +748,24 @@
                         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue/5 rounded-bl-full pointer-events-none"></div>
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-6 gap-4 relative z-10">
                           <div><h2 className="text-2xl font-black text-slate-800 flex items-center gap-3"><i className="fa-solid fa-pen-to-square text-brand-blue bg-blue-50 w-10 h-10 rounded-xl flex items-center justify-center"></i> Preenchimento Pós-Aula</h2><p className="text-sm font-semibold text-slate-500 mt-2">Relatório Oficial da Atividade {planDetails.activityNum} - {planDetails.theme}</p></div>
+                          <textarea rows="3" placeholder="Evolução Clínica / Intercorrências (Como foi a resposta dos idosos? Houve tontura, dor, pressão alta?)..." value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails,dailyEvolution:e.target.value})} className="w-full p-4 border border-amber-200 rounded-xl bg-amber-50 outline-none font-bold text-amber-900"></textarea>
                           <button onClick={() => setCircuitMode('view')} className="w-10 h-10 bg-slate-100 hover:bg-rose-100 text-slate-500 hover:text-rose-500 rounded-full flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark"></i></button>
                         </div>
+                        <div className="bg-slate-50 p-4 rounded-xl border">
+                        <div className="flex justify-between items-center mb-4"><h3 className="font-bold text-brand-blue uppercase text-xs tracking-widest"><i className="fa-solid fa-heart-pulse mr-2"></i>Sinais Vitais e Presença</h3><button onClick={handleAddParticipant} className="text-[10px] sm:text-xs bg-brand-blue text-white px-3 py-1.5 rounded-lg font-bold"><i className="fa-solid fa-plus mr-1"></i>Novo Idoso</button></div>
+                        <div className="max-h-80 overflow-y-auto space-y-2 pr-2">
+                          {planDetails.attendanceList.map((p, i) => (
+                            <div key={p.id} className={`p-3 border rounded-xl transition-colors ${p.present ? 'bg-blue-50 border-brand-blue/30' : 'bg-white'}`}>
+                              <label className="flex items-center gap-3 font-bold cursor-pointer"><input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="w-5 h-5 accent-brand-blue"/>{p.name}</label>
+                              {p.present && <div className="mt-3 grid grid-cols-3 gap-2">
+                                <div><p className="text-[10px] font-bold text-slate-400 text-center mb-1">FC (Início / Fim)</p><input placeholder="Ex: 80/95" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="w-full text-xs p-2 border text-center rounded-lg font-bold text-slate-700 outline-none focus:border-brand-blue"/></div>
+                                <div><p className="text-[10px] font-bold text-slate-400 text-center mb-1">SpO2 (Início / Fim)</p><input placeholder="Ex: 98/97" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="w-full text-xs p-2 border text-center rounded-lg font-bold text-slate-700 outline-none focus:border-brand-blue"/></div>
+                                <div><p className="text-[10px] font-bold text-slate-400 text-center mb-1">PA (Início / Fim)</p><input placeholder="Ex: 12x8/13x8" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="w-full text-xs p-2 border text-center rounded-lg font-bold text-slate-700 outline-none focus:border-brand-blue"/></div>
+                              </div>}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                         
                         <div className="space-y-5 relative z-10">
                            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Objetivos e Recursos</h3>
