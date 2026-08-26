@@ -5,13 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ATIVIDOSO - Plataforma Integrada</title>
   
+  <!-- Ícone da Aba do Navegador -->
   <link rel="icon" type="image/png" href="Logo_ATV_2024_Colorido_v2.png">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#202B5C">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="Logo_ATV_2024_Colorido_v2.png">
 
+  <script>
+    window.onerror = function(msg, url, lineNo) {
+      const root = document.getElementById('root');
+      if (root) {
+        root.innerHTML = `<div style="padding: 40px; background: #fff1f2; color: #be123c; min-height: 100vh; font-family: sans-serif;">
+            <h1 style="font-size: 28px; font-weight: 900; margin-bottom: 10px;">Ops! Ocorreu um erro</h1>
+            <div style="background: #fecdd3; padding: 20px; border-radius: 12px; margin-top: 20px; font-family: monospace;">
+              <strong>Mensagem:</strong> ${msg}<br/><br/><strong>Linha:</strong> ${lineNo}
+            </div></div>`;
+      }
+      return false;
+    };
+  </script>
+
+  <!-- Bibliotecas -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -19,185 +30,203 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
+  <!-- Fonte -->
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   
   <script>
     tailwind.config = {
-      theme: { extend: { fontFamily: { sans: ['Nunito', 'sans-serif'] }, colors: { brand: { blue: '#202B5C', dark: '#161E42', red: '#D12836', redDark: '#A81A26', light: '#F8FAFC' } } } }
+      theme: { 
+        extend: { 
+          fontFamily: { sans: ['Nunito', 'sans-serif'] },
+          colors: { brand: { blue: '#202B5C', dark: '#161E42', red: '#D12836', redDark: '#A81A26', light: '#F8FAFC', accent: '#FF9F1C' } } 
+        } 
+      }
     }
   </script>
   <style>
-    body { background-color: #f8fafc; color: #334155; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    body { background-color: #f8fafc; color: #334155; font-family: 'Nunito', sans-serif; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; border: 2px solid #f8fafc; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
+    
     .bg-pattern { background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px); background-size: 24px 24px; }
     .blob-shape { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
-    .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+    .blob-shape-2 { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    
+    .hover-lift { transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -5px rgba(0, 0, 0, 0.05); }
   </style>
 </head>
 <body class="bg-pattern">
-  <div id="root"><div style="display:flex;justify-content:center;align-items:center;min-height:100vh;"><h2 style="font-weight:900;">Carregando ATIVIDOSO...</h2></div></div>
+  <div id="root">
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Nunito', sans-serif; color: #202B5C;">
+      <h2 style="text-align: center; font-weight: 900; font-size: 24px; animation: pulse 2s infinite;">Despertando o ATIVIDOSO...</h2>
+    </div>
+  </div>
 
   <script type="text/babel">
     const { useState, useEffect, useMemo } = React;
 
+    // CHAVES DO SUPABASE
     const SUPABASE_URL = "https://rewkwzxuogdopzkqliwi.supabase.co"; 
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJld2t3enh1b2dkb3B6a3FsaXdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MDc3MjYsImV4cCI6MjEwMzI4MzcyNn0.ZW_KB3wl21aB00zCcyEqBQbOOFpGdOoxuctwU-6ICFM";
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // DADOS FIXOS
     const CATEGORIES = {
-      'mmss': { title: 'Mobilidade e fortalecimento de MMSS', shortTitle: 'MMSS e Tronco', icon: 'fa-child-reaching', color: 'text-sky-500', bg: 'bg-sky-50', border: 'border-sky-200', subgroups: ['Todos', 'Bíceps', 'Tríceps', 'Peito', 'Costas', 'Abdômen', 'Ombro', 'Punho', 'Outro'] },
-      'mmii': { title: 'Mobilidade e fortalecimento de MMII', shortTitle: 'Membros Inferiores', icon: 'fa-person-walking', color: 'text-emerald-500', bg: 'bg-emerald-50', border: 'border-emerald-200', subgroups: ['Todos', 'Quadríceps', 'Glúteos', 'Isquiotibiais', 'Panturrilhas', 'Tornozelo e Pé', 'Outro'] },
-      'cardio': { title: 'Aeróbicos e condicionamento cardiorrespiratório', shortTitle: 'Aeróbicos e Cardio', icon: 'fa-heart-pulse', color: 'text-rose-500', bg: 'bg-rose-50', border: 'border-rose-200', subgroups: ['Todos', 'Caminhada', 'Marcha', 'Circuitos', 'Resistência Contínua', 'Outro'] },
-      'dupla_tarefa': { title: 'Dupla tarefa (motora e cognitiva)', shortTitle: 'Dupla Tarefa', icon: 'fa-brain', color: 'text-violet-500', bg: 'bg-violet-50', border: 'border-violet-200', subgroups: ['Todos', 'Motora', 'Cognitiva', 'Motora + Cognitiva', 'Controle Postural', 'Equilíbrio', 'Coordenação', 'Atenção Dividida', 'Outro'] }
+      'mmss': { title: 'Exercícios de mobilidade e fortalecimento de MMSS', shortTitle: 'MMSS e Tronco', icon: 'fa-child-reaching', color: 'text-sky-500', bg: 'bg-sky-50', border: 'border-sky-200', subgroups: ['Todos', 'Bíceps', 'Tríceps', 'Peito', 'Costas', 'Abdômen', 'Ombro', 'Punho', 'Outro'] },
+      'mmii': { title: 'Exercícios de mobilidade e fortalecimento de MMII', shortTitle: 'Membros Inferiores', icon: 'fa-person-walking', color: 'text-emerald-500', bg: 'bg-emerald-50', border: 'border-emerald-200', subgroups: ['Todos', 'Quadríceps', 'Glúteos', 'Isquiotibiais', 'Panturrilhas', 'Tornozelo e Pé', 'Outro'] },
+      'cardio': { title: 'Exercícios aeróbicos e condicionamento cardiorrespiratório', shortTitle: 'Aeróbicos e Cardio', icon: 'fa-heart-pulse', color: 'text-rose-500', bg: 'bg-rose-50', border: 'border-rose-200', subgroups: ['Todos', 'Caminhada', 'Marcha', 'Circuitos', 'Resistência Contínua', 'Outro'] },
+      'dupla_tarefa': { title: 'Exercícios de dupla tarefa (motora e cognitiva)', shortTitle: 'Dupla Tarefa', icon: 'fa-brain', color: 'text-violet-500', bg: 'bg-violet-50', border: 'border-violet-200', subgroups: ['Todos', 'Motora', 'Cognitiva', 'Motora + Cognitiva', 'Controle Postural', 'Equilíbrio', 'Coordenação', 'Atenção Dividida', 'Outro'] }
     };
 
     const AGENDA_DATA = [
-      { act: 17, date: "14/08/2026", title: "RETORNO: Gincana/ dinâmica", resp: "Todos os integrantes do projeto" },
-      { act: 18, date: "21/08/2026", title: "Mobilidade e fortalecimento MMSS", resp: "E1: Emyle, Vitória E., Vitória A., Gustavo" },
-      { act: 19, date: "28/08/2026", title: "Mobilidade e fortalecimento MMII", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
-      { act: 20, date: "04/09/2026", title: "Aeróbicos e condicionamento", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
-      { act: 21, date: "11/09/2026", title: "Dupla tarefa (motora e cognitiva)", resp: "E4: Letícia R., Nyslanny, Danyllo" },
-      { act: 22, date: "18/09/2026", title: "Mobilidade e fortalecimento MMSS", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
-      { act: 23, date: "25/09/2026", title: "Mobilidade e fortalecimento MMII", resp: "E1: Emyle, Vitória E., Vitória A., Gustavo" },
-      { act: 24, date: "02/10/2026", title: "Aeróbicos e condicionamento", resp: "E4: Letícia R., Nyslanny, Danyllo" },
-      { act: 25, date: "09/10/2026", title: "Mobilidade e fortalecimento MMII", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
-      { act: 26, date: "16/10/2026", title: "Atividade educativa em saúde", resp: "Todos" },
-      { act: 27, date: "23/10/2026", title: "Aeróbicos e condicionamento", resp: "E1: Emyle, Vitória E., Vitória A., Gustavo" },
-      { act: 28, date: "30/10/2026", title: "Dupla tarefa (motora e cognitiva)", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
-      { act: 29, date: "06/11/2026", title: "Mobilidade e fortalecimento MMSS", resp: "E4: Letícia R., Nyslanny, Danyllo" },
-      { act: 30, date: "13/11/2026", title: "Mobilidade e fortalecimento MMII", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
-      { act: 31, date: "27/11/2026", title: "Avaliação participativa", resp: "Todos" },
-      { act: 32, date: "04/12/2026", title: "Encerramento do semestre", resp: "Todos" }
+      { act: 17, date: "14/08/2026", title: "RETORNO DAS ATIVIDADES: Gincana/ dinâmica", resp: "Todos os integrantes do projeto" },
+      { act: 18, date: "21/08/2026", title: "Mobilidade e fortalecimento muscular de MMSS", resp: "E1: Emyle, Vitória E., Vitória A., Gustavo" },
+      { act: 19, date: "28/08/2026", title: "Mobilidade e fortalecimento muscular de MMII", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: 20, date: "04/09/2026", title: "Exercícios aeróbicos e condicionamento", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: 21, date: "11/09/2026", title: "Exercícios de dupla tarefa (motora e cognitiva)", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: 22, date: "18/09/2026", title: "Mobilidade e fortalecimento muscular de MMSS", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: 23, date: "25/09/2026", title: "Mobilidade e fortalecimento muscular de MMII", resp: "E1: Emyle, Vitória E., Vitória A., Gustavo" },
+      { act: 24, date: "02/10/2026", title: "Exercícios aeróbicos e condicionamento", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: 25, date: "09/10/2026", title: "Mobilidade e fortalecimento muscular de MMII", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: 26, date: "16/10/2026", title: "Atividade educativa em saúde e promoção do autocuidado", resp: "Todos" },
+      { act: 27, date: "23/10/2026", title: "Exercícios aeróbicos e condicionamento", resp: "E1: Emyle, Vitória E., Vitória A., Gustavo" },
+      { act: 28, date: "30/10/2026", title: "Exercícios de dupla tarefa (motora e cognitiva)", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: 29, date: "06/11/2026", title: "Mobilidade e fortalecimento muscular de MMSS", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: 30, date: "13/11/2026", title: "Mobilidade e fortalecimento muscular de MMII", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: 31, date: "27/11/2026", title: "Avaliação participativa dos participantes e planejamento", resp: "Todos" },
+      { act: 32, date: "04/12/2026", title: "Atividade temática de integração/confraternização", resp: "Todos" }
     ];
 
-    const DEFAULT_PARTICIPANTS = [
-      { id: '1', name: 'Alice Maria da Silva Pereira' }, { id: '2', name: 'Anaide Pereira Alves' }, { id: '3', name: 'Angelita Alves de Lima' },
-      { id: '4', name: 'Angelita Maria dos Santos' }, { id: '5', name: 'Cicero Cruz Neves' }, { id: '6', name: 'Darci Sobral de Luna' },
-      { id: '7', name: 'Doralice Farias da Anunciação' }, { id: '8', name: 'Francisca Araújo Carvalho' }, { id: '9', name: 'Francisca De Andrade Rodrigues Souza' },
-      { id: '10', name: 'Izaura Brandão Neves' }, { id: '11', name: 'Jacira Gustavo de Almeida' }, { id: '12', name: 'Joaquim Chaves dos Santos' },
-      { id: '13', name: 'João Teles Bandeira' }, { id: '14', name: 'Joselia Maria da Silva Lima' }, { id: '15', name: 'Luiz de Medeiros Lima' },
-      { id: '16', name: 'Luiza Pereira do Nascimento' }, { id: '17', name: 'Magnólia Pires de Melo' }, { id: '18', name: 'Manoel Francisco Neto' },
-      { id: '19', name: 'Marcos Claudino da Silva' }, { id: '20', name: 'Maria das Graças Lopes Borges' }, { id: '21', name: 'Maria das Mercês Carvalho' },
-      { id: '22', name: 'Maria de Fátima Araújo Coelho' }, { id: '23', name: 'Maria do Socorro Ramos Patriota' }, { id: '24', name: 'Maria Helena de Araujo Castro' },
-      { id: '25', name: 'Maria Hilda dos Santos Freire' }, { id: '26', name: 'Maria José da Silva' }, { id: '27', name: 'Maria Leonilde da Silva Gomes' },
-      { id: '28', name: 'Maria Nilza Guimarães Soares' }, { id: '29', name: 'Maria Socorro de Sousa Campos' }, { id: '30', name: 'Maria Socorro Souza Dias' },
-      { id: '31', name: 'Maria Soledade Barros Seki' }, { id: '32', name: 'Maurício Antônio da Silva Matos' }, { id: '33', name: 'Milton Soares de Souza' },
-      { id: '34', name: 'Natalina Sumie Eguchi' }, { id: '35', name: 'Orismaria Mendonça Barboza' }, { id: '36', name: 'Rubinalva Ferreira Lima de Miranda' },
-      { id: '37', name: 'Vera Lúcia de Jesus' }, { id: '38', name: 'Wilson Barbosa Soares' }, { id: '39', name: 'Zélia Aguiar da Silva' }
-    ];
-
+    // ==========================================
+    // TELA DE LOGIN
+    // ==========================================
     const LoginPage = ({ onLogin }) => {
       const [isLogin, setIsLogin] = useState(true);
       const [name, setName] = useState('');
       const [email, setEmail] = useState('');
       const [password, setPassword] = useState('');
+      const [showPassword, setShowPassword] = useState(false);
       const [loading, setLoading] = useState(false);
       const [error, setError] = useState('');
+      const [successMsg, setSuccessMsg] = useState('');
 
       const handleSubmit = async (e) => {
-        e.preventDefault(); setLoading(true); setError('');
+        e.preventDefault(); setLoading(true); setError(''); setSuccessMsg('');
         if (isLogin) {
           const { data, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password });
-          if (authError) { setError("E-mail ou senha incorretos."); setLoading(false); return; }
+          if (authError) { setError(authError.message.includes("Invalid login") ? "E-mail ou senha incorretos." : "Erro: " + authError.message); setLoading(false); return; }
           let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', data.user.id).single();
           onLogin({ id: data.user.id, email: data.user.email, full_name: profile?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
         } else {
           const { data, error: signUpError } = await supabaseClient.auth.signUp({ email, password, options: { data: { full_name: name } } });
-          if (signUpError) { setError(signUpError.message); setLoading(false); } 
+          if (signUpError) { setError("Erro ao criar conta: " + signUpError.message); } 
           else {
-            if (data.user) { await supabaseClient.from('profiles').insert([{ id: data.user.id, full_name: name, role: 'Monitor' }]); alert("Conta criada! Faça login."); setIsLogin(true); setPassword(''); }
-            setLoading(false);
+            if (data.user) {
+              await supabaseClient.from('profiles').insert([{ id: data.user.id, full_name: name, role: 'Monitor' }]);
+              setSuccessMsg("Que bom ter você na equipe! Faça o login agora."); setIsLogin(true); setPassword('');
+            }
           }
+          setLoading(false);
         }
       };
 
       return (
-        <div className="min-h-screen flex items-center justify-center p-4">
-          <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-xl w-full max-w-md border border-slate-100 overflow-hidden relative z-10">
-            <div className="bg-gradient-to-br from-brand-blue to-brand-dark p-8 text-center">
-              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-16 mx-auto mb-2 object-contain" onError={(e) => e.target.style.display = 'none'} />
-              <h2 className="text-2xl font-black text-white">Bem-vindo(a)</h2>
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 relative overflow-hidden bg-pattern">
+          <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-brand-red/10 blob-shape blur-3xl"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[30rem] h-[30rem] bg-brand-blue/10 blob-shape-2 blur-3xl"></div>
+          
+          <div className="bg-white/90 backdrop-blur-md rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] w-full max-w-md overflow-hidden border border-slate-100 relative z-10">
+            <div className="bg-gradient-to-br from-brand-blue to-brand-dark p-10 text-center relative overflow-hidden">
+              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" className="h-16 mx-auto mb-4 object-contain relative z-10 drop-shadow-lg" onError={(e) => { e.target.style.display = 'none'; document.getElementById('fallbackLogo').classList.remove('hidden'); }} />
+              <div id="fallbackLogo" className="hidden relative z-10"><div className="w-16 h-16 bg-white rounded-3xl mx-auto flex items-center justify-center mb-4 shadow-lg"><i className="fa-solid fa-heart-pulse text-brand-red text-3xl"></i></div></div>
+              <h2 className="text-2xl font-black text-white relative z-10 tracking-tight">Bem-vindo(a)</h2>
+              <p className="text-brand-light/80 text-xs font-bold uppercase tracking-widest mt-1 relative z-10">{isLogin ? 'Faça login para continuar' : 'Junte-se à nossa equipe'}</p>
             </div>
-            <div className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {!isLogin && ( <input type="text" value={name} onChange={e=>setName(e.target.value)} required className="w-full px-4 py-3 rounded-xl bg-slate-50 border outline-none text-sm font-semibold" placeholder="Seu Nome Completo" /> )}
-                <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-4 py-3 rounded-xl bg-slate-50 border outline-none text-sm font-semibold" placeholder="E-mail" />
-                <input type="password" value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full px-4 py-3 rounded-xl bg-slate-50 border outline-none text-sm font-semibold" placeholder="Senha" />
-                {error && <div className="text-rose-500 text-xs font-bold text-center">{error}</div>}
-                <button type="submit" disabled={loading} className="w-full bg-brand-red hover:bg-brand-redDark text-white font-black py-3.5 rounded-xl transition shadow-md">{loading ? 'Aguarde...' : (isLogin ? 'Entrar no Aplicativo' : 'Criar Conta')}</button>
+            
+            <div className="p-8 sm:p-10">
+              {successMsg && <div className="bg-emerald-50 text-emerald-700 p-4 rounded-2xl text-sm font-bold border border-emerald-100 mb-6 text-center shadow-sm"><i className="fa-solid fa-face-smile-wink mr-2 text-lg"></i> {successMsg}</div>}
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {!isLogin && ( <div><label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Como devemos te chamar?</label><input type="text" value={name} onChange={e=>setName(e.target.value)} required className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold text-slate-700" placeholder="Ex: João da Silva" /></div> )}
+                <div><label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Seu E-mail</label><input type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold text-slate-700" placeholder="voce@email.com" /></div>
+                <div><label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Senha {(!isLogin) && "(Mín. 6 caracteres)"}</label>
+                  <div className="relative">
+                    <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-5 pr-12 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold text-slate-700" placeholder="••••••••" />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-3.5 text-slate-400 hover:text-brand-blue transition-colors p-1"><i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i></button>
+                  </div>
+                </div>
+                {error && <div className="bg-rose-50 text-rose-600 p-4 rounded-2xl text-xs font-bold border border-rose-100 flex items-center gap-2"><i className="fa-solid fa-circle-exclamation text-lg"></i> {error}</div>}
+                <button type="submit" disabled={loading} className="w-full bg-brand-red hover:bg-brand-redDark text-white font-black py-4 rounded-2xl transition-all shadow-[0_8px_20px_-6px_rgba(209,40,54,0.4)] hover:-translate-y-0.5 mt-4 text-base">{loading ? <i className="fa-solid fa-spinner fa-spin"></i> : (isLogin ? 'Entrar na Plataforma' : 'Criar Conta de Monitor')}</button>
               </form>
-              <div className="mt-6 text-center"><button onClick={() => {setIsLogin(!isLogin); setError('');}} className="text-sm font-bold text-slate-500">{isLogin ? "Criar conta." : "Já tenho conta."}</button></div>
+              <div className="mt-8 text-center border-t border-slate-100 pt-6">
+                <button onClick={() => {setIsLogin(!isLogin); setError(''); setSuccessMsg('');}} className="text-sm font-bold text-slate-500 hover:text-brand-blue transition-colors">{isLogin ? "Primeira vez na equipe? Cadastre-se." : "Já é da equipe? Clique para Entrar."}</button>
+              </div>
             </div>
           </div>
         </div>
       );
     };
 
+    // ==========================================
+    // PLATAFORMA / DASHBOARD
+    // ==========================================
     const Dashboard = ({ session, onLogout, updateSessionData }) => {
       const isAdmin = session.role === 'admin' || session.role === 'Coordenador / Admin';
 
       const [currentView, setCurrentView] = useState('home');
       const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
       
+      const [selectedExercise, setSelectedExercise] = useState(null);
       const [searchQuery, setSearchQuery] = useState('');
       const [filterCat, setFilterCat] = useState('all');
       const [filterSub, setFilterSub] = useState('Todos');
-      const [selectedExercise, setSelectedExercise] = useState(null);
       
       const [exercises, setExercises] = useState([]);
       const [savedCircuits, setSavedCircuits] = useState([]);
       const [announcements, setAnnouncements] = useState([]);
-      const [participantsList, setParticipantsList] = useState(DEFAULT_PARTICIPANTS);
       
+      // Cadastro Exercicio
       const [formCat, setFormCat] = useState('');
       const [formMuscleSelect, setFormMuscleSelect] = useState('');
       const [formCustomMuscle, setFormCustomMuscle] = useState('');
       const [mediaFile, setMediaFile] = useState(null); 
       const [formData, setFormData] = useState({ title: '', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '', videoUrl: '', instructions: '', precautions: '' });
-      const [formStatus, setFormStatus] = useState({ loading: false, success: false });
+      const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: '' });
 
+      // Circuitos
       const [circuitMode, setCircuitMode] = useState('agenda');
       const [circuit, setCircuit] = useState([[], [], [], [], []]);
       const [viewingCircuit, setViewingCircuit] = useState(null);
-      const [planDetails, setPlanDetails] = useState({ activityNum: '', theme: '', date: '', students: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['', '', '', '', ''], proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', developmentNarrative: '', dailyEvolution: '', resultObtained: '', attendanceCount: '', attendanceList: [] });
+      const [planDetails, setPlanDetails] = useState({ activityNum: '', theme: '', date: '', students: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['', '', '', '', ''], proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', developmentNarrative: '', resultObtained: '', attendanceCount: '' });
 
+      // Avisos Formulário (Admin)
       const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '', link_url: '' });
+      const [isPostingAviso, setIsPostingAviso] = useState(false);
+
+      // Perfil Formulário
       const [profileForm, setProfileForm] = useState({ full_name: session.full_name, team_group: session.team_group || '' });
       const [profileAvatarFile, setProfileAvatarFile] = useState(null);
-      const [profileStatus, setProfileStatus] = useState('');
+      const [profileStatus, setProfileStatus] = useState({ loading: false, msg: '' });
 
       useEffect(() => {
-        const fetchAll = async () => {
-          const [{data:ex}, {data:ci}, {data:an}, {data:pa}] = await Promise.all([
-            supabaseClient.from('exercises').select('*').order('created_at', { ascending: false }),
-            supabaseClient.from('circuits').select('*').order('created_at', { ascending: false }),
-            supabaseClient.from('announcements').select('*').order('created_at', { ascending: false }),
-            supabaseClient.from('participants').select('*').order('name', { ascending: true })
-          ]);
-          if(ex) setExercises(ex); if(ci) setSavedCircuits(ci); if(an) setAnnouncements(an); 
-          if(pa && pa.length > 0) setParticipantsList(pa);
+        const fetchData = async () => {
+          const { data: exData } = await supabaseClient.from('exercises').select('*').order('created_at', { ascending: false });
+          if (exData) setExercises(exData);
+          const { data: circData } = await supabaseClient.from('circuits').select('*').order('created_at', { ascending: false });
+          if (circData) setSavedCircuits(circData);
+          const { data: annData } = await supabaseClient.from('announcements').select('*').order('created_at', { ascending: false });
+          if (annData) setAnnouncements(annData);
         };
-        fetchAll();
+        fetchData();
       }, [currentView, circuitMode]);
 
-      const upcomingActivity = useMemo(() => {
-        if(!session.team_group || session.team_group === 'Nenhum') return null;
-        const today = new Date(); today.setHours(0,0,0,0);
-        for (let item of AGENDA_DATA) {
-          if (item.resp.includes(session.team_group) || item.resp.includes('Todos')) {
-            const [d, m, y] = item.date.split('/'); const itemDate = new Date(y, m - 1, d); itemDate.setDate(itemDate.getDate() + 1); 
-            if (itemDate >= today) return item;
-          }
-        }
-        return null;
-      }, [session.team_group]);
-
-      const approvedExercises = exercises.filter(ex => ex.status === 'approved');
-      const filteredExercises = approvedExercises.filter(ex => (filterCat === 'all' || ex.category === filterCat) && (filterSub === 'Todos' || ex.muscleGroup === filterSub) && (ex.title.toLowerCase().includes(searchQuery.toLowerCase())));
       const pendingCount = exercises.filter(ex => ex.status === 'pending').length;
+      const approvedExercises = exercises.filter(ex => ex.status === 'approved');
+
+      const handleNavClick = (view, mode = null) => { setCurrentView(view); if(mode) setCircuitMode(mode); setIsMobileMenuOpen(false); };
 
       const getYouTubeId = (url) => {
         if (!url) return null;
@@ -205,323 +234,766 @@
         return match ? match[1] : null;
       };
 
-      const handleSaveProfile = async (e) => {
-        e.preventDefault(); setProfileStatus('Salvando...');
-        let newAvatarUrl = session.avatar_url;
-        if (profileAvatarFile) {
-          const fileName = `avatar_${session.id}_${Date.now()}.${profileAvatarFile.name.split('.').pop()}`;
-          const { error } = await supabaseClient.storage.from('midia_exercicios').upload(fileName, profileAvatarFile);
-          if (!error) newAvatarUrl = supabaseClient.storage.from('midia_exercicios').getPublicUrl(fileName).data.publicUrl;
-        }
-        const { error } = await supabaseClient.from('profiles').update({ full_name: profileForm.full_name, team_group: profileForm.team_group, avatar_url: newAvatarUrl }).eq('id', session.id);
-        if(!error) { setProfileStatus('Salvo!'); updateSessionData({ ...session, full_name: profileForm.full_name, team_group: profileForm.team_group, avatar_url: newAvatarUrl }); }
-      };
+      const filteredExercises = useMemo(() => {
+        return approvedExercises.filter(ex => {
+          const matchCat = filterCat === 'all' || ex.category === filterCat;
+          const matchSub = filterSub === 'Todos' || ex.muscleGroup === filterSub;
+          const matchSearch = ex.title.toLowerCase().includes(searchQuery.toLowerCase()) || ex.muscleGroup.toLowerCase().includes(searchQuery.toLowerCase());
+          return matchCat && matchSub && matchSearch;
+        });
+      }, [searchQuery, filterCat, filterSub, approvedExercises]);
 
-      const handlePostAnnouncement = async (e) => {
-        e.preventDefault();
-        const { data } = await supabaseClient.from('announcements').insert([newAnnouncement]).select();
-        if(data) { setAnnouncements([data[0], ...announcements]); setNewAnnouncement({ title: '', content: '', link_url: '' }); }
-      };
-      const handleDeleteAnnouncement = async (id) => { if(window.confirm("Apagar?")) { await supabaseClient.from('announcements').delete().eq('id', id); setAnnouncements(announcements.filter(a => a.id !== id)); } };
-
-      const handleFormSubmit = async (e) => {
-        e.preventDefault(); setFormStatus({ loading: true, success: false });
-        let url = null;
-        if (mediaFile) {
-          const fName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${mediaFile.name.split('.').pop()}`;
-          await supabaseClient.storage.from('midia_exercicios').upload(fName, mediaFile);
-          url = supabaseClient.storage.from('midia_exercicios').getPublicUrl(fName).data.publicUrl;
-        }
-        const ex = { title: formData.title, category: formCat, "muscleGroup": formMuscleSelect==='Outro'?formCustomMuscle:formMuscleSelect, difficulty: formData.difficulty, equipment: formData.equipment, dosage: formData.dosage, "videoUrl": formData.videoUrl, "mediaUrl": url, instructions: formData.instructions, precautions: formData.precautions, status: 'pending', author: session.full_name };
-        const { error } = await supabaseClient.from('exercises').insert([ex]);
-        if (!error) { setFormStatus({ loading: false, success: true }); setFormData({ title:'', difficulty:'Iniciante / Leve', equipment:'Nenhum', dosage:'', videoUrl:'', instructions:'', precautions:'' }); setFormCat(''); setFormMuscleSelect(''); setMediaFile(null); }
-      };
-      const handleApprove = async (id) => { await supabaseClient.from('exercises').update({ status: 'approved' }).eq('id', id); setExercises(exercises.map(ex => ex.id === id ? { ...ex, status: 'approved' } : ex)); };
-      const handleReject = async (id) => { await supabaseClient.from('exercises').delete().eq('id', id); setExercises(exercises.filter(ex => ex.id !== id)); };
-      const handleDeleteExercise = async (id) => { if(window.confirm("Apagar exercício?")) { await supabaseClient.from('exercises').delete().eq('id', id); setExercises(exercises.filter(ex => ex.id !== id)); setCurrentView('library'); } };
-
-      const handleAddParticipant = async () => {
-        const name = prompt('Nome completo do idoso:');
-        if(name) {
-          const { data, error } = await supabaseClient.from('participants').insert([{ name }]).select();
-          if(!error && data) {
-            setParticipantsList([...participantsList, data[0]].sort((a,b)=>a.name.localeCompare(b.name)));
-            if (circuitMode === 'report_edit') {
-               const newP = { id: data[0].id, name: data[0].name, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' };
-               setPlanDetails({...planDetails, attendanceList: [...planDetails.attendanceList, newP].sort((a,b)=>a.name.localeCompare(b.name))});
+      // ALERTA DE AGENDA INTELIGENTE
+      // Procura a próxima atividade na agenda baseada no grupo do usuário (ex: 'E2')
+      const upcomingActivity = useMemo(() => {
+        if(!session.team_group || session.team_group === 'Nenhum') return null;
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        
+        // Formato brasileiro para Date object e encontra o primeiro que ainda não passou muito
+        for (let item of AGENDA_DATA) {
+          if (item.resp.includes(session.team_group) || item.resp.includes('Todos')) {
+            const [d, m, y] = item.date.split('/');
+            const itemDate = new Date(y, m - 1, d);
+            // Se a atividade for hoje ou no futuro (vamos mostrar se estiver até 1 dia no passado para garantir)
+            itemDate.setDate(itemDate.getDate() + 1); 
+            if (itemDate >= today) {
+              return item; // Retorna a primeira que bater
             }
-          } else {
-             const fallbackId = Date.now().toString();
-             const newP = { id: fallbackId, name: name };
-             setParticipantsList([...participantsList, newP].sort((a,b)=>a.name.localeCompare(b.name)));
-             if (circuitMode === 'report_edit') {
-               setPlanDetails({...planDetails, attendanceList: [...planDetails.attendanceList, { ...newP, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' }].sort((a,b)=>a.name.localeCompare(b.name))});
-             }
           }
         }
+        return null;
+      }, [session.team_group]);
+
+      // ======= FUNÇÕES DE PERFIL =======
+      const handleSaveProfile = async (e) => {
+        e.preventDefault(); setProfileStatus({ loading: true, msg: '' });
+        let newAvatarUrl = session.avatar_url;
+
+        if (profileAvatarFile) {
+          const fileExt = profileAvatarFile.name.split('.').pop();
+          const fileName = `avatar_${session.id}_${Date.now()}.${fileExt}`;
+          const { error: uploadError } = await supabaseClient.storage.from('midia_exercicios').upload(fileName, profileAvatarFile);
+          if (!uploadError) {
+            const { data } = supabaseClient.storage.from('midia_exercicios').getPublicUrl(fileName);
+            newAvatarUrl = data.publicUrl;
+          }
+        }
+
+        const updates = { id: session.id, full_name: profileForm.full_name, team_group: profileForm.team_group };
+        if (newAvatarUrl) updates.avatar_url = newAvatarUrl;
+
+        const { error } = await supabaseClient.from('profiles').update(updates).eq('id', session.id);
+        if (error) { setProfileStatus({ loading: false, msg: 'Erro ao salvar perfil.' }); }
+        else { 
+          setProfileStatus({ loading: false, msg: 'Perfil salvo com sucesso!' }); 
+          updateSessionData({ ...session, full_name: profileForm.full_name, team_group: profileForm.team_group, avatar_url: newAvatarUrl });
+        }
       };
 
-      const updateAttendance = (idx, field, val) => {
-         const list = [...planDetails.attendanceList]; list[idx][field] = val;
-         setPlanDetails({...planDetails, attendanceList: list, attendanceCount: field==='present' ? list.filter(p=>p.present).length.toString() : planDetails.attendanceCount});
+      // ======= FUNÇÕES DE AVISOS =======
+      const handlePostAnnouncement = async (e) => {
+        e.preventDefault(); setIsPostingAviso(true);
+        const { data, error } = await supabaseClient.from('announcements').insert([{ title: newAnnouncement.title, content: newAnnouncement.content, link_url: newAnnouncement.link_url }]).select();
+        setIsPostingAviso(false);
+        if(!error && data) {
+          setAnnouncements([data[0], ...announcements]);
+          setNewAnnouncement({ title: '', content: '', link_url: '' });
+        }
       };
 
-      const startPlanning = () => { setPlanDetails({ activityNum: '', theme: '', date: '', students: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['','','','',''], proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', developmentNarrative: '', dailyEvolution: '', resultObtained: '', attendanceCount: '', attendanceList: [] }); setCircuit([[],[],[],[],[]]); setCircuitMode('plan'); };
+      const handleDeleteAnnouncement = async (id) => {
+        if(window.confirm("Apagar este recado?")) {
+          await supabaseClient.from('announcements').delete().eq('id', id);
+          setAnnouncements(announcements.filter(a => a.id !== id));
+        }
+      };
+
+      // ======= FUNÇÕES DE EXERCÍCIOS =======
+      const handleFormSubmit = async (e) => {
+        e.preventDefault(); setFormStatus({ loading: true, success: false, error: '' });
+        let uploadedMediaUrl = null;
+        if (mediaFile) {
+          const fileExt = mediaFile.name.split('.').pop();
+          const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+          const { error: uploadError } = await supabaseClient.storage.from('midia_exercicios').upload(fileName, mediaFile);
+          if (uploadError) { setFormStatus({ loading: false, success: false, error: 'Erro ao enviar mídia.' }); return; }
+          const { data } = supabaseClient.storage.from('midia_exercicios').getPublicUrl(fileName);
+          uploadedMediaUrl = data.publicUrl;
+        }
+        const finalMuscleGroup = formMuscleSelect === 'Outro' ? formCustomMuscle : formMuscleSelect;
+        const newExercise = { title: formData.title, category: formCat, "muscleGroup": finalMuscleGroup, difficulty: formData.difficulty, equipment: formData.equipment, dosage: formData.dosage, "videoUrl": formData.videoUrl, "mediaUrl": uploadedMediaUrl, instructions: formData.instructions, precautions: formData.precautions, status: 'pending', author: session.full_name };
+        const { error } = await supabaseClient.from('exercises').insert([newExercise]);
+        if (error) setFormStatus({ loading: false, success: false, error: error.message });
+        else { setFormStatus({ loading: false, success: true, error: '' }); setFormData({ title: '', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '', videoUrl: '', instructions: '', precautions: '' }); setFormCat(''); setFormMuscleSelect(''); setFormCustomMuscle(''); setMediaFile(null); }
+      };
+
+      const handleApprove = async (id) => { await supabaseClient.from('exercises').update({ status: 'approved' }).eq('id', id); setExercises(exercises.map(ex => ex.id === id ? { ...ex, status: 'approved' } : ex)); };
+      const handleReject = async (id) => { await supabaseClient.from('exercises').delete().eq('id', id); setExercises(exercises.filter(ex => ex.id !== id)); };
+      const handleDeleteExercise = async (id) => { if(window.confirm("ATENÇÃO: Você vai apagar este exercício. Tem certeza?")) { await supabaseClient.from('exercises').delete().eq('id', id); setExercises(exercises.filter(ex => ex.id !== id)); setCurrentView('library'); } };
+
+      // ======= FUNÇÕES DE RELATÓRIOS E AULA =======
+      const startPlanning = () => { setPlanDetails({ activityNum: '', theme: '', date: '', students: '', proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['', '', '', '', ''], developmentNarrative: '', resultObtained: '', attendanceCount: '' }); setCircuit([[], [], [], [], []]); setCircuitMode('plan'); };
+      const startEditingReport = () => { setPlanDetails(viewingCircuit.details); setCircuitMode('report_edit'); };
+      const handleDeleteCircuit = async (id) => { if(window.confirm("Deseja apagar este Relatório permanentemente?")) { await supabaseClient.from('circuits').delete().eq('id', id); setSavedCircuits(savedCircuits.filter(c => c.id !== id)); setCircuitMode('history'); } };
       
-      const startEditingReport = () => { 
-        let list = viewingCircuit.details.attendanceList || [];
-        if (list.length === 0) list = participantsList.map(p => ({ id: p.id, name: p.name, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' }));
-        else { const ids = list.map(c=>c.id); list = [...list, ...participantsList.filter(p=>!ids.includes(p.id)).map(p=>({ id: p.id, name: p.name, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' }))].sort((a,b)=>a.name.localeCompare(b.name)); }
-        setPlanDetails({ ...viewingCircuit.details, attendanceList: list }); setCircuitMode('report_edit'); 
+      const addToCircuit = (stationIndex, exerciseId) => {
+        if (!exerciseId) return;
+        const exercise = approvedExercises.find(ex => ex.id === exerciseId);
+        if (!exercise) return;
+        const newCircuit = [...circuit];
+        if (!newCircuit[stationIndex].find(ex => ex.id === exerciseId)) { newCircuit[stationIndex] = [...newCircuit[stationIndex], exercise]; setCircuit(newCircuit); }
       };
+      const removeFromCircuit = (stationIndex, exerciseId) => { const newCircuit = [...circuit]; newCircuit[stationIndex] = newCircuit[stationIndex].filter(ex => ex.id !== exerciseId); setCircuit(newCircuit); };
+      const updateStationResponsible = (index, value) => { const updated = [...planDetails.stationResponsibles]; updated[index] = value; setPlanDetails({ ...planDetails, stationResponsibles: updated }); };
 
       const handleSavePlan = async () => {
         if (!planDetails.date || !planDetails.theme || !planDetails.activityNum) return alert('Preencha Número, Tema e Data!');
-        const { data, error } = await supabaseClient.from('circuits').insert([{ activity_date: planDetails.date, stations: circuit, details: planDetails, author: session.full_name }]).select();
-        if (!error) { alert('Salvo!'); setSavedCircuits([data[0], ...savedCircuits]); setCircuitMode('history'); }
+        const newSavedCircuit = { activity_date: planDetails.date, stations: circuit, details: planDetails, author: session.full_name };
+        const { data, error } = await supabaseClient.from('circuits').insert([newSavedCircuit]).select();
+        if (error) alert('Erro ao salvar planejamento: ' + error.message);
+        else { alert('Aula Planejada com Sucesso!'); setSavedCircuits([data[0], ...savedCircuits]); setCircuitMode('history'); }
       };
 
       const handleUpdateReport = async () => {
+        const updatedCircuit = { ...viewingCircuit, details: planDetails };
         const { error } = await supabaseClient.from('circuits').update({ details: planDetails }).eq('id', viewingCircuit.id);
-        if (!error) { alert('Relatório Salvo!'); setSavedCircuits(savedCircuits.map(c => c.id === viewingCircuit.id ? { ...c, details: planDetails } : c)); setViewingCircuit({ ...viewingCircuit, details: planDetails }); setCircuitMode('view'); }
+        if (error) alert('Erro ao atualizar: ' + error.message);
+        else { alert('Relatório Salvo!'); setSavedCircuits(savedCircuits.map(c => c.id === viewingCircuit.id ? updatedCircuit : c)); setViewingCircuit(updatedCircuit); setCircuitMode('view'); }
       };
-
-      const handleDeleteCircuit = async (id) => { if(window.confirm("Apagar permanentemente?")) { await supabaseClient.from('circuits').delete().eq('id', id); setSavedCircuits(savedCircuits.filter(c => c.id !== id)); setCircuitMode('history'); } };
-      
-      const addToCircuit = (stationIndex, exerciseId) => { if (!exerciseId) return; const exercise = approvedExercises.find(ex => ex.id === exerciseId); if (!exercise) return; const newCircuit = [...circuit]; if (!newCircuit[stationIndex].find(ex => ex.id === exerciseId)) { newCircuit[stationIndex] = [...newCircuit[stationIndex], exercise]; setCircuit(newCircuit); } };
-      const removeFromCircuit = (stationIndex, exerciseId) => { const newCircuit = [...circuit]; newCircuit[stationIndex] = newCircuit[stationIndex].filter(ex => ex.id !== exerciseId); setCircuit(newCircuit); };
 
       const handleGeneratePDF = (circuitData) => {
         const d = circuitData.details;
-        let stHtml = ''; circuitData.stations.forEach((st, i) => { stHtml += `<div style="margin-bottom:10px;"><strong>Estação ${i+1}</strong> (Resp: ${d.stationResponsibles?.[i]||'-'}): ${st.length===0?'Sem ex.':st.map(e=>e.title).join(', ')}</div>`; });
-        let vitHtml = ''; if(d.attendanceList && d.attendanceList.some(p=>p.present)) {
-          vitHtml = `<br><p><strong>QUADRO CLÍNICO E FREQUÊNCIA NOMINAL:</strong></p><table style="width:100%;border-collapse:collapse;font-size:11px;margin:10px 0;text-align:center;"><tr style="background:#f1f5f9;border-bottom:2px solid #cbd5e1;"><th style="padding:4px;text-align:left;">NOME</th><th>FC (I/F)</th><th>SpO2 (I/F)</th><th>PA (I/F)</th></tr>` + d.attendanceList.filter(p=>p.present).map(p=>`<tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:4px;text-align:left;">${p.name}</td><td>${p.fc_in||'-'} / ${p.fc_out||'-'}</td><td>${p.spo2_in||'-'} / ${p.spo2_out||'-'}</td><td>${p.pa_in||'-'} / ${p.pa_out||'-'}</td></tr>`).join('') + `</table>`;
-        }
+        const dateFormatted = circuitData.activity_date.split('-').reverse().join('/');
+        let stationsHtml = '';
+        circuitData.stations.forEach((station, idx) => {
+          let exercisesHtml = station.length === 0 ? '<p style="font-size: 13px; color: #555;"><i>Sem exercícios vinculados.</i></p>' : '<ul style="margin-top: 5px; padding-left: 20px; font-size: 13px;">' + station.map(ex => `<li><strong>${ex.title}</strong> (${ex.dosage})</li>`).join('') + '</ul>';
+          stationsHtml += `<div style="margin-bottom: 15px; border-left: 2px solid #D12836; padding-left: 10px;"><strong>Estação ${idx + 1} ${idx === 4 ? '- Circuito Funcional' : ''}</strong><br/>Responsáveis: ${d.stationResponsibles?.[idx] || 'Não informado'}<br/>${exercisesHtml}</div>`;
+        });
+
         const element = document.createElement('div');
-        element.innerHTML = `<div style="font-family:Arial;font-size:14px;color:#333;line-height:1.5;padding:30px;"><div style="text-align:center;margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px;margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0;font-size:18px;color:#161E42;text-transform:uppercase;">ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</h2></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES:</strong> ${d.students||'-'}</p><br><p><strong>OBJETIVOS:</strong> ${d.objectives||'-'}</p><p><strong>PROPOSTAS:</strong> ${d.proposedActivities||'-'}</p><p><strong>MATERIAIS:</strong> ${d.materials||'-'}</p><p><strong>OPERAÇÃO (SV, Som, Cuid.):</strong> ${d.vitalSigns||'-'} | ${d.soundAndPhotos||'-'} | ${d.specialCare||'-'}</p><br><p><strong>AQUECIMENTO:</strong> ${d.warmUp||'-'}</p>${stHtml}<p><strong>DESAQUECIMENTO:</strong> ${d.coolDown||'-'}</p>${vitHtml}<br><p><strong>RELATO NARRATIVO:</strong> ${d.developmentNarrative||'-'}</p><br><p><strong>EVOLUÇÃO E INTERCORRÊNCIAS:</strong> ${d.dailyEvolution||'Sem intercorrências.'}</p><br><p><strong>RESULTADOS:</strong> ${d.resultObtained||'-'}</p><br><p><strong>TOTAL PRESENTES:</strong> ${d.attendanceCount||'-'}</p></div>`;
-        html2pdf().set({ margin: 0.4, filename: `Relatorio_ATIV_${d.activityNum||'00'}.pdf`, html2canvas: { scale: 2, useCORS: true } }).from(element).save();
+        element.innerHTML = `
+          <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333; line-height: 1.6; padding: 40px;">
+            <div style="text-align: center; margin-bottom: 30px;"><img src="Logo_ATV_2024_Colorido_v2.png" alt="ATIVIDOSO" style="max-height: 80px; margin-bottom: 10px;" /><h2 style="margin: 0; font-size: 18px; color: #161E42; text-transform: uppercase;">ATIVIDADE ${d.activityNum || 'X'} – ${d.theme || 'TEMA NÃO INFORMADO'}</h2></div>
+            <p><strong>DATA DE REALIZAÇÃO:</strong> ${dateFormatted}</p>
+            <p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students || 'Não informado'}</p><br/>
+            <p><strong>ATIVIDADE(S) PROPOSTA(S):</strong><br/>${d.proposedActivities ? d.proposedActivities.replace(/\n/g, '<br/>') : '-'}</p><br/>
+            <p><strong>OBJETIVO(S) DA(S) ATIVIDADE(S):</strong><br/>${d.objectives ? d.objectives.replace(/\n/g, '<br/>') : '-'}</p><br/>
+            <p><strong>OBSERVAÇÕES OPERACIONAIS:</strong><br/><span style="margin-left: 10px; display: inline-block;">• <strong>Registro dos sinais vitais:</strong> ${d.vitalSigns || '-'}</span><br/><span style="margin-left: 10px; display: inline-block;">• <strong>Som, tempo e fotos:</strong> ${d.soundAndPhotos || '-'}</span><br/><span style="margin-left: 10px; display: inline-block;">• <strong>Cuidados especiais:</strong> ${d.specialCare || '-'}</span></p><br/>
+            <p><strong>MATERIAIS UTILIZADOS:</strong><br/>${d.materials ? d.materials.replace(/\n/g, '<br/>') : '-'}</p><br/>
+            <p><strong>DESENVOLVIMENTO DA ATIVIDADE:</strong></p>
+            <p><strong>Aquecimento:</strong> ${d.warmUp || '-'}</p>
+            <div style="margin-left: 10px; margin-top: 15px; margin-bottom: 15px;">${stationsHtml}</div>
+            <p><strong>Desaquecimento:</strong> ${d.coolDown || 'Todos'}</p><br/>
+            <p><strong>Relato Completo da Dinâmica:</strong><br/>${d.developmentNarrative ? d.developmentNarrative.replace(/\n/g, '<br/>') : '-'}</p><br/>
+            <p><strong>RESULTADO OBTIDO:</strong><br/>${d.resultObtained ? d.resultObtained.replace(/\n/g, '<br/>') : '-'}</p><br/>
+            <p><strong>QUANTITATIVO DE IDOSOS:</strong> ${d.attendanceCount || '-'}</p>
+          </div>
+        `;
+        html2pdf().set({ margin: 0.4, filename: `Relatorio_ATIVIDOSO_Ativ_${d.activityNum || '00'}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(element).save();
       };
 
-      const NavBtn = ({v, icon, text}) => <button onClick={()=>{setCurrentView(v);setIsMobileMenuOpen(false);}} className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold w-full transition-all ${currentView===v ? 'bg-brand-blue text-white shadow-md' : 'text-slate-600 hover:bg-slate-50'}`}><i className={`fa-solid ${icon} w-5`}></i> {text}</button>;
-
       return (
-        <div className="min-h-screen flex bg-slate-50 relative">
-          {isMobileMenuOpen && <div className="fixed inset-0 bg-black/40 z-40 md:hidden" onClick={()=>setIsMobileMenuOpen(false)}></div>}
+        <div className="min-h-screen flex relative">
           
-          <aside className={`w-72 bg-white flex flex-col h-screen fixed md:relative z-50 transition-transform duration-300 border-r border-slate-200 ${isMobileMenuOpen?'translate-x-0':'-translate-x-full'} md:translate-x-0`}>
-            <div className="p-6 text-center"><h1 className="text-2xl font-black text-brand-blue">ATIV<span className="text-brand-red">IDOSO</span></h1></div>
-            <div className="px-6 pb-4 border-b flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition p-2 rounded-2xl mx-4" onClick={()=>{setCurrentView('perfil');setIsMobileMenuOpen(false);}}>
-              {session.avatar_url ? <img src={session.avatar_url} className="w-10 h-10 rounded-full object-cover shadow-sm"/> : <div className="w-10 h-10 bg-brand-red text-white flex items-center justify-center rounded-full font-bold">{session.full_name[0]}</div>}
-              <div className="overflow-hidden"><p className="text-sm font-bold text-slate-800 truncate">{session.full_name}</p><p className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 rounded-full inline-block">{session.team_group || 'Sem Grupo'}</p></div>
+          {isMobileMenuOpen && <div className="fixed inset-0 bg-brand-dark/40 z-40 md:hidden backdrop-blur-sm transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>}
+
+          {/* ==========================================
+              MENU LATERAL
+          ========================================== */}
+          <aside className={`w-72 bg-white text-slate-600 flex flex-col h-screen fixed md:relative z-50 transition-transform duration-300 ease-out border-r border-slate-200 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+            <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden absolute top-6 right-6 text-slate-400 hover:text-brand-red bg-slate-50 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark"></i></button>
+
+            <div className="p-8 flex flex-col items-center justify-center gap-2 mt-4">
+              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-16 object-contain drop-shadow-sm" onError={(e) => { e.target.style.display = 'none'; document.getElementById('sidebarTextLogo').classList.remove('hidden'); }} />
+              <div id="sidebarTextLogo" className="hidden"><span className="text-2xl font-black text-brand-blue">ATIV<span className="text-brand-red">IDOSO</span></span></div>
             </div>
-            <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-              <NavBtn v="home" icon="fa-home" text="Início & Mural" />
-              <NavBtn v="library" icon="fa-dumbbell" text="Acervo de Exercícios" />
-              <NavBtn v="circuito" icon="fa-clipboard-list" text="Aulas e Diário Clínico" />
-              <NavBtn v="cadastro" icon="fa-circle-plus" text="Criar Exercício" />
-              {isAdmin && <button onClick={()=>{setCurrentView('aprovacoes');setIsMobileMenuOpen(false);}} className={`flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-bold w-full transition-all ${currentView==='aprovacoes' ? 'bg-amber-500 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><div className="flex gap-3"><i className="fa-solid fa-check-double w-5"></i> Aprovações</div>{pendingCount>0 && <span className="bg-white text-amber-600 text-[10px] px-2 rounded-full">{pendingCount}</span>}</button>}
+            
+            <div className="px-6 pb-6 mb-2 border-b border-slate-100 flex items-center gap-4 cursor-pointer hover:bg-slate-50 transition p-2 rounded-2xl mx-4" onClick={() => handleNavClick('perfil')}>
+              {session.avatar_url ? (
+                 <img src={session.avatar_url} className="w-12 h-12 rounded-full object-cover shadow-md ring-4 ring-slate-50 shrink-0" />
+              ) : (
+                 <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-red to-orange-400 flex items-center justify-center text-white font-black text-xl shadow-md uppercase shrink-0 ring-4 ring-red-50">{session.full_name.charAt(0)}</div>
+              )}
+              <div className="overflow-hidden">
+                <p className="text-sm font-extrabold text-slate-800 leading-tight truncate">{session.full_name}</p>
+                <div className="flex gap-1 mt-1">
+                  <span className="text-[9px] text-brand-blue font-bold uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded-full inline-block">{session.role}</span>
+                  {session.team_group && session.team_group !== 'Nenhum' && <span className="text-[9px] text-emerald-600 font-bold uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full inline-block border border-emerald-100"><i className="fa-solid fa-users"></i> {session.team_group}</span>}
+                </div>
+              </div>
+            </div>
+
+            <nav className="flex-1 px-4 py-4 flex flex-col gap-1.5 overflow-y-auto">
+              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 pl-3">Meu Espaço</p>
+              <button onClick={() => handleNavClick('home')} className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${currentView === 'home' ? 'bg-brand-blue text-white shadow-md shadow-brand-blue/20' : 'hover:bg-slate-50 text-slate-600 hover:text-brand-blue'}`}><i className="fa-solid fa-house-chimney-medical w-5 text-center text-lg"></i> Início & Mural</button>
+              <button onClick={() => handleNavClick('perfil')} className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${currentView === 'perfil' ? 'bg-brand-blue text-white shadow-md shadow-brand-blue/20' : 'hover:bg-slate-50 text-slate-600 hover:text-brand-blue'}`}><i className="fa-solid fa-user-astronaut w-5 text-center text-lg"></i> Meu Perfil</button>
+              
+              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 mt-6 pl-3">Atividades e Saúde</p>
+              <button onClick={() => handleNavClick('library')} className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${currentView === 'library' || currentView === 'detail' ? 'bg-brand-blue text-white shadow-md shadow-brand-blue/20' : 'hover:bg-slate-50 text-slate-600 hover:text-brand-blue'}`}><i className="fa-solid fa-dumbbell w-5 text-center text-lg"></i> Acervo de Exercícios</button>
+              <button onClick={() => handleNavClick('circuito', 'agenda')} className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${currentView === 'circuito' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20' : 'hover:bg-slate-50 text-slate-600 hover:text-emerald-600'}`}><i className="fa-solid fa-clipboard-list w-5 text-center text-lg"></i> Aulas e Relatórios</button>
+
+              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 mt-6 pl-3">Gestão de Conteúdo</p>
+              <button onClick={() => { handleNavClick('cadastro'); setFormStatus({loading: false, success: false, error: ''}); }} className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${currentView === 'cadastro' ? 'bg-brand-red text-white shadow-md shadow-brand-red/20' : 'hover:bg-rose-50 text-slate-600 hover:text-brand-red'}`}><i className="fa-solid fa-circle-plus w-5 text-center text-lg"></i> Criar Exercício</button>
+              {isAdmin && (
+                <button onClick={() => handleNavClick('aprovacoes')} className={`flex items-center justify-between px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${currentView === 'aprovacoes' ? 'bg-amber-500 text-white shadow-md shadow-amber-500/20' : 'hover:bg-amber-50 text-slate-600 hover:text-amber-600'}`}><div className="flex items-center gap-3"><i className="fa-solid fa-clipboard-check w-5 text-center text-lg"></i> Aprovações</div>{pendingCount > 0 && <span className={`text-[10px] px-2.5 py-1 rounded-full font-black ${currentView === 'aprovacoes' ? 'bg-white text-amber-600' : 'bg-amber-100 text-amber-700'}`}>{pendingCount}</span>}</button>
+              )}
             </nav>
-            <div className="p-4 border-t"><button onClick={onLogout} className="w-full text-slate-500 hover:text-rose-500 font-bold text-sm py-2"><i className="fa-solid fa-power-off mr-2"></i>Sair do App</button></div>
+            <div className="p-6 border-t border-slate-100"><button onClick={onLogout} className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-sm font-bold text-slate-500 hover:bg-rose-50 hover:text-rose-600 w-full transition-colors"><i className="fa-solid fa-arrow-right-from-bracket text-lg"></i> Sair da Conta</button></div>
           </aside>
 
-          <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
-            <header className="h-16 bg-white border-b px-6 flex items-center justify-between shrink-0">
-              <div className="flex items-center gap-3"><button onClick={()=>setIsMobileMenuOpen(true)} className="md:hidden text-slate-500"><i className="fa-solid fa-bars text-xl"></i></button><h2 className="font-black text-slate-800 uppercase tracking-widest text-sm truncate">{currentView}</h2></div>
+          {/* ==========================================
+              ÁREA PRINCIPAL
+          ========================================== */}
+          <main className="flex-1 flex flex-col h-screen overflow-hidden w-full bg-slate-50/50 relative">
+            <header className="h-20 px-4 sm:px-8 flex items-center justify-between shrink-0 z-10 pt-4">
+              <div className="flex items-center gap-4">
+                <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden w-10 h-10 bg-white rounded-full shadow-sm border border-slate-200 text-slate-600 flex items-center justify-center hover:text-brand-blue transition"><i className="fa-solid fa-bars"></i></button>
+                <div>
+                  <h2 className="font-black text-slate-800 text-xl sm:text-2xl tracking-tight leading-none">
+                    {currentView === 'home' && "Início e Mural"}
+                    {currentView === 'perfil' && "Meu Perfil"}
+                    {currentView === 'library' && "Biblioteca Clínica"}
+                    {currentView === 'detail' && "Detalhes Clínicos"}
+                    {currentView === 'cadastro' && "Novo Conteúdo"}
+                    {currentView === 'aprovacoes' && "Central de Aprovações"}
+                    {currentView === 'circuito' && "Aulas e Planejamento"}
+                  </h2>
+                  <p className="text-xs font-bold text-slate-400 mt-1 hidden sm:block">Gerenciamento do Projeto ATIVIDOSO</p>
+                </div>
+              </div>
             </header>
-            
-            <div className="flex-1 overflow-y-auto p-4 sm:p-8">
+
+            <div className="flex-1 overflow-y-auto p-4 sm:p-8 pt-6">
               
+              {/* === TELA: PERFIL === */}
               {currentView === 'perfil' && (
-                <div className="max-w-2xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                  <h2 className="text-xl font-black mb-6 border-b pb-4">Meu Perfil</h2>
-                  {profileStatus && <div className="mb-4 text-emerald-600 font-bold">{profileStatus}</div>}
-                  <form onSubmit={handleSaveProfile} className="space-y-4">
-                    <div className="flex items-center gap-4 mb-4">{session.avatar_url && <img src={session.avatar_url} className="w-16 h-16 rounded-full object-cover"/>}<input type="file" onChange={e=>setProfileAvatarFile(e.target.files[0])} className="text-xs" /></div>
-                    <input type="text" value={profileForm.full_name} onChange={e=>setProfileForm({...profileForm, full_name:e.target.value})} className="w-full p-3 rounded-xl bg-slate-50 border outline-none font-bold" />
-                    <select value={profileForm.team_group} onChange={e=>setProfileForm({...profileForm, team_group:e.target.value})} className="w-full p-3 rounded-xl bg-slate-50 border outline-none font-bold"><option value="Nenhum">Sem Grupo</option><option value="E1">Grupo E1</option><option value="E2">Grupo E2</option><option value="E3">Grupo E3</option><option value="E4">Grupo E4</option></select>
-                    <button className="bg-brand-blue text-white font-bold px-6 py-3 rounded-xl">Salvar Perfil</button>
-                  </form>
+                <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
+                  <div className="bg-white p-8 sm:p-10 rounded-[2.5rem] shadow-sm border border-slate-100">
+                    <h2 className="text-2xl font-black text-slate-800 mb-8 border-b border-slate-100 pb-4"><i className="fa-solid fa-user-astronaut text-brand-blue mr-2"></i> Configurações do Perfil</h2>
+                    
+                    {profileStatus.msg && <div className="mb-6 p-4 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold text-center border border-emerald-100"><i className="fa-solid fa-check-circle mr-2"></i>{profileStatus.msg}</div>}
+
+                    <form onSubmit={handleSaveProfile} className="space-y-6">
+                      <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                        <div className="relative">
+                          {session.avatar_url ? ( <img src={session.avatar_url} className="w-24 h-24 rounded-full object-cover shadow-md" /> ) : ( <div className="w-24 h-24 rounded-full bg-brand-blue text-white flex items-center justify-center text-4xl font-black">{session.full_name.charAt(0)}</div> )}
+                          <div className="absolute bottom-0 right-0 bg-white p-1 rounded-full shadow-sm border border-slate-200"><i className="fa-solid fa-camera text-slate-400 text-xs m-1"></i></div>
+                        </div>
+                        <div className="flex-1 w-full">
+                          <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Alterar Foto de Perfil</label>
+                          <input type="file" accept="image/*" onChange={e => setProfileAvatarFile(e.target.files[0])} className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brand-blue file:text-white cursor-pointer" />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div><label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Nome de Exibição</label><input type="text" value={profileForm.full_name} onChange={e=>setProfileForm({...profileForm, full_name: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-semibold" required /></div>
+                        <div>
+                          <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Seu Grupo na Quadra</label>
+                          <select value={profileForm.team_group} onChange={e=>setProfileForm({...profileForm, team_group: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-bold text-emerald-700">
+                            <option value="">Selecione...</option>
+                            <option value="Nenhum">Nenhum / Não aplicável</option>
+                            <option value="E1">Grupo E1</option>
+                            <option value="E2">Grupo E2</option>
+                            <option value="E3">Grupo E3</option>
+                            <option value="E4">Grupo E4</option>
+                          </select>
+                          <p className="text-[10px] text-slate-400 mt-1.5 pl-2 font-medium">Isso ajuda o sistema a te avisar quando for o seu dia de dar aula.</p>
+                        </div>
+                      </div>
+
+                      <div className="pt-6 border-t border-slate-100 flex justify-end">
+                        <button type="submit" disabled={profileStatus.loading} className="w-full sm:w-auto px-8 py-3.5 bg-brand-blue hover:bg-brand-dark text-white font-black rounded-2xl shadow-md transition-all flex items-center justify-center gap-2">{profileStatus.loading ? 'Salvando...' : 'Salvar Perfil'}</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               )}
 
+              {/* === TELA: DASHBOARD / HOME === */}
               {currentView === 'home' && (
-                <div className="max-w-5xl mx-auto space-y-6">
+                <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
+                  
+                  {/* Banner de Lembrete Inteligente da Agenda */}
                   {upcomingActivity && (
-                    <div className="bg-emerald-500 p-6 rounded-2xl text-white shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
-                      <div><h2 className="font-black text-xl mb-1"><i className="fa-solid fa-bell mr-2"></i> Atenção, Grupo {session.team_group}!</h2><p className="text-sm">Sua próxima aula: <strong>{upcomingActivity.date}</strong> - {upcomingActivity.title}</p></div>
-                      <button onClick={()=>{setCurrentView('circuito');setCircuitMode('plan');}} className="w-full sm:w-auto bg-white text-emerald-600 px-4 py-2 font-bold rounded-lg shadow-sm">Planejar Aula</button>
+                    <div className="bg-emerald-500 p-6 sm:p-8 rounded-[2rem] text-white shadow-[0_15px_30px_-10px_rgba(16,185,129,0.4)] relative overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-6 hover-lift border border-emerald-400">
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blob-shape rotate-45 mix-blend-overlay"></div>
+                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shrink-0 border border-white/30 text-3xl"><i className="fa-solid fa-bell animate-bounce"></i></div>
+                      <div className="text-center md:text-left relative z-10 flex-1">
+                        <h2 className="text-xl sm:text-2xl font-black mb-1">Atenção, {session.team_group}! É a vez de vocês!</h2>
+                        <p className="text-emerald-50 font-semibold mb-3">A agenda indica que o seu grupo está responsável pela próxima aula na quadra.</p>
+                        <div className="bg-white/10 p-4 rounded-xl border border-white/20 inline-block text-left w-full sm:w-auto">
+                          <p className="text-sm"><strong className="uppercase tracking-widest text-[10px] text-emerald-200 block mb-1">Data e Tema</strong></p>
+                          <p className="font-bold">{upcomingActivity.date} — {upcomingActivity.title}</p>
+                        </div>
+                      </div>
+                      <button onClick={() => handleNavClick('circuito', 'plan')} className="w-full md:w-auto px-6 py-3 bg-white text-emerald-600 font-black rounded-xl shadow-sm hover:bg-emerald-50 transition-colors relative z-10 mt-4 md:mt-0 self-center">Planejar Aula Agora</button>
                     </div>
                   )}
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-                      <h3 className="font-black text-lg mb-4 border-b pb-2">Mural de Avisos da Coordenação</h3>
-                      {isAdmin && ( <form onSubmit={handlePostAnnouncement} className="flex gap-2 mb-6"><input value={newAnnouncement.title} onChange={e=>setNewAnnouncement({...newAnnouncement, title:e.target.value})} placeholder="Aviso..." className="flex-1 p-2 bg-slate-50 border rounded-lg text-sm" required /><button className="bg-brand-blue text-white px-4 rounded-lg font-bold text-sm">+</button></form> )}
-                      <div className="space-y-3">
-                        {announcements.map(a => (<div key={a.id} className="p-4 bg-slate-50 rounded-xl relative">{isAdmin && <button onClick={()=>handleDeleteAnnouncement(a.id)} className="absolute top-3 right-3 text-rose-500"><i className="fa-solid fa-trash"></i></button>}<p className="font-bold text-slate-800">{a.title}</p><p className="text-sm text-slate-600">{a.content}</p></div>))}
+
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    {/* Coluna Esquerda (Mural de Avisos) */}
+                    <div className="lg:col-span-2 space-y-6">
+                      <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
+                        <div className="w-10 h-10 bg-brand-red/10 text-brand-red rounded-xl flex items-center justify-center text-lg"><i className="fa-solid fa-bullhorn"></i></div>
+                        <h2 className="text-xl font-black text-slate-800">Mural de Avisos da Coordenação</h2>
+                      </div>
+
+                      {/* Criar Aviso (Somente Admin) */}
+                      {isAdmin && (
+                        <div className="bg-white p-5 rounded-3xl border border-dashed border-slate-300 mb-6">
+                          <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Postar Novo Aviso / Link de Reunião</p>
+                          <form onSubmit={handlePostAnnouncement} className="space-y-3">
+                            <input type="text" placeholder="Título (Ex: Reunião Geral Quarta-feira)" value={newAnnouncement.title} onChange={e=>setNewAnnouncement({...newAnnouncement, title: e.target.value})} required className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white outline-none text-sm font-bold" />
+                            <textarea placeholder="Mensagem..." value={newAnnouncement.content} onChange={e=>setNewAnnouncement({...newAnnouncement, content: e.target.value})} required className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white outline-none text-sm font-medium" rows="2"></textarea>
+                            <div className="flex flex-col sm:flex-row gap-3">
+                              <input type="url" placeholder="Link (Ex: Zoom, Meet, Drive) Opcional" value={newAnnouncement.link_url} onChange={e=>setNewAnnouncement({...newAnnouncement, link_url: e.target.value})} className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white outline-none text-sm font-semibold" />
+                              <button type="submit" disabled={isPostingAviso} className="px-6 py-2.5 bg-brand-blue text-white font-bold rounded-xl hover:bg-brand-dark transition-colors">{isPostingAviso ? 'Postando...' : 'Postar Aviso'}</button>
+                            </div>
+                          </form>
+                        </div>
+                      )}
+
+                      {/* Lista de Avisos */}
+                      <div className="space-y-4">
+                        {announcements.length === 0 ? (
+                          <div className="text-center py-10 bg-white rounded-3xl border border-slate-100 text-slate-400 text-sm font-medium">Nenhum aviso no momento.</div>
+                        ) : (
+                          announcements.map(aviso => {
+                            const date = new Date(aviso.created_at).toLocaleDateString('pt-BR', {day:'2-digit', month:'short'});
+                            return (
+                              <div key={aviso.id} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative group">
+                                {isAdmin && <button onClick={() => handleDeleteAnnouncement(aviso.id)} className="absolute top-4 right-4 text-slate-300 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"><i className="fa-solid fa-trash"></i></button>}
+                                <div className="flex items-start gap-4">
+                                  <div className="w-12 h-12 bg-blue-50 text-brand-blue rounded-full flex flex-col items-center justify-center shrink-0 border border-blue-100"><span className="text-[10px] uppercase font-black">{date.split(' ')[2]}</span><span className="text-lg font-black leading-none">{date.split(' ')[0]}</span></div>
+                                  <div>
+                                    <h3 className="text-base font-black text-slate-800 mb-1">{aviso.title}</h3>
+                                    <p className="text-sm text-slate-600 whitespace-pre-line mb-3">{aviso.content}</p>
+                                    {aviso.link_url && <a href={aviso.link_url} target="_blank" className="inline-flex items-center gap-2 text-xs font-bold text-white bg-brand-red px-4 py-2 rounded-lg hover:bg-brand-redDark transition-colors"><i className="fa-solid fa-link"></i> Acessar Link Externo</a>}
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          })
+                        )}
                       </div>
                     </div>
-                    <div className="space-y-4">
-                      <div className="bg-white p-6 rounded-3xl shadow-sm flex items-center gap-4"><div className="text-3xl text-sky-500"><i className="fa-solid fa-dumbbell"></i></div><div><p className="text-2xl font-black">{approvedExercises.length}</p><p className="text-xs text-slate-500 font-bold uppercase">Exercícios</p></div></div>
-                      <div className="bg-white p-6 rounded-3xl shadow-sm flex items-center gap-4"><div className="text-3xl text-emerald-500"><i className="fa-solid fa-calendar-check"></i></div><div><p className="text-2xl font-black">{savedCircuits.length}</p><p className="text-xs text-slate-500 font-bold uppercase">Aulas</p></div></div>
+
+                    {/* Coluna Direita (Estatísticas Rápidas) */}
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
+                        <div className="w-10 h-10 bg-slate-200 text-slate-500 rounded-xl flex items-center justify-center text-lg"><i className="fa-solid fa-chart-simple"></i></div>
+                        <h2 className="text-xl font-black text-slate-800">Estatísticas</h2>
+                      </div>
+                      
+                      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5 hover-lift">
+                        <div className="w-16 h-16 rounded-full bg-sky-50 text-sky-500 flex items-center justify-center text-3xl shadow-inner shrink-0"><i className="fa-solid fa-dumbbell"></i></div>
+                        <div><p className="text-4xl font-black text-slate-800">{approvedExercises.length}</p><p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Exercícios Acervo</p></div>
+                      </div>
+                      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5 hover-lift">
+                        <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center text-3xl shadow-inner shrink-0"><i className="fa-regular fa-calendar-check"></i></div>
+                        <div><p className="text-4xl font-black text-slate-800">{savedCircuits.length}</p><p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Aulas Realizadas</p></div>
+                      </div>
+                      {isAdmin && (
+                        <div className="bg-white p-6 rounded-3xl border border-amber-200 shadow-sm flex items-center gap-5 relative overflow-hidden bg-amber-50/30 hover-lift cursor-pointer" onClick={() => handleNavClick('aprovacoes')}>
+                          <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-inner shrink-0 ${pendingCount > 0 ? 'bg-amber-500 text-white shadow-amber-500/30' : 'bg-slate-200 text-slate-400'}`}><i className="fa-solid fa-clock-rotate-left"></i></div>
+                          <div><p className="text-4xl font-black text-slate-800">{pendingCount}</p><p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Exercícios Pendentes</p></div>
+                        </div>
+                      )}
                     </div>
+
                   </div>
                 </div>
               )}
 
-              {currentView === 'library' && (
-                <div className="max-w-6xl mx-auto">
-                  <div className="mb-6 flex gap-2 overflow-x-auto p-1"><button onClick={()=>setFilterCat('all')} className={`px-4 py-2 rounded-full text-xs font-bold ${filterCat==='all'?'bg-slate-800 text-white':'bg-white shadow-sm border'}`}>Todos</button>{Object.keys(CATEGORIES).map(k=><button key={k} onClick={()=>setFilterCat(k)} className={`px-4 py-2 rounded-full text-xs font-bold ${filterCat===k?'bg-brand-blue text-white':'bg-white shadow-sm border'}`}>{CATEGORIES[k].shortTitle}</button>)}</div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {filteredExercises.map(ex => (
-                      <div key={ex.id} className="bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer border hover:border-brand-blue transition flex flex-col" onClick={()=>{setSelectedExercise(ex);setCurrentView('detail');}}>
-                        <div className="h-32 bg-slate-100 flex items-center justify-center text-slate-300 text-3xl">{(ex.mediaUrl||ex.videoUrl)?(ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|webp)/i)?<img src={ex.mediaUrl} className="w-full h-full object-cover"/>:<i className="fa-solid fa-play text-brand-red"></i>):<i className="fa-solid fa-dumbbell"></i>}</div>
-                        <div className="p-4 flex-1 flex flex-col"><span className="text-[9px] uppercase font-black text-brand-red bg-red-50 inline-block self-start px-2 py-1 rounded">{ex.muscleGroup}</span><h3 className="font-bold text-sm leading-tight mt-2 line-clamp-2">{ex.title}</h3></div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {currentView === 'detail' && selectedExercise && (
-                <div className="max-w-3xl mx-auto bg-white rounded-3xl overflow-hidden shadow-md">
-                   <div className="p-6 border-b flex justify-between"><button onClick={()=>setCurrentView('library')} className="font-bold text-slate-500"><i className="fa-solid fa-arrow-left"></i> Voltar</button>{isAdmin && <button onClick={()=>handleDeleteExercise(selectedExercise.id)} className="text-rose-500"><i className="fa-solid fa-trash"></i> Remover</button>}</div>
-                   <div className="p-6 bg-slate-50"><h1 className="text-2xl font-black">{selectedExercise.title}</h1><p className="text-xs font-bold text-brand-red uppercase mt-1">{selectedExercise.muscleGroup}</p></div>
-                   <div className="aspect-video bg-black flex items-center justify-center">
-                      {(selectedExercise.mediaUrl || selectedExercise.videoUrl) ? (
-                         getYouTubeId(selectedExercise.videoUrl) ? <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${getYouTubeId(selectedExercise.videoUrl)}`} frameBorder="0" allowFullScreen></iframe> :
-                         selectedExercise.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i) ? <video src={selectedExercise.mediaUrl} controls className="w-full h-full object-contain"></video> : <img src={selectedExercise.mediaUrl} className="w-full h-full object-contain"/>
-                      ) : <span className="text-white">Sem mídia</span>}
-                   </div>
-                   <div className="p-6 space-y-4">
-                      <p><strong>Equipamento:</strong> {selectedExercise.equipment}</p>
-                      <p><strong>Dosagem:</strong> {selectedExercise.dosage}</p>
-                      <div><strong>Passo a Passo:</strong><p className="bg-slate-50 p-4 rounded-xl text-sm whitespace-pre-line mt-2">{selectedExercise.instructions}</p></div>
-                      {selectedExercise.precautions && <div><strong className="text-amber-600">Precauções:</strong><p className="bg-amber-50 text-amber-900 p-4 rounded-xl text-sm whitespace-pre-line mt-2">{selectedExercise.precautions}</p></div>}
-                   </div>
-                </div>
-              )}
-
-              {currentView === 'cadastro' && (
-                <div className="max-w-3xl mx-auto bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100">
-                  <h2 className="text-2xl font-black mb-6 border-b pb-4">Cadastrar Exercício</h2>
-                  {formStatus.success ? <div className="text-center p-10"><i className="fa-solid fa-check-circle text-5xl text-emerald-500 mb-4"></i><h3 className="font-bold text-xl">Enviado para aprovação!</h3><button onClick={()=>setFormStatus({success:false})} className="mt-4 bg-brand-blue text-white px-6 py-2 rounded-xl">Novo Cadastro</button></div> : 
-                  <form onSubmit={handleFormSubmit} className="space-y-4">
-                    <input type="text" placeholder="Título" value={formData.title} onChange={e=>setFormData({...formData,title:e.target.value})} required className="w-full p-3 bg-slate-50 rounded-xl outline-none font-bold"/>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <select required value={formCat} onChange={e=>{setFormCat(e.target.value);setFormMuscleSelect('');}} className="p-3 bg-slate-50 rounded-xl outline-none"><option value="">Categoria...</option>{Object.keys(CATEGORIES).map(k=><option key={k} value={k}>{CATEGORIES[k].title}</option>)}</select>
-                      <select required value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} disabled={!formCat} className="p-3 bg-slate-50 rounded-xl outline-none"><option value="">Foco...</option>{formCat && CATEGORIES[formCat].subgroups.map(s=><option key={s} value={s}>{s}</option>)}</select>
-                    </div>
-                    {formMuscleSelect==='Outro' && <input type="text" placeholder="Qual músculo?" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className="w-full p-3 bg-red-50 rounded-xl outline-none"/>}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <input type="text" placeholder="Dosagem (Ex: 3x10)" value={formData.dosage} onChange={e=>setFormData({...formData,dosage:e.target.value})} required className="p-3 bg-slate-50 rounded-xl outline-none"/>
-                      <input type="text" placeholder="Equipamento" value={formData.equipment} onChange={e=>setFormData({...formData,equipment:e.target.value})} className="p-3 bg-slate-50 rounded-xl outline-none"/>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <input type="url" placeholder="Link YouTube" value={formData.videoUrl} onChange={e=>setFormData({...formData,videoUrl:e.target.value})} className="p-3 bg-slate-50 rounded-xl outline-none"/>
-                      <input type="file" accept="image/*,video/*" onChange={e=>setMediaFile(e.target.files[0])} className="p-3 bg-blue-50 text-xs rounded-xl"/>
-                    </div>
-                    <textarea rows="4" placeholder="Passo a Passo..." value={formData.instructions} onChange={e=>setFormData({...formData,instructions:e.target.value})} required className="w-full p-3 bg-slate-50 rounded-xl outline-none"></textarea>
-                    <textarea rows="2" placeholder="Precauções..." value={formData.precautions} onChange={e=>setFormData({...formData,precautions:e.target.value})} className="w-full p-3 bg-amber-50 rounded-xl outline-none"></textarea>
-                    <button type="submit" disabled={formStatus.loading} className="w-full bg-brand-red text-white font-black py-4 rounded-xl">{formStatus.loading?'Enviando...':'Enviar Exercício'}</button>
-                  </form>}
-                </div>
-              )}
-
-              {currentView === 'aprovacoes' && isAdmin && (
-                <div className="max-w-3xl mx-auto space-y-4">
-                  <h2 className="text-2xl font-black mb-6">Fila de Aprovação</h2>
-                  {exercises.filter(ex=>ex.status==='pending').map(ex => (
-                    <div key={ex.id} className="bg-white p-5 rounded-2xl shadow-sm border flex flex-col sm:flex-row justify-between items-center gap-4">
-                      <div><p className="text-[10px] uppercase font-bold text-amber-500">Por: {ex.author}</p><h3 className="font-black text-lg">{ex.title}</h3></div>
-                      <div className="flex gap-2 w-full sm:w-auto"><button onClick={()=>{setSelectedExercise(ex);setCurrentView('detail');}} className="flex-1 sm:flex-none px-3 py-2 bg-slate-100 rounded-lg text-xs font-bold">Ver</button><button onClick={()=>handleApprove(ex.id)} className="flex-1 sm:flex-none px-3 py-2 bg-emerald-100 text-emerald-600 rounded-lg text-xs font-bold">Aprovar</button><button onClick={()=>handleReject(ex.id)} className="flex-1 sm:flex-none px-3 py-2 bg-rose-100 text-rose-600 rounded-lg text-xs font-bold">Recusar</button></div>
-                    </div>
-                  ))}
-                  {pendingCount === 0 && <p className="text-center text-slate-400">Nenhum exercício pendente.</p>}
-                </div>
-              )}
-
+              {/* === TELA: AULAS E RELATÓRIOS === */}
               {currentView === 'circuito' && (
-                <div className="max-w-5xl mx-auto">
-                  <div className="flex gap-2 p-1 bg-white rounded-full mb-6 w-max mx-auto shadow-sm border overflow-x-auto max-w-full">
-                    <button onClick={()=>setCircuitMode('agenda')} className={`px-4 sm:px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap ${circuitMode==='agenda'?'bg-slate-800 text-white':''}`}>Agenda</button>
-                    <button onClick={startPlanning} className={`px-4 sm:px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap ${circuitMode==='plan'?'bg-emerald-500 text-white':''}`}>Planejar</button>
-                    <button onClick={()=>setCircuitMode('history')} className={`px-4 sm:px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap ${circuitMode==='history'||circuitMode==='view'||circuitMode==='report_edit'?'bg-brand-blue text-white':''}`}>Diário Clínico</button>
+                <div className="max-w-5xl mx-auto space-y-6">
+                  
+                  {/* Navegação em Pílulas */}
+                  <div className="flex gap-2 sm:gap-3 p-2 bg-white rounded-full shadow-sm border border-slate-200 overflow-x-auto no-scrollbar relative w-max max-w-full">
+                    <button onClick={() => setCircuitMode('agenda')} className={`px-5 sm:px-6 py-3 rounded-full text-xs sm:text-sm font-extrabold transition-all whitespace-nowrap ${circuitMode === 'agenda' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-500 hover:bg-slate-100'}`}><i className="fa-regular fa-calendar-days mr-2"></i> Cronograma</button>
+                    <button onClick={startPlanning} className={`px-5 sm:px-6 py-3 rounded-full text-xs sm:text-sm font-extrabold transition-all whitespace-nowrap ${circuitMode === 'plan' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20' : 'text-slate-500 hover:bg-slate-100'}`}><i className="fa-solid fa-route mr-2"></i> Planejar Aula</button>
+                    <button onClick={() => setCircuitMode('history')} className={`px-5 sm:px-6 py-3 rounded-full text-xs sm:text-sm font-extrabold transition-all whitespace-nowrap ${circuitMode === 'history' || circuitMode === 'view' || circuitMode === 'report_edit' ? 'bg-brand-blue text-white shadow-md shadow-brand-blue/20' : 'text-slate-500 hover:bg-slate-100'}`}><i className="fa-solid fa-folder-open mr-2"></i> Histórico de PDF</button>
                   </div>
 
                   {circuitMode === 'agenda' && (
-                    <div className="bg-white rounded-3xl shadow-sm p-4 sm:p-6 overflow-x-auto"><table className="w-full text-sm text-left"><thead className="bg-slate-50 uppercase text-[10px]"><tr><th className="p-3 sm:p-4">Data</th><th className="p-3 sm:p-4">Tema</th></tr></thead><tbody>{AGENDA_DATA.map((item,i)=><tr key={i} className="border-b"><td className="p-3 sm:p-4 font-bold whitespace-nowrap">{item.date}</td><td className="p-3 sm:p-4">{item.title}<br/><span className="text-[10px] text-slate-400">{item.resp}</span></td></tr>)}</tbody></table></div>
+                    <div className="animate-fade-in bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+                      <div className="bg-slate-50 p-6 sm:p-8 border-b border-slate-100 flex items-center gap-4">
+                        <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-slate-400 text-xl shrink-0"><i className="fa-solid fa-calendar-check"></i></div>
+                        <div><h2 className="text-xl font-black text-slate-800">Resumo Semestral 2026.2</h2><p className="text-slate-500 text-sm font-medium">Cronograma de atividades na quadra.</p></div>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm text-left">
+                          <thead className="bg-white text-slate-400 font-extrabold uppercase text-[10px] tracking-widest border-b border-slate-100">
+                            <tr><th className="px-6 py-5">Ativ.</th><th className="px-6 py-5">Data</th><th className="px-6 py-5">Tema & Responsáveis</th></tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-50">
+                            {AGENDA_DATA.map((item, idx) => (
+                              <tr key={idx} className={`hover:bg-slate-50 transition-colors ${item === upcomingActivity ? 'bg-emerald-50/50' : ''}`}>
+                                <td className="px-6 py-5 font-black text-slate-800 text-lg w-16">{item.act}</td>
+                                <td className="px-6 py-5 font-black text-emerald-600 whitespace-nowrap w-32">{item.date}</td>
+                                <td className="px-6 py-5"><p className="font-bold text-slate-700 mb-1">{item.title}</p><p className="text-xs font-semibold text-slate-400 bg-white border border-slate-200 px-3 py-1 rounded-lg inline-block shadow-sm"><i className="fa-solid fa-users text-slate-300 mr-1"></i> {item.resp}</p></td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   )}
 
+                  {/* ABA: PLANEJAR ATIVIDADE */}
                   {circuitMode === 'plan' && (
-                    <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm space-y-6">
-                      <h2 className="text-xl font-black border-b pb-4">Planejar Aula</h2>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4"><input type="text" placeholder="Nº (Ex: 39)" value={planDetails.activityNum} onChange={e=>setPlanDetails({...planDetails,activityNum:e.target.value})} className="p-3 bg-slate-50 rounded-xl" /><input type="date" value={planDetails.date} onChange={e=>setPlanDetails({...planDetails,date:e.target.value})} className="p-3 bg-slate-50 rounded-xl" /><select value={planDetails.theme} onChange={e=>setPlanDetails({...planDetails,theme:e.target.value})} className="p-3 bg-slate-50 rounded-xl"><option value="">Tema...</option><option value="EXERCÍCIOS DE DUPLA TAREFA">Dupla Tarefa</option><option value="MOBILIDADE MMSS">Mobilidade MMSS</option><option value="MOBILIDADE MMII">Mobilidade MMII</option><option value="AERÓBICOS">Aeróbicos</option><option value="OUTRA">Outra</option></select></div>
-                      <input type="text" placeholder="Responsáveis pela Aula" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails,students:e.target.value})} className="w-full p-3 bg-slate-50 rounded-xl" />
-                      
-                      <div className="pt-6 border-t">
-                        <textarea placeholder="Aquecimento Coletivo" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails,warmUp:e.target.value})} className="w-full p-3 bg-slate-50 rounded-xl mb-4"></textarea>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {circuit.map((st, i) => (
-                            <div key={i} className="border rounded-xl p-4 bg-slate-50"><p className="font-black mb-2">Estação {i+1}</p><input placeholder="Responsável" value={planDetails.stationResponsibles[i]} onChange={e=>{let a=[...planDetails.stationResponsibles];a[i]=e.target.value;setPlanDetails({...planDetails,stationResponsibles:a})}} className="w-full p-2 text-xs mb-2 rounded border outline-none"/>
-                              {st.map(ex=><div key={ex.id} className="flex justify-between items-center text-xs bg-white p-2 border mb-1 rounded"><span className="truncate pr-2">{ex.title}</span><button onClick={()=>removeFromCircuit(i,ex.id)} className="text-rose-500"><i className="fa-solid fa-x"></i></button></div>)}
-                              <select onChange={e=>addToCircuit(i,e.target.value)} className="w-full p-2 text-xs bg-white border mt-2 outline-none"><option value="">+ Exercício</option>{approvedExercises.map(e=><option key={e.id} value={e.id}>{e.title}</option>)}</select>
-                            </div>
-                          ))}
+                    <div className="space-y-6 animate-fade-in pb-12">
+                      <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-10">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-6 gap-4">
+                          <div><h2 className="text-2xl font-black text-slate-800 flex items-center gap-3"><i className="fa-solid fa-route text-emerald-500 bg-emerald-50 w-10 h-10 rounded-xl flex items-center justify-center"></i> Ficha de Planejamento da Aula</h2><p className="text-sm font-semibold text-slate-500 mt-2">Defina os exercícios e responsáveis antes de ir para a quadra.</p></div>
                         </div>
-                        <textarea placeholder="Desaquecimento" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails,coolDown:e.target.value})} className="w-full p-3 bg-slate-50 rounded-xl mt-4"></textarea>
+                        
+                        <div className="space-y-5">
+                          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Informações da Atividade</h3>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Número da Ativ.</label><input type="text" value={planDetails.activityNum} onChange={e=>setPlanDetails({...planDetails, activityNum: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm transition-all font-semibold" placeholder="Ex: 39" /></div>
+                            <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Data da Ativ.</label><input type="date" value={planDetails.date} onChange={e=>setPlanDetails({...planDetails, date: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm transition-all font-semibold text-slate-700" /></div>
+                            <div>
+                              <label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Tema Principal</label>
+                              <select value={planDetails.theme} onChange={e=>setPlanDetails({...planDetails, theme: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm transition-all font-semibold text-slate-700">
+                                <option value="">Selecione...</option><option value="EXERCÍCIOS DE DUPLA TAREFA">Dupla Tarefa</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMSS E TRONCO">Mobilidade/Fortalecimento MMSS</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMII">Mobilidade/Fortalecimento MMII</option><option value="EXERCÍCIOS AERÓBICOS E CONDICIONAMENTO CARDIORRESPIRATÓRIO">Aeróbicos e Condicionamento</option><option value="OUTRA ATIVIDADE">Outra (Gincana/Avaliação)</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Discentes Responsáveis Pela Aula</label><input type="text" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails, students: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm transition-all font-semibold text-slate-700" placeholder="Ex: Francyellen, Sarah, Raissa..." /></div>
+                        </div>
+
+                        <div className="space-y-6 pt-8 border-t border-slate-100">
+                          <div className="flex items-center gap-3 mb-6"><div className="w-10 h-10 bg-brand-red/10 text-brand-red rounded-xl flex items-center justify-center text-lg"><i className="fa-solid fa-map-location-dot"></i></div><div><h3 className="text-base font-black text-slate-800">Montagem do Circuito</h3><p className="text-xs font-semibold text-slate-400">Distribua os exercícios e responsáveis.</p></div></div>
+                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Descreva o Aquecimento Coletivo</label><textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm font-medium transition-all" placeholder="Ex: Dança funcional e alongamento..."></textarea></div>
+                          
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                            {circuit.map((stationExercises, index) => (
+                              <div key={index} className="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden flex flex-col hover-lift">
+                                <div className={`p-4 sm:p-5 flex items-center gap-4 ${index === 4 ? 'bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100' : 'bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-100'}`}>
+                                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black shadow-inner ${index === 4 ? 'bg-amber-500 text-white' : 'bg-emerald-500 text-white'}`}>{index + 1}</div>
+                                  <div><h4 className={`text-sm font-black uppercase tracking-widest ${index === 4 ? 'text-amber-800' : 'text-emerald-800'}`}>Estação {index + 1}</h4>{index === 4 && <p className="text-[10px] font-bold text-amber-600">Circuito Funcional</p>}</div>
+                                </div>
+                                <div className="p-5 flex flex-col gap-4 bg-white/50">
+                                  <div><label className="block text-[10px] font-extrabold text-slate-400 uppercase mb-1.5 pl-1">Monitores Responsáveis</label><input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => updateStationResponsible(index, e.target.value)} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 outline-none text-sm bg-slate-50 focus:bg-white transition-colors font-semibold" placeholder="Nome dos monitores..." /></div>
+                                  <div className="space-y-2">
+                                    {stationExercises.map(ex => (
+                                      <div key={ex.id} className="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm relative overflow-hidden group">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-brand-red rounded-l-xl"></div>
+                                        <div className="pl-3 pr-2 w-full"><h3 className="font-bold text-slate-700 text-sm leading-tight truncate" title={ex.title}>{ex.title}</h3><p className="text-[10px] font-bold text-slate-400 mt-0.5"><i className="fa-solid fa-clock-rotate-left"></i> {ex.dosage}</p></div>
+                                        <button onClick={() => removeFromCircuit(index, ex.id)} className="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors shrink-0"><i className="fa-solid fa-trash text-xs"></i></button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                  <select value="" onChange={(e) => addToCircuit(index, e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-slate-100 focus:border-emerald-500 outline-none text-xs font-extrabold text-slate-500 cursor-pointer transition-colors mt-auto">
+                                    <option value="">+ Vincular exercício da biblioteca...</option>
+                                    {approvedExercises.map(ex => ( <option key={ex.id} value={ex.id}>[{ex.muscleGroup}] {ex.title}</option> ))}
+                                  </select>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2 mt-6">Descreva o Desaquecimento</label><textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm font-medium transition-all" placeholder="Relaxamento, roda de conversa..."></textarea></div>
+                        </div>
+
+                        <div className="pt-8 border-t border-slate-100 flex justify-end">
+                          <button onClick={handleSavePlan} className="w-full sm:w-auto px-10 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-2xl shadow-[0_8px_20px_-6px_rgba(16,185,129,0.4)] transition-all hover:-translate-y-1 text-base flex items-center justify-center gap-2"><i className="fa-solid fa-check-to-slot"></i> Concluir Planejamento</button>
+                        </div>
                       </div>
-                      <button onClick={handleSavePlan} className="w-full bg-emerald-500 text-white font-black py-4 rounded-xl">Salvar Planejamento</button>
                     </div>
                   )}
 
+                  {/* ABA: PREENCHER RELATÓRIO PÓS-AULA */}
                   {circuitMode === 'report_edit' && viewingCircuit && (
-                    <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm space-y-6">
-                      <h2 className="text-xl font-black border-b pb-4">Preencher Pós-Aula</h2>
-                      
-                      <div className="bg-slate-50 p-4 rounded-xl border">
-                        <div className="flex justify-between items-center mb-4"><h3 className="font-bold">Sinais Vitais e Presença</h3><button onClick={handleAddParticipant} className="text-[10px] sm:text-xs bg-brand-blue text-white px-3 py-1 rounded">Novo Idoso</button></div>
-                        <div className="max-h-80 overflow-y-auto space-y-2 pr-2">
-                          {planDetails.attendanceList.map((p, i) => (
-                            <div key={p.id} className="p-3 bg-white border rounded-xl"><label className="flex items-center gap-2 font-bold cursor-pointer"><input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="w-5 h-5"/>{p.name}</label>
-                              {p.present && <div className="mt-2 grid grid-cols-3 gap-2"><input placeholder="FC I/F" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="text-xs p-1.5 border text-center rounded"/><input placeholder="SpO2 I/F" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="text-xs p-1.5 border text-center rounded"/><input placeholder="PA I/F" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="text-xs p-1.5 border text-center rounded"/></div>}
-                            </div>
-                          ))}
+                    <div className="space-y-6 animate-fade-in pb-12">
+                      <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-10 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue/5 rounded-bl-full pointer-events-none"></div>
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-6 gap-4 relative z-10">
+                          <div><h2 className="text-2xl font-black text-slate-800 flex items-center gap-3"><i className="fa-solid fa-pen-to-square text-brand-blue bg-blue-50 w-10 h-10 rounded-xl flex items-center justify-center"></i> Preenchimento Pós-Aula</h2><p className="text-sm font-semibold text-slate-500 mt-2">Relatório Oficial da Atividade {planDetails.activityNum} - {planDetails.theme}</p></div>
+                          <button onClick={() => setCircuitMode('view')} className="w-10 h-10 bg-slate-100 hover:bg-rose-100 text-slate-500 hover:text-rose-500 rounded-full flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark"></i></button>
+                        </div>
+                        
+                        <div className="space-y-5 relative z-10">
+                           <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Objetivos e Recursos</h3>
+                           <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Objetivos da Atividade</label><textarea rows="3" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm font-medium transition-all" placeholder="Promover o desenvolvimento das capacidades..."></textarea></div>
+                           <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Atividades Propostas (Itens)</label><textarea rows="2" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm font-medium transition-all" placeholder="Ativ 1: Aquecimento..."></textarea></div>
+                           <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Materiais Utilizados na Quadra</label><textarea rows="2" value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails, materials: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm font-medium transition-all" placeholder="Cones, argolas..."></textarea></div>
+                        </div>
+
+                        <div className="space-y-5 relative z-10">
+                          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Organização Operacional</h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50/50 p-6 rounded-[2rem] border border-slate-100">
+                            <div><label className="block text-xs font-extrabold text-slate-500 mb-2 pl-2">Responsáveis pelos Sinais Vitais</label><input type="text" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails, vitalSigns: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-semibold" /></div>
+                            <div><label className="block text-xs font-extrabold text-slate-500 mb-2 pl-2">Responsáveis pelo Som e Fotos</label><input type="text" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails, soundAndPhotos: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-semibold" /></div>
+                            <div className="md:col-span-2"><label className="block text-xs font-extrabold text-slate-500 mb-2 pl-2">Participantes com cuidados especiais nas estações</label><input type="text" value={planDetails.specialCare} onChange={e=>setPlanDetails({...planDetails, specialCare: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-semibold" placeholder="Detalhes..." /></div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-5 relative z-10">
+                          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Relato da Atividade</h3>
+                          <div><label className="block text-xs font-black text-brand-blue mb-2 pl-2">Texto Narrativo do Desenvolvimento</label><textarea rows="6" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-5 rounded-2xl bg-blue-50/30 border border-brand-blue/20 focus:bg-white focus:border-brand-blue outline-none text-sm leading-relaxed transition-all font-medium text-slate-700 shadow-inner" placeholder="Escreva detalhadamente como aconteceu a aula..."></textarea></div>
+                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Resultados Obtidos</label><textarea rows="3" value={planDetails.resultObtained} onChange={e=>setPlanDetails({...planDetails, resultObtained: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm font-medium transition-all"></textarea></div>
+                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Quantitativo Final de Idosos Presentes</label><input type="text" value={planDetails.attendanceCount} onChange={e=>setPlanDetails({...planDetails, attendanceCount: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold text-slate-700" placeholder="Ex: 32 pessoas idosas" /></div>
+                        </div>
+
+                        <div className="pt-8 border-t border-slate-100 flex justify-end relative z-10">
+                          <button onClick={handleUpdateReport} className="w-full sm:w-auto px-10 py-4 bg-brand-blue hover:bg-brand-dark text-white font-black rounded-2xl shadow-[0_8px_20px_-6px_rgba(32,43,92,0.4)] transition-all hover:-translate-y-1 text-base flex items-center justify-center gap-2"><i className="fa-solid fa-file-pdf"></i> Salvar e Gerar Relatório</button>
                         </div>
                       </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"><textarea placeholder="Objetivos..." value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails,objectives:e.target.value})} className="p-3 border rounded-xl outline-none"></textarea><textarea placeholder="Materiais..." value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails,materials:e.target.value})} className="p-3 border rounded-xl outline-none"></textarea></div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"><input placeholder="Resp. Sinais Vitais" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails,vitalSigns:e.target.value})} className="p-3 border rounded-xl outline-none" /><input placeholder="Resp. Som/Fotos" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails,soundAndPhotos:e.target.value})} className="p-3 border rounded-xl outline-none" /></div>
-                      <textarea rows="4" placeholder="Relato Narrativo da Dinâmica..." value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails,developmentNarrative:e.target.value})} className="w-full p-3 border rounded-xl outline-none"></textarea>
-                      <textarea rows="3" placeholder="Evolução Clínica / Intercorrências..." value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails,dailyEvolution:e.target.value})} className="w-full p-3 border rounded-xl bg-amber-50 outline-none font-bold text-amber-900"></textarea>
-                      
-                      <div className="flex flex-col sm:flex-row gap-4"><button onClick={()=>setCircuitMode('view')} className="px-6 py-3 border font-bold rounded-xl w-full sm:w-auto">Cancelar</button><button onClick={handleUpdateReport} className="flex-1 bg-brand-blue text-white font-black rounded-xl py-3 shadow-md">Salvar Diário Clínico</button></div>
                     </div>
                   )}
 
+                  {/* ABA: HISTÓRICO / ESTADO VAZIO */}
                   {circuitMode === 'history' && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {savedCircuits.map(c => (
-                        <div key={c.id} className="bg-white p-5 sm:p-6 rounded-2xl border shadow-sm cursor-pointer hover:border-brand-blue" onClick={()=>{setViewingCircuit(c);setCircuitMode('view');}}>
-                          <span className="text-[10px] font-black bg-slate-100 px-2 py-1 rounded-full">{c.activity_date}</span>
-                          <h3 className="font-black mt-3">Ativ. {c.details?.activityNum}</h3><p className="text-xs text-slate-500 truncate">{c.details?.theme}</p>
-                          {c.details?.resultObtained && <span className="text-[10px] text-emerald-500 font-bold mt-2 block"><i className="fa-solid fa-check"></i> Relatório Preenchido</span>}
+                    <div className="animate-fade-in">
+                      {savedCircuits.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-[3rem] border border-slate-100 shadow-sm px-6"><div className="w-32 h-32 rounded-full bg-blue-50 flex items-center justify-center mb-6 relative"><div className="absolute inset-0 bg-brand-blue/10 animate-ping rounded-full"></div><i className="fa-solid fa-folder-open text-5xl text-brand-blue relative z-10"></i></div><h3 className="text-2xl font-black text-slate-800 mb-2 tracking-tight">O histórico está limpo</h3><p className="text-slate-500 font-medium max-w-sm mx-auto">Vá na aba "Planejar Aula" para criar o primeiro registro e começar a preencher a biblioteca de aulas!</p></div>
+                      ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {savedCircuits.map(circ => {
+                            const isComplete = circ.details?.resultObtained;
+                            return (
+                              <div key={circ.id} className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm hover-lift cursor-pointer flex flex-col group relative overflow-hidden" onClick={() => {setViewingCircuit(circ); setCircuitMode('view');}}>
+                                <div className={`absolute top-0 left-0 w-full h-1.5 ${isComplete ? 'bg-brand-blue' : 'bg-emerald-400'}`}></div>
+                                <div className="flex justify-between items-start mb-5"><div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-inner ${isComplete ? 'bg-blue-50 text-brand-blue' : 'bg-emerald-50 text-emerald-500'}`}><i className={`fa-solid ${isComplete ? 'fa-file-signature' : 'fa-calendar-day'}`}></i></div><span className="text-[10px] font-black text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full tracking-widest">{circ.activity_date.split('-').reverse().join('/')}</span></div>
+                                <h3 className="text-lg font-black text-slate-800 mb-1 leading-tight group-hover:text-brand-blue transition-colors">Atividade {circ.details?.activityNum || '-'}</h3><p className="text-xs font-bold text-slate-400 mb-6 line-clamp-2 leading-relaxed">{circ.details?.theme || 'Tema não informado'}</p>
+                                <button className={`mt-auto pt-5 border-t border-slate-50 text-xs uppercase tracking-widest font-black flex items-center gap-2 ${isComplete ? 'text-brand-blue' : 'text-emerald-500'}`}>{isComplete ? 'Ver Relatório PDF' : 'Preencher Pós-Aula'} <i className="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i></button>
+                              </div>
+                            )
+                          })}
                         </div>
-                      ))}
-                      {savedCircuits.length === 0 && <p className="text-slate-400 col-span-full text-center py-10">Nenhum relatório criado.</p>}
+                      )}
                     </div>
                   )}
 
+                  {/* ABA: VISUALIZANDO RELATÓRIO SALVO */}
                   {circuitMode === 'view' && viewingCircuit && (
-                    <div className="bg-white p-8 rounded-3xl shadow-sm space-y-4">
-                      <div className="flex flex-wrap gap-2"><button onClick={()=>setCircuitMode('history')} className="px-4 py-2 border rounded-xl text-sm font-bold flex-1 sm:flex-none text-center">Voltar</button><button onClick={startEditingReport} className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold flex-1 sm:flex-none text-center">Preencher</button><button onClick={()=>handleGeneratePDF(viewingCircuit)} className="px-4 py-2 bg-brand-blue text-white rounded-xl text-sm font-bold flex-1 sm:flex-none text-center">Gerar PDF</button>{isAdmin && <button onClick={()=>handleDeleteCircuit(viewingCircuit.id)} className="px-4 py-2 text-rose-500 font-bold sm:ml-auto w-full sm:w-auto text-center"><i className="fa-solid fa-trash"></i></button>}</div>
-                      <div className="border-t pt-4">
-                        <h2 className="font-black text-xl text-center">Atividade {viewingCircuit.details?.activityNum}</h2>
-                        <p className="text-center text-sm">{viewingCircuit.details?.theme}</p>
+                    <div className="space-y-6 animate-fade-in pb-12">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-100 gap-4">
+                        <button onClick={() => setCircuitMode('history')} className="w-full sm:w-auto px-6 py-3 bg-slate-50 hover:bg-slate-100 text-slate-600 font-extrabold rounded-2xl transition-colors text-sm flex items-center justify-center"><i className="fa-solid fa-arrow-left mr-2"></i> Voltar</button>
+                        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                          {isAdmin && ( <button onClick={() => handleDeleteCircuit(viewingCircuit.id)} className="w-full sm:w-auto px-6 py-3 bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 font-extrabold rounded-2xl transition-colors text-sm flex items-center justify-center"><i className="fa-solid fa-trash mr-2"></i> Apagar</button> )}
+                          <button onClick={startEditingReport} className="w-full sm:w-auto px-6 py-3 bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100 font-extrabold rounded-2xl transition-colors text-sm flex items-center justify-center"><i className="fa-solid fa-pen-to-square mr-2"></i> Preencher / Editar</button>
+                          <button onClick={() => handleGeneratePDF(viewingCircuit)} className="w-full sm:w-auto px-6 py-3 bg-brand-blue hover:bg-brand-dark text-white font-extrabold rounded-2xl transition-all shadow-[0_4px_15px_-4px_rgba(32,43,92,0.4)] text-sm flex items-center justify-center"><i className="fa-solid fa-download mr-2"></i> Baixar PDF</button>
+                        </div>
                       </div>
-                      <div className="bg-slate-50 p-4 rounded-xl mt-4">
-                         <p className="text-xs font-bold text-slate-400 uppercase">Resumo Clínico</p>
-                         <p className="text-sm mt-1 whitespace-pre-line">{viewingCircuit.details?.dailyEvolution || 'Sem anotações clínicas.'}</p>
+
+                      <div className="bg-white p-6 sm:p-12 rounded-[2.5rem] shadow-sm border border-slate-100 text-sm text-slate-800 leading-relaxed font-serif overflow-x-hidden relative">
+                        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-brand-blue to-brand-red"></div>
+                        <div className="text-center mb-10 pt-4 border-b border-slate-100 pb-8"><img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-16 mx-auto mb-6 object-contain drop-shadow-md" onError={(e) => e.target.style.display='none'} /><h2 className="font-black uppercase text-lg sm:text-xl tracking-wide">ATIVIDADE {viewingCircuit.details?.activityNum || 'X'} – {viewingCircuit.details?.theme}</h2></div>
+                        
+                        <div className="max-w-3xl mx-auto space-y-8">
+                          <div className="flex justify-between border-b border-dashed border-slate-200 pb-4"><p><strong>DATA:</strong> {viewingCircuit.activity_date.split('-').reverse().join('/')}</p><p className="text-right"><strong>DISCENTES:</strong> {viewingCircuit.details?.students}</p></div>
+                          <div><p className="font-bold text-brand-blue mb-2 text-xs uppercase tracking-widest">ATIVIDADE(S) PROPOSTA(S)</p><p className="whitespace-pre-line text-slate-600 bg-slate-50 p-4 rounded-xl">{viewingCircuit.details?.proposedActivities || 'Não informado.'}</p></div>
+                          <div><p className="font-bold text-brand-blue mb-2 text-xs uppercase tracking-widest">OBJETIVO(S) DA(S) ATIVIDADE(S)</p><p className="text-justify whitespace-pre-line text-slate-600">{viewingCircuit.details?.objectives || 'Não informado.'}</p></div>
+                          <div className="bg-amber-50 p-5 rounded-2xl border border-amber-100 text-amber-900"><p className="font-bold mb-3 text-xs uppercase tracking-widest text-amber-700">OBSERVAÇÕES OPERACIONAIS</p><ul className="list-disc list-inside space-y-1"><li><strong>Sinais vitais:</strong> {viewingCircuit.details?.vitalSigns || '-'}</li><li><strong>Som, tempo e fotos:</strong> {viewingCircuit.details?.soundAndPhotos || '-'}</li><li><strong>Cuidados especiais:</strong> {viewingCircuit.details?.specialCare || '-'}</li></ul></div>
+                          <div><p className="font-bold text-brand-blue mb-2 text-xs uppercase tracking-widest">MATERIAIS UTILIZADOS</p><p className="whitespace-pre-line text-slate-600">{viewingCircuit.details?.materials || 'Não informado.'}</p></div>
+                          <div className="border-l-4 border-emerald-400 pl-6 space-y-6">
+                            <p className="font-black text-emerald-600 text-sm uppercase tracking-widest">DESENVOLVIMENTO (Prática)</p>
+                            <p><strong className="text-slate-800">Aquecimento:</strong> <span className="text-slate-600">{viewingCircuit.details?.warmUp || 'Não informado.'}</span></p>
+                            <div className="space-y-4">
+                              {viewingCircuit.stations && viewingCircuit.stations.map((station, idx) => (
+                                <div key={idx} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm"><p className="font-black text-slate-800">Estação {idx + 1} {idx === 4 && <span className="text-brand-red font-bold text-xs ml-2">FUNCIONAL</span>}</p><p className="text-[10px] uppercase font-bold text-slate-400 mb-2 mt-1 border-b border-slate-100 pb-2">Resp: {viewingCircuit.details?.stationResponsibles?.[idx]}</p><ul className="list-inside space-y-1 mt-2">{station.length === 0 ? <li className="text-xs text-slate-400 italic">Nenhum exercício vinculado.</li> : station.map(ex => <li key={ex.id} className="text-sm font-semibold text-slate-700"><i className="fa-solid fa-check text-emerald-400 mr-2"></i> {ex.title} <span className="text-xs font-normal text-slate-400">({ex.dosage})</span></li>)}</ul></div>
+                              ))}
+                            </div>
+                            <p><strong className="text-slate-800">Desaquecimento:</strong> <span className="text-slate-600">{viewingCircuit.details?.coolDown || 'Não informado.'}</span></p>
+                          </div>
+                          <div><p className="font-bold text-brand-blue mb-2 text-xs uppercase tracking-widest mt-8">RELATO NARRATIVO PÓS-AULA</p><p className="text-justify whitespace-pre-line text-slate-600 bg-blue-50/50 p-6 rounded-2xl border border-blue-100">{viewingCircuit.details?.developmentNarrative || 'Relatório ainda não preenchido.'}</p></div>
+                          <div><p className="font-bold text-brand-blue mb-2 text-xs uppercase tracking-widest">RESULTADO OBTIDO</p><p className="text-justify whitespace-pre-line text-slate-600">{viewingCircuit.details?.resultObtained || 'Relatório ainda não preenchido.'}</p></div>
+                          <div className="text-center pt-8 border-t border-dashed border-slate-200"><p className="text-xl font-black text-slate-800 bg-slate-100 inline-block px-6 py-3 rounded-2xl shadow-inner"><strong>Público Atendido:</strong> <span className="text-brand-red">{viewingCircuit.details?.attendanceCount || 'Não informado.'}</span></p></div>
+                        </div>
                       </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* === TELA: BIBLIOTECA === */}
+              {currentView === 'library' && (
+                <div className="max-w-6xl mx-auto space-y-6">
+                  <div className="bg-white p-4 sm:p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col gap-4">
+                    <div className="relative w-full"><i className="fa-solid fa-magnifying-glass absolute left-5 top-4 text-slate-400 text-lg"></i><input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Encontre exercícios por nome, foco..." className="w-full pl-14 pr-4 py-4 rounded-2xl bg-slate-50 hover:bg-slate-100 focus:bg-white border border-transparent focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10 outline-none text-sm font-semibold transition-all shadow-inner text-slate-700" /></div>
+                    <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 pt-1 px-1 no-scrollbar">
+                      <button onClick={() => {setFilterCat('all'); setFilterSub('Todos');}} className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all shadow-sm ${filterCat === 'all' ? 'bg-slate-800 text-white' : 'bg-white border border-slate-200 text-slate-500 hover:border-slate-300'}`}>Tudo</button>
+                      {Object.keys(CATEGORIES).map(key => (
+                        <button key={key} onClick={() => {setFilterCat(key); setFilterSub('Todos');}} className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all shadow-sm flex items-center gap-2 ${filterCat === key ? `${CATEGORIES[key].bg} ${CATEGORIES[key].color} ring-2 ring-offset-1 ring-${CATEGORIES[key].color.split('-')[1]}-300` : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50'}`}><i className={`fa-solid ${CATEGORIES[key].icon}`}></i> {CATEGORIES[key].shortTitle}</button>
+                      ))}
+                    </div>
+                    {filterCat !== 'all' && (
+                      <div className="flex gap-2 mt-2 overflow-x-auto pb-2 px-1 no-scrollbar items-center bg-slate-50 p-2 rounded-2xl border border-slate-100"><span className="text-[10px] font-black uppercase text-slate-400 ml-2 mr-2 shrink-0 tracking-widest">Foco:</span>{CATEGORIES[filterCat].subgroups.map(sub => ( <button key={sub} onClick={() => setFilterSub(sub)} className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors ${filterSub === sub ? `bg-white ${CATEGORIES[filterCat].color} shadow-sm border ${CATEGORIES[filterCat].border}` : 'bg-transparent text-slate-500 hover:bg-white hover:shadow-sm'}`}>{sub}</button> ))}</div>
+                    )}
+                  </div>
+
+                  {filteredExercises.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[3rem] border border-slate-100 shadow-sm px-6 text-center"><div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-4"><i className="fa-solid fa-magnifying-glass text-3xl text-slate-300"></i></div><h3 className="text-xl font-black text-slate-800">Nenhum exercício encontrado</h3><p className="text-sm font-medium text-slate-500 mt-2">Tente buscar por outro termo ou cadastre um novo conteúdo.</p></div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {filteredExercises.map(ex => {
+                        const ytId = getYouTubeId(ex.videoUrl);
+                        const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null;
+                        const isImage = ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i);
+                        const isVideo = ex.mediaUrl && ex.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i);
+                        const cat = CATEGORIES[ex.category] || CATEGORIES['mmss'];
+
+                        return (
+                          <div key={ex.id} className="bg-white rounded-[2rem] border border-slate-100 shadow-sm hover-lift flex flex-col group cursor-pointer overflow-hidden" onClick={() => { setSelectedExercise(ex); setCurrentView('detail'); }}>
+                            <div className="h-44 bg-slate-100 flex items-center justify-center relative overflow-hidden">
+                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" /> ) : isVideo ? ( <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex flex-col items-center justify-center group-hover:scale-105 transition-transform duration-700"><i className="fa-solid fa-circle-play text-4xl text-brand-red mb-2 drop-shadow-md"></i><span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Vídeo Anexado</span></div> ) : ( <i className="fa-solid fa-dumbbell text-4xl text-slate-300"></i> )}
+                              <div className="absolute inset-0 bg-brand-dark/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"><div className="bg-white/90 w-12 h-12 rounded-full flex items-center justify-center shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-300 delay-100"><i className="fa-solid fa-eye text-brand-blue text-xl"></i></div></div>
+                            </div>
+                            <div className="p-5 sm:p-6 flex-1 flex flex-col bg-white">
+                              <span className={`text-[9px] font-black uppercase tracking-widest ${cat.color} ${cat.bg} px-2.5 py-1 rounded-md border ${cat.border} mb-3 self-start shadow-sm`}>{ex.muscleGroup}</span>
+                              <h3 className="font-extrabold text-slate-800 text-lg leading-tight group-hover:text-brand-blue transition-colors line-clamp-2">{ex.title}</h3>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* === TELA: DETALHES === */}
+              {currentView === 'detail' && selectedExercise && (
+                <div className="max-w-4xl mx-auto pb-12 animate-fade-in">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <button onClick={() => setCurrentView('library')} className="w-full sm:w-auto text-sm font-extrabold text-slate-500 hover:text-brand-blue bg-white px-6 py-3 rounded-2xl border border-slate-200 shadow-sm transition-all flex items-center justify-center hover:-translate-x-1"><i className="fa-solid fa-arrow-left mr-2"></i> Voltar ao Acervo</button>
+                    {isAdmin && ( <button onClick={() => handleDeleteExercise(selectedExercise.id)} className="w-full sm:w-auto text-sm font-extrabold text-rose-500 hover:bg-rose-500 hover:text-white bg-white px-6 py-3 rounded-2xl border border-rose-200 shadow-sm transition-all flex items-center justify-center"><i className="fa-solid fa-trash mr-2"></i> Remover do Acervo</button> )}
+                  </div>
+
+                  <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-lg overflow-hidden">
+                    <div className="p-6 sm:p-10 border-b border-slate-100 bg-gradient-to-br from-slate-50 to-white relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue/5 rounded-bl-full"></div>
+                      <div className="flex flex-wrap items-center gap-3 mb-5 relative z-10"><span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-white bg-brand-blue px-4 py-2 rounded-xl shadow-md">{CATEGORIES[selectedExercise.category]?.shortTitle || selectedExercise.category}</span><span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-brand-red bg-red-50 border border-red-100 px-4 py-2 rounded-xl">{selectedExercise.difficulty}</span></div>
+                      <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-800 mb-6 leading-tight tracking-tight relative z-10">{selectedExercise.title}</h1>
+                      <div className="flex flex-wrap gap-4 text-xs font-bold text-slate-600 relative z-10"><div className="bg-white border border-slate-200 px-5 py-3 rounded-2xl flex items-center gap-2 shadow-sm"><div className="w-6 h-6 rounded-full bg-brand-red/10 text-brand-red flex items-center justify-center"><i className="fa-solid fa-bullseye"></i></div> Foco Principal: <span className="text-brand-blue font-black ml-1">{selectedExercise.muscleGroup}</span></div></div>
+                    </div>
+                    
+                    <div className="w-full bg-slate-900 aspect-video flex items-center justify-center relative shadow-inner overflow-hidden">
+                      {getYouTubeId(selectedExercise.videoUrl) ? ( 
+                        <iframe className="w-full h-full absolute inset-0" src={`https://www.youtube-nocookie.com/embed/${getYouTubeId(selectedExercise.videoUrl)}?rel=0`} title="Tutorial" frameBorder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe> 
+                      ) : selectedExercise.mediaUrl ? (
+                        selectedExercise.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i) ? ( <video src={selectedExercise.mediaUrl} controls className="w-full h-full object-contain bg-black"></video> ) : ( <img src={selectedExercise.mediaUrl} className="w-full h-full object-cover" /> )
+                      ) : ( <div className="text-center text-slate-500 flex flex-col items-center"><div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mb-4"><i className="fa-solid fa-video-slash text-3xl"></i></div><p className="font-bold text-sm tracking-widest uppercase">Sem demonstração visual</p></div> )}
+                    </div>
+                    
+                    {getYouTubeId(selectedExercise.videoUrl) && ( <div className="bg-brand-red text-center py-3"><a href={selectedExercise.videoUrl} target="_blank" className="text-xs font-black text-white hover:text-white/80 uppercase tracking-widest transition-colors flex items-center justify-center gap-2"><i className="fa-brands fa-youtube text-lg"></i> Abrir aplicativo do YouTube</a></div> )}
+
+                    <div className="p-6 sm:p-10 space-y-10">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="bg-blue-50/50 p-6 rounded-3xl border border-brand-blue/10 flex items-center gap-4"><div className="w-12 h-12 bg-white rounded-2xl shadow-sm text-brand-blue flex items-center justify-center text-xl shrink-0"><i className="fa-solid fa-cube"></i></div><div><h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Equipamento</h4><p className="font-extrabold text-slate-700 text-sm sm:text-base">{selectedExercise.equipment || 'Nenhum'}</p></div></div>
+                        <div className="bg-red-50/50 p-6 rounded-3xl border border-brand-red/10 flex items-center gap-4"><div className="w-12 h-12 bg-white rounded-2xl shadow-sm text-brand-red flex items-center justify-center text-xl shrink-0"><i className="fa-solid fa-stopwatch-20"></i></div><div><h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Dosagem Clínica</h4><p className="font-extrabold text-slate-700 text-sm sm:text-base">{selectedExercise.dosage}</p></div></div>
+                      </div>
+                      <div className="grid lg:grid-cols-2 gap-8">
+                        <div><h4 className="text-sm font-black text-slate-800 uppercase flex items-center gap-3 mb-5"><div className="w-8 h-8 rounded-full bg-brand-blue text-white flex items-center justify-center text-xs"><i className="fa-solid fa-list-ol"></i></div> Como Executar</h4><div className="whitespace-pre-line bg-slate-50 p-6 sm:p-8 rounded-[2rem] border border-slate-100 text-sm font-medium leading-loose text-slate-600 shadow-inner">{selectedExercise.instructions}</div></div>
+                        <div><h4 className="text-sm font-black text-slate-800 uppercase flex items-center gap-3 mb-5"><div className="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs"><i className="fa-solid fa-triangle-exclamation"></i></div> Cuidados & Precauções</h4><div className="whitespace-pre-line bg-amber-50/50 p-6 sm:p-8 rounded-[2rem] border border-amber-100 text-sm font-bold leading-loose text-amber-900 shadow-inner">{selectedExercise.precautions || 'Nenhuma restrição registrada para a execução padrão.'}</div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* === TELA: CADASTRO === */}
+              {currentView === 'cadastro' && (
+                <div className="max-w-4xl mx-auto bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+                  <div className="bg-gradient-to-br from-brand-blue to-brand-dark p-8 sm:p-10 text-white relative overflow-hidden">
+                    <div className="absolute -top-12 -right-12 w-32 h-32 bg-white/5 blob-shape"></div>
+                    <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-brand-red/20 blob-shape-2"></div>
+                    <h2 className="text-2xl sm:text-3xl font-black flex items-center gap-4 relative z-10"><div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20"><i className="fa-solid fa-file-medical text-brand-red text-xl"></i></div> Novo Exercício Clínico</h2>
+                    <p className="text-sm text-slate-300 mt-4 relative z-10 max-w-xl leading-relaxed">Adicione um novo exercício ao acervo do projeto. Após o envio, a coordenação fará a revisão técnica e científica.</p>
+                  </div>
+                  
+                  {formStatus.success ? (
+                    <div className="p-10 sm:p-20 text-center bg-white"><div className="w-32 h-32 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center text-6xl mx-auto mb-6 relative"><div className="absolute inset-0 border-4 border-emerald-500/20 rounded-full animate-ping"></div><i className="fa-solid fa-check"></i></div><h3 className="text-2xl sm:text-3xl font-black text-slate-800 mb-2">Salvo com Sucesso!</h3><p className="text-slate-500 font-medium mb-8 max-w-sm mx-auto">Sua contribuição foi enviada e está na fila para aprovação técnica.</p><button onClick={() => setFormStatus({loading: false, success: false, error: ''})} className="px-8 py-4 rounded-2xl font-black text-white bg-brand-blue hover:bg-brand-dark transition-all shadow-[0_8px_20px_-6px_rgba(32,43,92,0.4)] hover:-translate-y-1 w-full sm:w-auto"><i className="fa-solid fa-plus mr-2"></i> Adicionar Outro</button></div>
+                  ) : (
+                    <form className="p-6 sm:p-10 space-y-10" onSubmit={handleFormSubmit}>
+                      <div className="space-y-5">
+                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-3 pl-2 flex items-center gap-2"><i className="fa-solid fa-1 text-slate-300"></i> Informações Básicas</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          <div className="md:col-span-2"><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Título do Exercício *</label><input type="text" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} required className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold" placeholder="Ex: Sentar e Levantar da Cadeira" /></div>
+                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Classificação (Tema) *</label><select required value={formCat} onChange={(e) => {setFormCat(e.target.value); setFormMuscleSelect('');}} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold text-slate-700"><option value="">Selecione...</option>{Object.keys(CATEGORIES).map(k => <option key={k} value={k}>{CATEGORIES[k].title}</option>)}</select></div>
+                          <div>
+                            <label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Foco Muscular / Motricidade *</label>
+                            <select required value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold text-slate-700 disabled:opacity-50" disabled={!formCat}><option value="">Selecione...</option>{formCat && CATEGORIES[formCat].subgroups.filter(s => s !== 'Todos').map(sub => (<option key={sub} value={sub}>{sub}</option>))}</select>
+                            {formMuscleSelect === 'Outro' && (<input type="text" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className="w-full px-5 py-4 mt-3 rounded-2xl bg-white border border-brand-red outline-none text-sm transition-all font-semibold" placeholder="Qual o foco exato?" />)}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-5">
+                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-3 pl-2 flex items-center gap-2"><i className="fa-solid fa-2 text-slate-300"></i> Parâmetros e Mídia</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Dosagem Sugerida *</label><input type="text" value={formData.dosage} onChange={e=>setFormData({...formData, dosage: e.target.value})} required className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold" placeholder="Ex: 3 séries de 10 repetições" /></div>
+                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Nível de Exigência *</label><select required value={formData.difficulty} onChange={e=>setFormData({...formData, difficulty: e.target.value})} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold text-slate-700"><option value="Iniciante / Leve">Iniciante / Leve</option><option value="Intermediário">Intermediário</option><option value="Avançado / Desafiador">Avançado / Desafiador</option></select></div>
+                          
+                          <div className="md:col-span-2 bg-blue-50/50 p-6 rounded-3xl border border-brand-blue/10 grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Equipamento Necessário</label><input type="text" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})} className="w-full px-5 py-4 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-semibold" placeholder="Ex: Cadeira, Halter..." /></div>
+                            <div><label className="block text-xs font-extrabold text-brand-blue mb-2 pl-2"><i className="fa-brands fa-youtube mr-1 text-brand-red"></i> Link do YouTube</label><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className="w-full px-5 py-4 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-semibold" placeholder="https://..." /></div>
+                            <div>
+                               <label className="block text-xs font-extrabold text-brand-blue mb-2 pl-2"><i className="fa-solid fa-cloud-arrow-up mr-1 text-emerald-500"></i> Ou Anexar (Foto/Vídeo)</label>
+                               <input type="file" accept="image/*,video/*" onChange={e=>setMediaFile(e.target.files[0])} className="w-full px-3 py-3 rounded-2xl border-2 border-dashed border-brand-blue/20 bg-white hover:bg-slate-50 transition-colors outline-none text-xs font-bold text-slate-500 cursor-pointer" />
+                            </div>
+                          </div>
+
+                          <div className="md:col-span-2"><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Passo a Passo da Execução *</label><textarea rows="5" value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})} required className="w-full p-5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm leading-relaxed transition-all font-medium" placeholder="Descreva os movimentos de forma clara..."></textarea></div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-5">
+                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-3 pl-2 flex items-center gap-2"><i className="fa-solid fa-3 text-slate-300"></i> Aspectos Clínicos</h3>
+                        <div><label className="block text-xs font-extrabold text-amber-700 mb-2 pl-2">Precauções e Contraindicações</label><textarea rows="3" value={formData.precautions} onChange={e=>setFormData({...formData, precautions: e.target.value})} className="w-full p-5 rounded-2xl bg-amber-50/50 border border-amber-200 focus:bg-white focus:border-amber-400 outline-none text-sm leading-relaxed text-amber-900 transition-all font-medium" placeholder="Ex: Evitar em caso de artrose avançada..."></textarea></div>
+                      </div>
+
+                      <div className="pt-8 border-t border-slate-100 flex justify-end relative z-10">
+                        <button type="submit" disabled={formStatus.loading} className="w-full sm:w-auto px-10 py-4 bg-brand-red hover:bg-brand-redDark text-white font-black rounded-2xl shadow-[0_8px_20px_-6px_rgba(209,40,54,0.4)] transition-all hover:-translate-y-1 text-base flex items-center justify-center gap-3">
+                          {formStatus.loading ? <><i className="fa-solid fa-spinner fa-spin"></i> Processando...</> : <><i className="fa-solid fa-paper-plane"></i> Submeter à Coordenação</>}
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </div>
+              )}
+
+              {/* === TELA: APROVAÇÕES PENDENTES === */}
+              {currentView === 'aprovacoes' && (
+                <div className="max-w-4xl mx-auto space-y-8">
+                  <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-8 rounded-[2rem] text-white shadow-lg relative overflow-hidden">
+                    <i className="fa-solid fa-clipboard-check absolute -right-6 -bottom-6 text-9xl opacity-20 transform -rotate-12"></i>
+                    <h2 className="text-2xl sm:text-3xl font-black mb-2 relative z-10">Central de Avaliação</h2>
+                    <p className="text-amber-100 font-medium relative z-10">Revise o conteúdo enviado pelos monitores antes de adicioná-lo ao acervo.</p>
+                  </div>
+                  
+                  {pendingCount === 0 ? (
+                    <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 p-16 text-center flex flex-col items-center"><div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6"><i className="fa-solid fa-inbox text-4xl text-slate-300"></i></div><h3 className="text-2xl font-black text-slate-800">Fila Vazia!</h3><p className="text-slate-500 font-medium mt-2">Nenhum exercício aguardando revisão no momento.</p></div>
+                  ) : (
+                    <div className="space-y-6">
+                      {exercises.filter(ex => ex.status === 'pending').map(ex => {
+                        const ytId = getYouTubeId(ex.videoUrl);
+                        const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : null;
+                        const isImage = ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i);
+                        const isVideo = ex.mediaUrl && ex.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i);
+
+                        return (
+                          <div key={ex.id} className="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-4 sm:p-6 flex flex-col md:flex-row gap-6 items-start hover-lift transition-all">
+                            <div className="w-full md:w-56 aspect-video bg-slate-100 rounded-2xl overflow-hidden shrink-0 flex items-center justify-center relative">
+                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="w-full h-full bg-slate-200 flex flex-col items-center justify-center"><i className="fa-solid fa-film text-3xl text-slate-400 mb-1"></i><span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Vídeo</span></div> ) : ( <i className="fa-solid fa-dumbbell text-3xl text-slate-300"></i> )}
+                            </div>
+                            <div className="flex-1 w-full flex flex-col">
+                              <div className="flex justify-between items-start mb-3"><span className="text-[10px] font-black uppercase tracking-widest text-amber-600 bg-amber-50 border border-amber-100 px-3 py-1.5 rounded-lg inline-block shadow-sm">Pendente</span><span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-3 py-1 rounded-full">Autor: {ex.author}</span></div>
+                              <h3 className="font-black text-slate-800 text-xl leading-tight mb-2">{ex.title}</h3>
+                              <p className="text-xs font-bold text-slate-500 mb-6 flex items-center gap-2"><i className="fa-solid fa-bullseye text-brand-red"></i> Foco: {ex.muscleGroup}</p>
+                              <div className="flex flex-wrap sm:flex-nowrap gap-3 mt-auto pt-5 border-t border-slate-100">
+                                <button onClick={() => {setSelectedExercise(ex); setCurrentView('detail');}} className="flex-1 sm:flex-none px-4 py-3 bg-white border border-slate-200 text-slate-600 font-extrabold text-xs rounded-xl hover:bg-slate-50 hover:text-brand-blue transition-colors text-center shadow-sm"><i className="fa-solid fa-eye sm:mr-2"></i> <span className="hidden sm:inline">Analisar</span></button>
+                                <button onClick={() => handleApprove(ex.id)} className="flex-1 sm:flex-none px-4 py-3 bg-emerald-50 text-emerald-600 font-extrabold text-xs rounded-xl hover:bg-emerald-500 hover:text-white transition-colors text-center shadow-sm"><i className="fa-solid fa-check sm:mr-2"></i> <span className="hidden sm:inline">Aprovar</span></button>
+                                <button onClick={() => handleReject(ex.id)} className="flex-1 sm:flex-none px-4 py-3 bg-rose-50 text-rose-500 font-extrabold text-xs rounded-xl sm:ml-auto hover:bg-rose-500 hover:text-white transition-colors text-center shadow-sm"><i className="fa-solid fa-trash sm:mr-2"></i> <span className="hidden sm:inline">Recusar</span></button>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
                     </div>
                   )}
                 </div>
@@ -533,16 +1005,16 @@
       );
     };
 
+    // INICIALIZAÇÃO E CONTROLE DE ESTADO GLOBAL
     const App = () => {
       const [session, setSession] = useState(null);
       const [loadingAuth, setLoadingAuth] = useState(true);
 
       useEffect(() => {
-        if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
         supabaseClient.auth.getSession().then(async ({ data: { session } }) => {
           if (session) {
             const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
-            setSession({ ...session.user, full_name: profile?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
+            setSession({ ...session.user, full_name: profile?.full_name || session.user.user_metadata?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
           }
           setLoadingAuth(false);
         });
@@ -550,7 +1022,7 @@
 
       const handleLogout = async () => { await supabaseClient.auth.signOut(); setSession(null); };
 
-      if (loadingAuth) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="w-10 h-10 border-4 border-slate-200 border-t-brand-blue rounded-full animate-spin"></div></div>;
+      if (loadingAuth) return <div className="min-h-screen flex items-center justify-center bg-pattern"><div className="bg-white p-8 rounded-3xl shadow-xl flex flex-col items-center"><div className="w-16 h-16 border-4 border-slate-100 border-t-brand-blue rounded-full animate-spin mb-4"></div><p className="text-brand-blue font-black tracking-widest uppercase text-xs">Carregando Plataforma...</p></div></div>;
       if (!session) return <LoginPage onLogin={setSession} />;
       return <Dashboard session={session} onLogout={handleLogout} updateSessionData={setSession} />;
     };
