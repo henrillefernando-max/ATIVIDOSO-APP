@@ -135,6 +135,7 @@
         </div>
       );
     };
+
     const Dashboard = ({ session, onLogout, updateSessionData }) => {
       const isAdmin = session.role === 'admin' || session.role === 'Coordenador / Admin';
 
@@ -151,7 +152,6 @@
       const [announcements, setAnnouncements] = useState([]);
       const [participantsList, setParticipantsList] = useState(DEFAULT_PARTICIPANTS);
       
-      // Cadastro Forms
       const [formCat, setFormCat] = useState('');
       const [formMuscleSelect, setFormMuscleSelect] = useState('');
       const [formCustomMuscle, setFormCustomMuscle] = useState('');
@@ -159,13 +159,11 @@
       const [formData, setFormData] = useState({ title: '', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '', videoUrl: '', instructions: '', precautions: '' });
       const [formStatus, setFormStatus] = useState({ loading: false, success: false });
 
-      // Circuitos / Aula
       const [circuitMode, setCircuitMode] = useState('agenda');
       const [circuit, setCircuit] = useState([[], [], [], [], []]);
       const [viewingCircuit, setViewingCircuit] = useState(null);
       const [planDetails, setPlanDetails] = useState({ activityNum: '', theme: '', date: '', students: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['', '', '', '', ''], proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', developmentNarrative: '', dailyEvolution: '', resultObtained: '', attendanceCount: '', attendanceList: [] });
 
-      // Perfil & Avisos
       const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '', link_url: '' });
       const [profileForm, setProfileForm] = useState({ full_name: session.full_name, team_group: session.team_group || '' });
       const [profileAvatarFile, setProfileAvatarFile] = useState(null);
@@ -207,7 +205,6 @@
         return match ? match[1] : null;
       };
 
-      // PERFIL
       const handleSaveProfile = async (e) => {
         e.preventDefault(); setProfileStatus('Salvando...');
         let newAvatarUrl = session.avatar_url;
@@ -220,7 +217,6 @@
         if(!error) { setProfileStatus('Salvo!'); updateSessionData({ ...session, full_name: profileForm.full_name, team_group: profileForm.team_group, avatar_url: newAvatarUrl }); }
       };
 
-      // AVISOS
       const handlePostAnnouncement = async (e) => {
         e.preventDefault();
         const { data } = await supabaseClient.from('announcements').insert([newAnnouncement]).select();
@@ -228,7 +224,6 @@
       };
       const handleDeleteAnnouncement = async (id) => { if(window.confirm("Apagar?")) { await supabaseClient.from('announcements').delete().eq('id', id); setAnnouncements(announcements.filter(a => a.id !== id)); } };
 
-      // EXERCÍCIOS
       const handleFormSubmit = async (e) => {
         e.preventDefault(); setFormStatus({ loading: true, success: false });
         let url = null;
@@ -245,21 +240,17 @@
       const handleReject = async (id) => { await supabaseClient.from('exercises').delete().eq('id', id); setExercises(exercises.filter(ex => ex.id !== id)); };
       const handleDeleteExercise = async (id) => { if(window.confirm("Apagar exercício?")) { await supabaseClient.from('exercises').delete().eq('id', id); setExercises(exercises.filter(ex => ex.id !== id)); setCurrentView('library'); } };
 
-      // AULAS E RELATÓRIOS
       const handleAddParticipant = async () => {
         const name = prompt('Nome completo do idoso:');
         if(name) {
-          // Salva no banco de dados se a tabela existir, caso contrário só adiciona localmente no estado
           const { data, error } = await supabaseClient.from('participants').insert([{ name }]).select();
           if(!error && data) {
             setParticipantsList([...participantsList, data[0]].sort((a,b)=>a.name.localeCompare(b.name)));
-            // Se estivermos editando um relatório agora, já injeta ele na lista do relatório!
             if (circuitMode === 'report_edit') {
                const newP = { id: data[0].id, name: data[0].name, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' };
                setPlanDetails({...planDetails, attendanceList: [...planDetails.attendanceList, newP].sort((a,b)=>a.name.localeCompare(b.name))});
             }
           } else {
-             // Fallback caso a tabela participants não exista ainda
              const fallbackId = Date.now().toString();
              const newP = { id: fallbackId, name: name };
              setParticipantsList([...participantsList, newP].sort((a,b)=>a.name.localeCompare(b.name)));
@@ -319,7 +310,7 @@
           
           <aside className={`w-72 bg-white flex flex-col h-screen fixed md:relative z-50 transition-transform duration-300 border-r border-slate-200 ${isMobileMenuOpen?'translate-x-0':'-translate-x-full'} md:translate-x-0`}>
             <div className="p-6 text-center"><h1 className="text-2xl font-black text-brand-blue">ATIV<span className="text-brand-red">IDOSO</span></h1></div>
-            <div className="px-6 pb-4 border-b flex items-center gap-3 cursor-pointer hover:bg-slate-50" onClick={()=>{setCurrentView('perfil');setIsMobileMenuOpen(false);}}>
+            <div className="px-6 pb-4 border-b flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition p-2 rounded-2xl mx-4" onClick={()=>{setCurrentView('perfil');setIsMobileMenuOpen(false);}}>
               {session.avatar_url ? <img src={session.avatar_url} className="w-10 h-10 rounded-full object-cover shadow-sm"/> : <div className="w-10 h-10 bg-brand-red text-white flex items-center justify-center rounded-full font-bold">{session.full_name[0]}</div>}
               <div className="overflow-hidden"><p className="text-sm font-bold text-slate-800 truncate">{session.full_name}</p><p className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 rounded-full inline-block">{session.team_group || 'Sem Grupo'}</p></div>
             </div>
@@ -340,7 +331,6 @@
             
             <div className="flex-1 overflow-y-auto p-4 sm:p-8">
               
-              {/* PERFIL */}
               {currentView === 'perfil' && (
                 <div className="max-w-2xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
                   <h2 className="text-xl font-black mb-6 border-b pb-4">Meu Perfil</h2>
@@ -354,7 +344,6 @@
                 </div>
               )}
 
-              {/* HOME / MURAL */}
               {currentView === 'home' && (
                 <div className="max-w-5xl mx-auto space-y-6">
                   {upcomingActivity && (
@@ -379,10 +368,9 @@
                 </div>
               )}
 
-              {/* BIBLIOTECA */}
               {currentView === 'library' && (
                 <div className="max-w-6xl mx-auto">
-                  <div className="mb-6 flex gap-2 overflow-x-auto p-1"><button onClick={()=>setFilterCat('all')} className={`px-4 py-2 rounded-full text-xs font-bold ${filterCat==='all'?'bg-slate-800 text-white':'bg-white'}`}>Todos</button>{Object.keys(CATEGORIES).map(k=><button key={k} onClick={()=>setFilterCat(k)} className={`px-4 py-2 rounded-full text-xs font-bold ${filterCat===k?'bg-brand-blue text-white':'bg-white shadow-sm border'}`}>{CATEGORIES[k].shortTitle}</button>)}</div>
+                  <div className="mb-6 flex gap-2 overflow-x-auto p-1"><button onClick={()=>setFilterCat('all')} className={`px-4 py-2 rounded-full text-xs font-bold ${filterCat==='all'?'bg-slate-800 text-white':'bg-white shadow-sm border'}`}>Todos</button>{Object.keys(CATEGORIES).map(k=><button key={k} onClick={()=>setFilterCat(k)} className={`px-4 py-2 rounded-full text-xs font-bold ${filterCat===k?'bg-brand-blue text-white':'bg-white shadow-sm border'}`}>{CATEGORIES[k].shortTitle}</button>)}</div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {filteredExercises.map(ex => (
                       <div key={ex.id} className="bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer border hover:border-brand-blue transition flex flex-col" onClick={()=>{setSelectedExercise(ex);setCurrentView('detail');}}>
@@ -394,7 +382,6 @@
                 </div>
               )}
 
-              {/* DETALHES DO EXERCÍCIO */}
               {currentView === 'detail' && selectedExercise && (
                 <div className="max-w-3xl mx-auto bg-white rounded-3xl overflow-hidden shadow-md">
                    <div className="p-6 border-b flex justify-between"><button onClick={()=>setCurrentView('library')} className="font-bold text-slate-500"><i className="fa-solid fa-arrow-left"></i> Voltar</button>{isAdmin && <button onClick={()=>handleDeleteExercise(selectedExercise.id)} className="text-rose-500"><i className="fa-solid fa-trash"></i> Remover</button>}</div>
@@ -414,7 +401,6 @@
                 </div>
               )}
 
-              {/* CADASTRO DE EXERCÍCIO */}
               {currentView === 'cadastro' && (
                 <div className="max-w-3xl mx-auto bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100">
                   <h2 className="text-2xl font-black mb-6 border-b pb-4">Cadastrar Exercício</h2>
@@ -441,7 +427,6 @@
                 </div>
               )}
 
-              {/* APROVAÇÕES */}
               {currentView === 'aprovacoes' && isAdmin && (
                 <div className="max-w-3xl mx-auto space-y-4">
                   <h2 className="text-2xl font-black mb-6">Fila de Aprovação</h2>
@@ -455,7 +440,6 @@
                 </div>
               )}
 
-              {/* AULAS E RELATÓRIOS */}
               {currentView === 'circuito' && (
                 <div className="max-w-5xl mx-auto">
                   <div className="flex gap-2 p-1 bg-white rounded-full mb-6 w-max mx-auto shadow-sm border overflow-x-auto max-w-full">
@@ -528,7 +512,7 @@
                   )}
 
                   {circuitMode === 'view' && viewingCircuit && (
-                    <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm space-y-4">
+                    <div className="bg-white p-8 rounded-3xl shadow-sm space-y-4">
                       <div className="flex flex-wrap gap-2"><button onClick={()=>setCircuitMode('history')} className="px-4 py-2 border rounded-xl text-sm font-bold flex-1 sm:flex-none text-center">Voltar</button><button onClick={startEditingReport} className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold flex-1 sm:flex-none text-center">Preencher</button><button onClick={()=>handleGeneratePDF(viewingCircuit)} className="px-4 py-2 bg-brand-blue text-white rounded-xl text-sm font-bold flex-1 sm:flex-none text-center">Gerar PDF</button>{isAdmin && <button onClick={()=>handleDeleteCircuit(viewingCircuit.id)} className="px-4 py-2 text-rose-500 font-bold sm:ml-auto w-full sm:w-auto text-center"><i className="fa-solid fa-trash"></i></button>}</div>
                       <div className="border-t pt-4">
                         <h2 className="font-black text-xl text-center">Atividade {viewingCircuit.details?.activityNum}</h2>
