@@ -174,7 +174,7 @@
 
       // Estados de Navegação e Responsividade
       const [currentView, setCurrentView] = useState('library');
-      const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // NOVO: Controle do menu mobile
+      const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
       
       const [selectedExercise, setSelectedExercise] = useState(null);
       const [searchQuery, setSearchQuery] = useState('');
@@ -196,15 +196,18 @@
       });
       const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: '' });
 
-      // ESTAÇÕES E AULA
+      // ESTAÇÕES, AULA E RELATÓRIO
+      // Modos: 'agenda', 'plan' (Planejar Aula), 'history' (Lista), 'view' (Ver PDF/Aula), 'report_edit' (Preencher Relatório)
       const [circuitMode, setCircuitMode] = useState('agenda');
       const [circuit, setCircuit] = useState([[], [], [], [], []]);
       const [viewingCircuit, setViewingCircuit] = useState(null);
+
+      // ÚNICO ESTADO PARA O PLANO DE AULA E RELATÓRIO
       const [planDetails, setPlanDetails] = useState({
-        activityNum: '', theme: '', date: '', students: '', proposedActivities: '', objectives: '', 
-        vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', 
+        activityNum: '', theme: '', date: '', students: '', 
         warmUp: '', coolDown: 'Todos', stationResponsibles: ['', '', '', '', ''],
-        developmentNarrative: '', resultObtained: '', attendanceCount: ''
+        proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', 
+        specialCare: '', materials: '', developmentNarrative: '', resultObtained: '', attendanceCount: ''
       });
 
       // Busca Inicial
@@ -225,7 +228,7 @@
       const handleNavClick = (view, mode = null) => {
         setCurrentView(view);
         if(mode) setCircuitMode(mode);
-        setIsMobileMenuOpen(false); // Fecha o menu automaticamente no celular
+        setIsMobileMenuOpen(false); 
       };
 
       // Extrator de Thumb do YouTube
@@ -260,14 +263,11 @@
             .upload(fileName, mediaFile);
 
           if (uploadError) {
-            setFormStatus({ loading: false, success: false, error: 'Erro ao enviar mídia: Verifique se o código SQL de permissão foi rodado.' });
+            setFormStatus({ loading: false, success: false, error: 'Erro ao enviar mídia. Verifique permissões do Supabase.' });
             return;
           }
 
-          const { data: publicUrlData } = supabaseClient.storage
-            .from('midia_exercicios')
-            .getPublicUrl(fileName);
-
+          const { data: publicUrlData } = supabaseClient.storage.from('midia_exercicios').getPublicUrl(fileName);
           uploadedMediaUrl = publicUrlData.publicUrl;
         }
 
@@ -301,16 +301,27 @@
       };
 
       const handleDeleteExercise = async (id) => {
-        if(window.confirm("ATENÇÃO: Você está prestes a apagar este exercício da biblioteca.\nEsta ação não tem volta. Tem certeza?")) {
+        if(window.confirm("ATENÇÃO: Você está prestes a apagar este exercício.\nEsta ação não tem volta. Tem certeza?")) {
           await supabaseClient.from('exercises').delete().eq('id', id);
           setExercises(exercises.filter(ex => ex.id !== id));
           setCurrentView('library');
         }
       };
 
-      // ======= FUNÇÕES DE RELATÓRIOS =======
+      // ======= FUNÇÕES DE RELATÓRIOS E PLANEJAMENTO =======
+      const startPlanning = () => {
+        setPlanDetails({ activityNum: '', theme: '', date: '', students: '', proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['', '', '', '', ''], developmentNarrative: '', resultObtained: '', attendanceCount: '' });
+        setCircuit([[], [], [], [], []]);
+        setCircuitMode('plan');
+      };
+
+      const startEditingReport = () => {
+        setPlanDetails(viewingCircuit.details);
+        setCircuitMode('report_edit');
+      };
+
       const handleDeleteCircuit = async (id) => {
-        if(window.confirm("ATENÇÃO: Deseja apagar este Relatório do Histórico permanentemente?")) {
+        if(window.confirm("ATENÇÃO: Deseja apagar este Registro permanentemente?")) {
           await supabaseClient.from('circuits').delete().eq('id', id);
           setSavedCircuits(savedCircuits.filter(c => c.id !== id));
           setCircuitMode('history');
@@ -340,18 +351,31 @@
         setPlanDetails({ ...planDetails, stationResponsibles: updated });
       };
 
-      const handleSaveCircuitToHistory = async () => {
-        if (!planDetails.date || !planDetails.theme || !planDetails.activityNum) return alert('Por favor, preencha os campos obrigatórios (Número, Tema e Data)!');
+      // Salva o Planejamento (Apenas a estrutura da aula)
+      const handleSavePlan = async () => {
+        if (!planDetails.date || !planDetails.theme || !planDetails.activityNum) return alert('Preencha Número, Tema e Data!');
         const newSavedCircuit = { activity_date: planDetails.date, stations: circuit, details: planDetails, author: session.full_name };
         const { data, error } = await supabaseClient.from('circuits').insert([newSavedCircuit]).select();
         if (error) {
-          alert('Erro ao salvar relatório: ' + error.message);
+          alert('Erro ao salvar planejamento: ' + error.message);
         } else {
-          alert('Relatório Acadêmico salvo com sucesso!');
+          alert('Atividade Planejada com Sucesso!');
           setSavedCircuits([data[0], ...savedCircuits]);
-          setPlanDetails({ activityNum: '', theme: '', date: '', students: '', proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['', '', '', '', ''], developmentNarrative: '', resultObtained: '', attendanceCount: '' });
-          setCircuit([[], [], [], [], []]);
           setCircuitMode('history');
+        }
+      };
+
+      // Salva a atualização do Relatório (Após a aula)
+      const handleUpdateReport = async () => {
+        const updatedCircuit = { ...viewingCircuit, details: planDetails };
+        const { error } = await supabaseClient.from('circuits').update({ details: planDetails }).eq('id', viewingCircuit.id);
+        if (error) {
+          alert('Erro ao atualizar relatório: ' + error.message);
+        } else {
+          alert('Relatório preenchido com sucesso!');
+          setSavedCircuits(savedCircuits.map(c => c.id === viewingCircuit.id ? updatedCircuit : c));
+          setViewingCircuit(updatedCircuit);
+          setCircuitMode('view');
         }
       };
 
@@ -446,7 +470,7 @@
         <div className="min-h-screen flex bg-slate-50 overflow-hidden relative">
           
           {/* ==========================================
-              OVERLAY DO MENU MOBILE (FUNDO ESCURO)
+              OVERLAY DO MENU MOBILE
           ========================================== */}
           {isMobileMenuOpen && (
             <div className="fixed inset-0 bg-brand-dark/50 z-40 md:hidden backdrop-blur-sm transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>
@@ -457,7 +481,6 @@
           ========================================== */}
           <aside className={`w-64 bg-brand-dark text-slate-300 flex flex-col h-screen fixed md:relative z-50 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 shadow-xl`}>
             
-            {/* Botão Fechar no Mobile */}
             <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden absolute top-5 right-5 text-slate-400 hover:text-white transition">
               <i className="fa-solid fa-xmark text-2xl"></i>
             </button>
@@ -507,7 +530,7 @@
                   {currentView === 'detail' && <><i className="fa-solid fa-file-medical text-brand-red"></i> <span className="hidden sm:inline">Ficha Clínica do Exercício</span><span className="sm:hidden">Detalhes</span></>}
                   {currentView === 'cadastro' && <><i className="fa-solid fa-circle-plus text-brand-red"></i> <span className="hidden sm:inline">Cadastro Oficial</span><span className="sm:hidden">Cadastrar</span></>}
                   {currentView === 'aprovacoes' && <><i className="fa-solid fa-check-double text-brand-red"></i> <span className="hidden sm:inline">Central de Aprovações</span><span className="sm:hidden">Aprovações</span></>}
-                  {currentView === 'circuito' && <><i className="fa-regular fa-calendar-days text-emerald-500"></i> <span className="hidden sm:inline">Cronograma & Relatórios</span><span className="sm:hidden">Agenda</span></>}
+                  {currentView === 'circuito' && <><i className="fa-regular fa-calendar-days text-emerald-500"></i> <span className="hidden sm:inline">Cronograma & Relatórios</span><span className="sm:hidden">Aulas</span></>}
                 </h2>
               </div>
             </header>
@@ -515,7 +538,7 @@
             <div className="flex-1 overflow-y-auto p-4 sm:p-8">
               
               {/* ============================================================
-                  TELA: AGENDA / RELATÓRIOS (CIRCUITOS)
+                  TELA: AGENDA / RELATÓRIOS E PLANEJAMENTO
               ============================================================= */}
               {currentView === 'circuito' && (
                 <div className="max-w-5xl mx-auto">
@@ -523,8 +546,8 @@
                   {/* Abas */}
                   <div className="flex gap-3 mb-8 border-b border-slate-200 pb-4 overflow-x-auto no-scrollbar">
                     <button onClick={() => setCircuitMode('agenda')} className={`px-6 py-2.5 rounded-full text-sm font-bold transition whitespace-nowrap ${circuitMode === 'agenda' ? 'bg-emerald-600 text-white shadow-md' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}><i className="fa-regular fa-calendar mr-2"></i> Agenda 2026.2</button>
-                    <button onClick={() => setCircuitMode('edit')} className={`px-6 py-2.5 rounded-full text-sm font-bold transition whitespace-nowrap ${circuitMode === 'edit' ? 'bg-emerald-600 text-white shadow-md' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}><i className="fa-solid fa-file-pen mr-2"></i> Gerar Novo Relatório</button>
-                    <button onClick={() => setCircuitMode('history')} className={`px-6 py-2.5 rounded-full text-sm font-bold transition whitespace-nowrap ${circuitMode === 'history' || circuitMode === 'view' ? 'bg-brand-blue text-white shadow-md' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}><i className="fa-solid fa-folder-open mr-2"></i> Histórico & PDF</button>
+                    <button onClick={startPlanning} className={`px-6 py-2.5 rounded-full text-sm font-bold transition whitespace-nowrap ${circuitMode === 'plan' ? 'bg-emerald-600 text-white shadow-md' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}><i className="fa-solid fa-route mr-2"></i> Planejar Atividade</button>
+                    <button onClick={() => setCircuitMode('history')} className={`px-6 py-2.5 rounded-full text-sm font-bold transition whitespace-nowrap ${circuitMode === 'history' || circuitMode === 'view' || circuitMode === 'report_edit' ? 'bg-brand-blue text-white shadow-md' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}><i className="fa-solid fa-folder-open mr-2"></i> Histórico & Relatórios</button>
                   </div>
 
                   {/* ABA: AGENDA FIXA */}
@@ -553,12 +576,12 @@
                     </div>
                   )}
 
-                  {/* ABA: GERAR RELATÓRIO */}
-                  {circuitMode === 'edit' && (
+                  {/* ABA: PLANEJAR ATIVIDADE (PRÉ-AULA) */}
+                  {circuitMode === 'plan' && (
                     <div className="space-y-6 animate-fade-in pb-12">
                       <div className="bg-white p-5 sm:p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
                         <div className="flex justify-between items-center border-b border-slate-100 pb-4">
-                          <h2 className="text-lg sm:text-xl font-black text-slate-800"><i className="fa-solid fa-file-invoice text-emerald-500 mr-2"></i> Formulário Acadêmico</h2>
+                          <h2 className="text-lg sm:text-xl font-black text-slate-800"><i className="fa-solid fa-calendar-plus text-emerald-500 mr-2"></i> Planejamento da Atividade (Pré-Aula)</h2>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -579,27 +602,14 @@
 
                         <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Discentes Responsáveis</label><input type="text" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails, students: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Ex: Francyellen, Sarah, Raissa..." /></div>
                         
-                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Atividades Propostas (Lista)</label><textarea rows="3" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-4 rounded-xl border border-slate-300 outline-none text-sm leading-relaxed" placeholder="Atividade 1: Aquecimento..."></textarea></div>
-                        
-                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Objetivos da Atividade</label><textarea rows="3" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-4 rounded-xl border border-slate-300 outline-none text-sm leading-relaxed" placeholder="Promover o desenvolvimento das capacidades..."></textarea></div>
-
-                        {/* Operacional */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100">
-                          <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Registro de Sinais Vitais (Responsáveis)</label><input type="text" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails, vitalSigns: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Nome..." /></div>
-                          <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Som, Tempo e Fotos (Responsáveis)</label><input type="text" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails, soundAndPhotos: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Nome..." /></div>
-                          <div className="md:col-span-2"><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Participantes com cuidados especiais nas estações</label><input type="text" value={planDetails.specialCare} onChange={e=>setPlanDetails({...planDetails, specialCare: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Detalhes..." /></div>
-                        </div>
-
-                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Materiais Utilizados</label><textarea rows="3" value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails, materials: e.target.value})} className="w-full p-4 rounded-xl border border-slate-300 outline-none text-sm leading-relaxed" placeholder="Argolas, Cones, Bolas..."></textarea></div>
-
-                        {/* Estações */}
+                        {/* Estações (Planejamento) */}
                         <div className="space-y-6 pt-6 border-t border-slate-100">
-                          <h3 className="text-sm font-black text-slate-800 uppercase mb-2 text-emerald-600"><i className="fa-solid fa-dumbbell mr-2"></i> Desenvolvimento Prático (Quadra)</h3>
+                          <h3 className="text-sm font-black text-slate-800 uppercase mb-2 text-emerald-600"><i className="fa-solid fa-dumbbell mr-2"></i> Estrutura Prática (Quadra)</h3>
                           
                           <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Aquecimento</label><textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className="w-full p-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Dança funcional, exercícios respiratórios..."></textarea></div>
                           
                           <div className="space-y-4">
-                            <h4 className="text-xs font-bold text-slate-500 uppercase mt-4 mb-2">Estrutura das Estações</h4>
+                            <h4 className="text-xs font-bold text-slate-500 uppercase mt-4 mb-2">Estações do Circuito</h4>
                             {circuit.map((stationExercises, index) => (
                               <div key={index} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col md:flex-row items-stretch">
                                 <div className="bg-emerald-50 px-4 py-4 md:py-6 md:w-32 shrink-0 border-b md:border-b-0 md:border-r border-emerald-100 flex flex-col items-center justify-center text-center">
@@ -623,7 +633,7 @@
                                   ))}
 
                                   <select value="" onChange={(e) => addToCircuit(index, e.target.value)} className="w-full px-3 py-2 rounded-lg border border-dashed border-slate-300 bg-white hover:bg-slate-50 focus:ring-2 focus:ring-emerald-500 outline-none text-xs font-bold text-slate-500 cursor-pointer truncate">
-                                    <option value="">+ Adicionar exercício à estação...</option>
+                                    <option value="">+ Adicionar exercício da biblioteca à estação...</option>
                                     {approvedExercises.map(ex => (
                                       <option key={ex.id} value={ex.id}>[{ex.muscleGroup}] {ex.title}</option>
                                     ))}
@@ -634,16 +644,43 @@
                           </div>
 
                           <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Desaquecimento</label><textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className="w-full p-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Exercícios respiratórios..."></textarea></div>
-
-                          <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1 border-b border-brand-blue pb-1 text-brand-blue mt-4">Texto Narrativo do Desenvolvimento (Relato Completo)</label><textarea rows="6" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-4 rounded-xl border border-slate-300 outline-none text-sm leading-relaxed bg-slate-50" placeholder="Inicialmente, realizou-se um aquecimento coletivo... Na primeira estação, os participantes realizaram... Ao término do circuito..."></textarea></div>
                         </div>
 
-                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Resultado Obtido</label><textarea rows="4" value={planDetails.resultObtained} onChange={e=>setPlanDetails({...planDetails, resultObtained: e.target.value})} className="w-full p-4 rounded-xl border border-slate-300 outline-none text-sm leading-relaxed"></textarea></div>
+                        <div className="pt-6 mt-8 border-t border-slate-200 flex justify-end">
+                          <button onClick={handleSavePlan} className="w-full sm:w-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl shadow-md transition flex items-center justify-center gap-2"><i className="fa-solid fa-save"></i> Salvar Planejamento</button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
-                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Quantitativo de Idosos</label><input type="text" value={planDetails.attendanceCount} onChange={e=>setPlanDetails({...planDetails, attendanceCount: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Ex: 32 pessoas idosas." /></div>
+                  {/* ABA: PREENCHER RELATÓRIO PÓS-AULA */}
+                  {circuitMode === 'report_edit' && viewingCircuit && (
+                    <div className="space-y-6 animate-fade-in pb-12">
+                      <div className="bg-white p-5 sm:p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
+                        <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+                          <div>
+                            <h2 className="text-lg sm:text-xl font-black text-slate-800"><i className="fa-solid fa-pen-to-square text-brand-blue mr-2"></i> Preencher Relatório Pós-Atividade</h2>
+                            <p className="text-xs text-slate-500 mt-1">Atividade {planDetails.activityNum} - {planDetails.theme}</p>
+                          </div>
+                          <button onClick={() => setCircuitMode('view')} className="text-sm font-bold text-slate-400 hover:text-slate-600"><i className="fa-solid fa-xmark text-xl"></i></button>
+                        </div>
+                        
+                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Atividades Propostas (Lista)</label><textarea rows="3" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-4 rounded-xl border border-slate-300 outline-none text-sm leading-relaxed" placeholder="Atividade 1: Aquecimento..."></textarea></div>
+                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Objetivos da Atividade</label><textarea rows="3" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-4 rounded-xl border border-slate-300 outline-none text-sm leading-relaxed" placeholder="Promover o desenvolvimento das capacidades..."></textarea></div>
+                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Materiais Utilizados</label><textarea rows="2" value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails, materials: e.target.value})} className="w-full p-4 rounded-xl border border-slate-300 outline-none text-sm leading-relaxed" placeholder="Argolas, Cones, Bolas..."></textarea></div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100">
+                          <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Registro de Sinais Vitais (Responsáveis)</label><input type="text" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails, vitalSigns: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Nome..." /></div>
+                          <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Som, Tempo e Fotos (Responsáveis)</label><input type="text" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails, soundAndPhotos: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Nome..." /></div>
+                          <div className="md:col-span-2"><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Participantes com cuidados especiais</label><input type="text" value={planDetails.specialCare} onChange={e=>setPlanDetails({...planDetails, specialCare: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Detalhes..." /></div>
+                        </div>
+
+                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1 border-b border-brand-blue pb-1 text-brand-blue">Texto Narrativo do Desenvolvimento (Relato Completo da Aula)</label><textarea rows="6" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-4 rounded-xl border border-slate-300 outline-none text-sm leading-relaxed bg-slate-50" placeholder="Inicialmente, realizou-se um aquecimento coletivo... Na primeira estação... Ao término do circuito..."></textarea></div>
+                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Resultado Obtido</label><textarea rows="3" value={planDetails.resultObtained} onChange={e=>setPlanDetails({...planDetails, resultObtained: e.target.value})} className="w-full p-4 rounded-xl border border-slate-300 outline-none text-sm leading-relaxed"></textarea></div>
+                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Quantitativo de Idosos Presentes</label><input type="text" value={planDetails.attendanceCount} onChange={e=>setPlanDetails({...planDetails, attendanceCount: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Ex: 32 pessoas idosas." /></div>
 
                         <div className="pt-6 mt-8 border-t border-slate-200 flex justify-end">
-                          <button onClick={handleSaveCircuitToHistory} className="w-full sm:w-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl shadow-md transition flex items-center justify-center gap-2"><i className="fa-solid fa-save"></i> Salvar Relatório</button>
+                          <button onClick={handleUpdateReport} className="w-full sm:w-auto px-8 py-3.5 bg-brand-blue hover:bg-brand-dark text-white font-black rounded-xl shadow-md transition flex items-center justify-center gap-2"><i className="fa-solid fa-save"></i> Salvar Relatório</button>
                         </div>
                       </div>
                     </div>
@@ -651,34 +688,39 @@
 
                   {/* ABA: HISTÓRICO EM LISTA */}
                   {circuitMode === 'history' && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-fade-in">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
                       {savedCircuits.length === 0 ? (
-                        <div className="col-span-full text-center py-12"><i className="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i><p className="text-slate-500">Nenhum relatório salvo no histórico ainda.</p></div>
+                        <div className="col-span-full text-center py-12"><i className="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i><p className="text-slate-500">Nenhum registro salvo no histórico ainda.</p></div>
                       ) : (
                         savedCircuits.map(circ => (
                           <div key={circ.id} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col" onClick={() => {setViewingCircuit(circ); setCircuitMode('view');}}>
                             <div className="flex justify-between items-start mb-4">
-                              <div className="w-12 h-12 bg-brand-blue/10 text-brand-blue rounded-full flex items-center justify-center text-xl"><i className="fa-solid fa-file-pdf"></i></div>
+                              <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl ${circ.details?.resultObtained ? 'bg-brand-blue/10 text-brand-blue' : 'bg-emerald-100 text-emerald-600'}`}>
+                                <i className={`fa-solid ${circ.details?.resultObtained ? 'fa-file-pdf' : 'fa-calendar-check'}`}></i>
+                              </div>
                               <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">{circ.activity_date.split('-').reverse().join('/')}</span>
                             </div>
                             <h3 className="text-lg font-black text-slate-800 mb-1 leading-tight">Atividade {circ.details?.activityNum || '-'}</h3>
                             <p className="text-xs font-bold text-slate-500 mb-4 line-clamp-2">{circ.details?.theme || 'Tema não informado'}</p>
-                            <button className="mt-auto pt-4 border-t border-slate-100 text-sm font-bold text-emerald-600 flex items-center gap-2 group">Abrir para Gerar PDF <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i></button>
+                            <button className={`mt-auto pt-4 border-t border-slate-100 text-sm font-bold flex items-center gap-2 group ${circ.details?.resultObtained ? 'text-brand-blue' : 'text-emerald-600'}`}>
+                              {circ.details?.resultObtained ? 'Abrir Relatório Final / PDF' : 'Ver Aula / Preencher Relatório'} <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+                            </button>
                           </div>
                         ))
                       )}
                     </div>
                   )}
 
-                  {/* ABA: VISUALIZANDO RELATÓRIO SALVO */}
+                  {/* ABA: VISUALIZANDO AULA / RELATÓRIO SALVO */}
                   {circuitMode === 'view' && viewingCircuit && (
                     <div className="space-y-6 animate-fade-in pb-12">
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 gap-4">
-                        <button onClick={() => setCircuitMode('history')} className="w-full sm:w-auto px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition text-sm flex items-center justify-center"><i className="fa-solid fa-arrow-left mr-2"></i> Voltar</button>
-                        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 gap-4">
+                        <button onClick={() => setCircuitMode('history')} className="w-full md:w-auto px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition text-sm flex items-center justify-center"><i className="fa-solid fa-arrow-left mr-2"></i> Voltar</button>
+                        <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                           {isAdmin && (
                              <button onClick={() => handleDeleteCircuit(viewingCircuit.id)} className="w-full sm:w-auto px-5 py-2.5 bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 font-bold rounded-xl transition text-sm flex items-center justify-center"><i className="fa-solid fa-trash mr-2"></i> Apagar</button>
                           )}
+                          <button onClick={startEditingReport} className="w-full sm:w-auto px-5 py-2.5 bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100 font-bold rounded-xl transition text-sm shadow-sm flex items-center justify-center"><i className="fa-solid fa-pen-to-square mr-2"></i> Preencher / Editar Relatório</button>
                           <button onClick={() => handleGeneratePDF(viewingCircuit)} className="w-full sm:w-auto px-5 py-2.5 bg-brand-blue hover:bg-brand-dark text-white font-bold rounded-xl transition text-sm shadow-md flex items-center justify-center"><i className="fa-solid fa-download mr-2"></i> Baixar PDF</button>
                         </div>
                       </div>
@@ -690,26 +732,26 @@
                         </div>
                         
                         <p className="mb-2"><strong>DATA DE REALIZAÇÃO DA ATIVIDADE:</strong> {viewingCircuit.activity_date.split('-').reverse().join('/')}</p>
-                        <p className="mb-6"><strong>DISCENTES RESPONSÁVEIS PELA ATIVIDADE:</strong> {viewingCircuit.details?.students}</p>
+                        <p className="mb-6"><strong>DISCENTES RESPONSÁVEIS PELA ATIVIDADE:</strong> {viewingCircuit.details?.students || '-'}</p>
                         
                         <p className="font-bold mb-1">ATIVIDADE(S) PROPOSTA(S):</p>
-                        <p className="mb-6 whitespace-pre-line break-words">{viewingCircuit.details?.proposedActivities}</p>
+                        <p className="mb-6 whitespace-pre-line break-words">{viewingCircuit.details?.proposedActivities || 'Não informado no planejamento.'}</p>
 
                         <p className="font-bold mb-1">OBJETIVO(S) DA(S) ATIVIDADE(S):</p>
-                        <p className="mb-6 text-justify whitespace-pre-line break-words">{viewingCircuit.details?.objectives}</p>
+                        <p className="mb-6 text-justify whitespace-pre-line break-words">{viewingCircuit.details?.objectives || 'Não informado.'}</p>
 
                         <p className="font-bold mb-1">OBSERVAÇÕES OPERACIONAIS:</p>
                         <ul className="mb-6 list-disc list-inside">
-                          <li>Registro dos sinais vitais: {viewingCircuit.details?.vitalSigns}</li>
-                          <li>Som, tempo e fotos: {viewingCircuit.details?.soundAndPhotos}</li>
-                          <li>Cuidados especiais: {viewingCircuit.details?.specialCare}</li>
+                          <li>Registro dos sinais vitais: {viewingCircuit.details?.vitalSigns || '-'}</li>
+                          <li>Som, tempo e fotos: {viewingCircuit.details?.soundAndPhotos || '-'}</li>
+                          <li>Cuidados especiais: {viewingCircuit.details?.specialCare || '-'}</li>
                         </ul>
 
                         <p className="font-bold mb-1">MATERIAIS UTILIZADOS:</p>
-                        <p className="mb-6 whitespace-pre-line break-words">{viewingCircuit.details?.materials}</p>
+                        <p className="mb-6 whitespace-pre-line break-words">{viewingCircuit.details?.materials || 'Não informado.'}</p>
 
                         <p className="font-bold mb-1">DESENVOLVIMENTO DA ATIVIDADE:</p>
-                        <p className="mb-2"><strong>Aquecimento:</strong> {viewingCircuit.details?.warmUp}</p>
+                        <p className="mb-2"><strong>Aquecimento:</strong> {viewingCircuit.details?.warmUp || 'Não informado.'}</p>
                         
                         <div className="mb-4 pl-4 border-l-2 border-slate-200 py-2">
                           {viewingCircuit.stations && viewingCircuit.stations.map((station, idx) => (
@@ -717,7 +759,7 @@
                               <p className="font-bold">Estação {idx + 1} {idx === 4 ? "- Circuito Funcional" : ""}</p>
                               <p className="text-xs text-slate-500 mb-1">Responsáveis: {viewingCircuit.details?.stationResponsibles?.[idx]}</p>
                               <ul className="list-disc list-inside text-xs">
-                                {station.length === 0 ? <li>Sem exercícios.</li> : station.map(ex => <li key={ex.id}>{ex.title} - {ex.dosage}</li>)}
+                                {station.length === 0 ? <li>Sem exercícios vinculados.</li> : station.map(ex => <li key={ex.id}>{ex.title} - {ex.dosage}</li>)}
                               </ul>
                             </div>
                           ))}
@@ -725,13 +767,13 @@
 
                         <p className="mb-6"><strong>Desaquecimento:</strong> {viewingCircuit.details?.coolDown}</p>
 
-                        <p className="font-bold mb-1">RELATO NARRATIVO:</p>
-                        <p className="mb-6 text-justify whitespace-pre-line break-words">{viewingCircuit.details?.developmentNarrative}</p>
+                        <p className="font-bold mb-1">RELATO NARRATIVO PÓS-AULA:</p>
+                        <p className="mb-6 text-justify whitespace-pre-line break-words">{viewingCircuit.details?.developmentNarrative || 'Relatório ainda não preenchido.'}</p>
 
                         <p className="font-bold mb-1">RESULTADO OBTIDO COM A ATIVIDADE:</p>
-                        <p className="mb-6 text-justify whitespace-pre-line break-words">{viewingCircuit.details?.resultObtained}</p>
+                        <p className="mb-6 text-justify whitespace-pre-line break-words">{viewingCircuit.details?.resultObtained || 'Relatório ainda não preenchido.'}</p>
 
-                        <p><strong>QUANTITATIVO DE IDOSOS:</strong> {viewingCircuit.details?.attendanceCount}</p>
+                        <p><strong>QUANTITATIVO DE IDOSOS:</strong> {viewingCircuit.details?.attendanceCount || 'Não informado.'}</p>
                       </div>
                     </div>
                   )}
@@ -816,174 +858,6 @@
                       <div className="col-span-full text-center py-12"><i className="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i><p className="text-slate-500">Nenhum exercício encontrado.</p></div>
                     )}
                   </div>
-                </div>
-              )}
-
-              {/* ==========================================
-                  TELA: DETALHES DO EXERCÍCIO
-              ========================================== */}
-              {currentView === 'detail' && selectedExercise && (
-                <div className="max-w-4xl mx-auto pb-12 animate-fade-in">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                    <button onClick={() => setCurrentView('library')} className="w-full sm:w-auto text-sm font-bold text-slate-500 hover:text-brand-blue bg-white px-5 py-2.5 rounded-xl border shadow-sm transition flex items-center justify-center"><i className="fa-solid fa-arrow-left mr-2"></i> Voltar</button>
-                    {isAdmin && (
-                       <button onClick={() => handleDeleteExercise(selectedExercise.id)} className="w-full sm:w-auto text-sm font-bold text-rose-500 hover:bg-rose-50 bg-white px-5 py-2.5 rounded-xl border border-rose-200 shadow-sm transition flex items-center justify-center"><i className="fa-solid fa-trash mr-2"></i> Apagar Exercício</button>
-                    )}
-                  </div>
-
-                  <div className="bg-white rounded-3xl border shadow-md overflow-hidden">
-                    <div className="p-6 sm:p-10 border-b bg-slate-50">
-                      <div className="flex flex-wrap items-center gap-2 mb-4">
-                        <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-white bg-brand-blue px-3 sm:px-4 py-1.5 rounded-lg shadow-sm">{CATEGORIES[selectedExercise.category]?.shortTitle || selectedExercise.category}</span>
-                        <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-brand-red bg-white border border-brand-red px-3 sm:px-4 py-1.5 rounded-lg">{selectedExercise.difficulty}</span>
-                      </div>
-                      <h1 className="text-2xl sm:text-4xl font-black text-slate-800 mb-6 leading-tight">{selectedExercise.title}</h1>
-                      <div className="flex flex-wrap gap-4 text-xs font-bold text-slate-600">
-                        <div className="bg-white border border-slate-200 px-4 sm:px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-sm"><i className="fa-solid fa-bullseye text-brand-red text-base"></i> Foco: {selectedExercise.muscleGroup}</div>
-                      </div>
-                    </div>
-                    
-                    <div className="w-full bg-slate-900 aspect-video flex items-center justify-center relative shadow-inner overflow-hidden">
-                      {getYouTubeId(selectedExercise.videoUrl) ? ( 
-                        <iframe className="w-full h-full absolute inset-0" src={`https://www.youtube-nocookie.com/embed/${getYouTubeId(selectedExercise.videoUrl)}?rel=0`} title="Tutorial" frameBorder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe> 
-                      ) : selectedExercise.mediaUrl ? (
-                        selectedExercise.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i) ? (
-                          <video src={selectedExercise.mediaUrl} controls className="w-full h-full object-contain"></video>
-                        ) : (
-                          <img src={selectedExercise.mediaUrl} className="w-full h-full object-contain" />
-                        )
-                      ) : ( 
-                        <div className="text-center text-slate-400"><i className="fa-solid fa-video-slash text-4xl mb-2"></i><p>Nenhuma mídia vinculada</p></div> 
-                      )}
-                    </div>
-                    
-                    {getYouTubeId(selectedExercise.videoUrl) && (
-                      <div className="bg-slate-800 text-center py-3 border-t border-slate-700">
-                        <a href={selectedExercise.videoUrl} target="_blank" className="text-xs text-slate-300 hover:text-white transition flex items-center justify-center gap-2"><i className="fa-brands fa-youtube text-brand-red text-lg"></i> Ver direto no YouTube</a>
-                      </div>
-                    )}
-
-                    <div className="p-6 sm:p-10 space-y-8">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                        <div><h4 className="text-[10px] sm:text-xs font-black text-brand-blue uppercase tracking-widest mb-1">Equipamento</h4><p className="font-bold text-slate-700">{selectedExercise.equipment}</p></div>
-                        <div><h4 className="text-[10px] sm:text-xs font-black text-brand-blue uppercase tracking-widest mb-1">Dosagem (Séries/Reps)</h4><p className="font-bold text-slate-700">{selectedExercise.dosage}</p></div>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
-                        <div><h4 className="text-sm font-black text-slate-800 uppercase flex items-center gap-2 mb-4 border-b border-slate-100 pb-3"><i className="fa-solid fa-list-ol text-brand-red"></i> Passo a Passo</h4><div className="whitespace-pre-line bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-100 text-sm leading-relaxed text-slate-600">{selectedExercise.instructions}</div></div>
-                        <div><h4 className="text-sm font-black text-slate-800 uppercase flex items-center gap-2 mb-4 border-b border-slate-100 pb-3"><i className="fa-solid fa-triangle-exclamation text-amber-500"></i> Precauções Clínicas</h4><div className="whitespace-pre-line bg-amber-50 p-5 sm:p-6 rounded-2xl border border-amber-200 text-sm leading-relaxed text-amber-900 font-bold">{selectedExercise.precautions || 'Nenhuma precaução informada.'}</div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* ==========================================
-                  TELA: CADASTRO COM ANEXO (UPLOAD)
-              ========================================== */}
-              {currentView === 'cadastro' && (
-                <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                  <div className="bg-brand-blue p-6 sm:p-8 text-white">
-                    <h2 className="text-xl sm:text-2xl font-black flex items-center gap-3"><i className="fa-solid fa-file-medical text-brand-red"></i> Cadastro de Exercício</h2>
-                    <p className="text-xs sm:text-sm text-slate-300 mt-2">Você pode colar um link do YouTube ou enviar um vídeo/foto direto da galeria do seu celular.</p>
-                  </div>
-                  
-                  {formStatus.success ? (
-                    <div className="p-8 sm:p-12 text-center bg-emerald-50"><i className="fa-solid fa-circle-check text-5xl sm:text-6xl text-emerald-500 mb-4"></i><h3 className="text-xl sm:text-2xl font-black text-emerald-800 mb-2">Enviado com Sucesso!</h3><p className="text-sm sm:text-base text-emerald-600 font-medium mb-6">O exercício está aguardando aprovação.</p><button onClick={() => setFormStatus({loading: false, success: false, error: ''})} className="px-6 py-3 rounded-xl font-bold text-white bg-emerald-600 transition w-full sm:w-auto">Cadastrar Outro Exercício</button></div>
-                  ) : (
-                    <form className="p-6 sm:p-8 space-y-8" onSubmit={handleFormSubmit}>
-                      <div className="space-y-4">
-                        <h3 className="text-sm font-black text-slate-800 uppercase border-b border-slate-100 pb-2">1. Identificação</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="md:col-span-2"><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Título do Exercício *</label><input type="text" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} required className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Ex: Sentar e Levantar da Cadeira" /></div>
-                          <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Tema Principal *</label><select required value={formCat} onChange={(e) => {setFormCat(e.target.value); setFormMuscleSelect('');}} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none bg-white text-sm"><option value="">Selecione a categoria...</option>{Object.keys(CATEGORIES).map(k => <option key={k} value={k}>{CATEGORIES[k].title}</option>)}</select></div>
-                          <div>
-                            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Músculo / Foco Principal *</label>
-                            <select required value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none bg-white text-sm disabled:bg-slate-50 disabled:text-slate-400" disabled={!formCat}><option value="">Selecione o grupo muscular...</option>{formCat && CATEGORIES[formCat].subgroups.filter(s => s !== 'Todos').map(sub => (<option key={sub} value={sub}>{sub}</option>))}</select>
-                            {formMuscleSelect === 'Outro' && (<input type="text" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className="w-full px-4 py-3 mt-3 rounded-xl border border-brand-red bg-red-50 outline-none text-sm" placeholder="Digite qual é o músculo..." />)}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <h3 className="text-sm font-black text-slate-800 uppercase border-b border-slate-100 pb-2">2. Prescrição e Mídia</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Dosagem Sugerida *</label><input type="text" value={formData.dosage} onChange={e=>setFormData({...formData, dosage: e.target.value})} required className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Ex: 3 séries de 10 repetições" /></div>
-                          <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Dificuldade *</label><select required value={formData.difficulty} onChange={e=>setFormData({...formData, difficulty: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none bg-white text-sm"><option value="Iniciante / Leve">Iniciante / Leve</option><option value="Intermediário">Intermediário</option><option value="Avançado / Desafiador">Avançado / Desafiador</option></select></div>
-                          
-                          <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Equipamento</label><input type="text" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="Ex: Cadeira, Halter..." /></div>
-                            <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Link do Vídeo (YouTube)</label><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none text-sm" placeholder="https://youtube.com/watch?v=..." /></div>
-                            <div>
-                               <label className="block text-[10px] sm:text-xs font-black text-brand-blue uppercase mb-1">OU ANEXAR (CELULAR/PC)</label>
-                               <input type="file" accept="image/*,video/*" onChange={e=>setMediaFile(e.target.files[0])} className="w-full px-3 py-2.5 rounded-xl border border-brand-blue/30 bg-blue-50 outline-none text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brand-blue file:text-white hover:file:bg-brand-dark transition cursor-pointer" />
-                            </div>
-                          </div>
-
-                          <div className="md:col-span-2"><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Passo a Passo da Execução *</label><textarea rows="4" value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})} required className="w-full p-4 rounded-xl border border-slate-300 outline-none text-sm leading-relaxed" placeholder="1. Posição inicial...&#10;2. Movimento..."></textarea></div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <h3 className="text-sm font-black text-slate-800 uppercase border-b border-slate-100 pb-2 text-brand-red">3. Segurança Clínica</h3>
-                        <div><label className="block text-xs font-bold text-slate-500 uppercase mb-1">Precauções e Contraindicações</label><textarea rows="2" value={formData.precautions} onChange={e=>setFormData({...formData, precautions: e.target.value})} className="w-full p-4 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 outline-none text-sm leading-relaxed" placeholder="Ex: Evitar a hiperextensão..."></textarea></div>
-                      </div>
-
-                      <div className="flex justify-end pt-4 border-t border-slate-100">
-                        <button type="submit" disabled={formStatus.loading} className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-white bg-brand-red hover:bg-brand-redDark shadow-md transition flex items-center justify-center gap-2">
-                          {formStatus.loading ? 'Enviando... Aguarde' : <><i className="fa-solid fa-paper-plane"></i> Enviar para Aprovação</>}
-                        </button>
-                      </div>
-                    </form>
-                  )}
-                </div>
-              )}
-
-              {/* ==========================================
-                  TELA: APROVAÇÕES PENDENTES (ADMIN)
-              ========================================== */}
-              {currentView === 'aprovacoes' && (
-                <div className="max-w-4xl mx-auto">
-                  <h2 className="text-2xl font-black text-slate-800 mb-6 flex items-center gap-3"><i className="fa-solid fa-check-double text-brand-red"></i> Fila de Aprovação Clínica</h2>
-                  {pendingCount === 0 ? (
-                    <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-12 text-center"><i className="fa-solid fa-clipboard-check text-6xl text-slate-200 mb-4"></i><h3 className="text-xl font-bold text-slate-700">Nenhum exercício pendente</h3></div>
-                  ) : (
-                    <div className="space-y-6">
-                      {exercises.filter(ex => ex.status === 'pending').map(ex => {
-                        const ytId = getYouTubeId(ex.videoUrl);
-                        const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : null;
-                        const isImage = ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i);
-                        const isVideo = ex.mediaUrl && ex.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i);
-
-                        return (
-                          <div key={ex.id} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 flex flex-col md:flex-row gap-4 sm:gap-6 items-start">
-                            
-                            <div className="w-full md:w-48 aspect-video bg-slate-100 rounded-xl overflow-hidden shrink-0 flex items-center justify-center">
-                              {ytThumb ? (
-                                <img src={ytThumb} className="w-full h-full object-cover" />
-                              ) : isImage ? (
-                                <img src={ex.mediaUrl} className="w-full h-full object-cover" />
-                              ) : isVideo ? (
-                                <div className="w-full h-full bg-slate-200 flex flex-col items-center justify-center"><i className="fa-solid fa-film text-3xl text-slate-400 mb-1"></i><span className="text-[10px] font-bold text-slate-500 uppercase">Vídeo Anexado</span></div>
-                              ) : (
-                                <i className="fa-solid fa-video-slash text-3xl text-slate-300"></i>
-                              )}
-                            </div>
-
-                            <div className="flex-1 w-full">
-                              <div className="flex justify-between items-start mb-2"><span className="text-[10px] font-black uppercase tracking-widest text-amber-600 bg-amber-50 px-2.5 py-1 rounded border border-amber-200 mb-2 inline-block">Aguardando Avaliação</span><span className="text-xs font-bold text-slate-400">Por: {ex.author}</span></div>
-                              <h3 className="font-black text-slate-800 text-lg sm:text-xl mb-1">{ex.title}</h3>
-                              <p className="text-xs font-bold text-slate-500 mb-4"><i className="fa-solid fa-bullseye text-brand-red mr-1"></i> {ex.muscleGroup}</p>
-                              <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-3 mt-auto pt-4 border-t border-slate-100">
-                                <button onClick={() => {setSelectedExercise(ex); setCurrentView('detail');}} className="flex-1 sm:flex-none px-3 py-2 bg-slate-100 text-slate-700 font-bold text-xs rounded-lg hover:bg-slate-200 transition text-center"><i className="fa-solid fa-eye sm:mr-1"></i> <span className="hidden sm:inline">Revisar Completo</span><span className="sm:hidden">Ver</span></button>
-                                <button onClick={() => handleApprove(ex.id)} className="flex-1 sm:flex-none px-3 py-2 bg-emerald-100 text-emerald-700 font-bold text-xs rounded-lg hover:bg-emerald-200 transition text-center"><i className="fa-solid fa-check sm:mr-1"></i> Aprovar</button>
-                                <button onClick={() => handleReject(ex.id)} className="flex-1 sm:flex-none px-3 py-2 bg-rose-100 text-rose-700 font-bold text-xs rounded-lg sm:ml-auto hover:bg-rose-200 transition text-center"><i className="fa-solid fa-xmark sm:mr-1"></i> Rejeitar</button>
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
                 </div>
               )}
 
