@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATIVIDOSO | Criar Senha</title>
+  <!-- Carrega a biblioteca do Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+    input { padding: 10px; margin: 10px; width: 200px; }
+    button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <h2>Bem-vindo à equipe ATIVIDOSO!</h2>
+  <p>Crie sua senha definitiva de acesso:</p>
+
+  <input type="password" id="campoSenha" placeholder="Digite sua nova senha">
+  <br>
+  <button onclick="salvarSenha()">Salvar Senha</button>
+
+  <script>
+    // 1. Cole aqui a URL e a chave pública (anon key) do seu Supabase
+    const supabaseUrl = 'https://rewkwzxuogdopzkqliwi.supabase.com';
+    const supabaseKey = 'sb_publishable_WtX-V75sKhWRnm7G_x6W1Q_fzuagXGH';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    // 2. Função que roda quando o botão é clicado
+    async function salvarSenha() {
+      // Pega o que foi digitado no campo
+      const novaSenha = document.getElementById('campoSenha').value;
+
+      if (!novaSenha) {
+        alert("Por favor, digite uma senha.");
+        return;
+      }
+
+      // Envia a nova senha para o Supabase
+      const { data, error } = await supabase.auth.updateUser({
+        password: novaSenha
+      });
+
+      if (error) {
+        alert("Erro ao criar senha: " + error.message);
+      } else {
+        alert("Senha criada com sucesso! Seja bem-vindo.");
+        // Redireciona o usuário para a página principal do projeto
+        window.location.href = 'index.html'; 
+      }
+    }
+  </script>
+
+</body>
+</html>
