@@ -80,36 +80,37 @@
         fetchAll();
       }, [currentView, circuitMode]);
 
-      // Alerta da Agenda
+     // Alerta da Agenda (Corrigido com a trava de equipe)
       const upcomingActivity = useMemo(() => {
         if(!session.team_group || session.team_group === 'Nenhum') return null;
         const today = new Date(); 
         today.setHours(0,0,0,0);
         
+        // 1. Descobre qual é a atividade da SEMANA ATUAL no calendário geral
+        let atividadeDestaSemana = null;
+        
         for (let item of AGENDA_DATA) {
-          if (item.resp.includes(session.team_group) || item.resp.includes('Todos')) {
-            const [d, m, y] = item.date.split('/'); 
-            const itemDate = new Date(y, m - 1, d); 
-            itemDate.setDate(itemDate.getDate() + 1); 
-            if (itemDate >= today) return item;
+          const [d, m, y] = item.date.split('/'); 
+          const itemDate = new Date(y, m - 1, d); 
+          itemDate.setDate(itemDate.getDate() + 1); // Mantém a sua lógica original de fuso horário
+          
+          if (itemDate >= today) {
+            atividadeDestaSemana = item;
+            break; // Achou a atividade mais próxima de hoje e para a busca
           }
         }
-        return null;
+
+        // Se não tiver mais nenhuma atividade no semestre, esconde o aviso
+        if (!atividadeDestaSemana) return null;
+
+        // 2. A TRAVA INVISÍVEL: A equipe desta semana é a equipe do usuário logado?
+        if (atividadeDestaSemana.resp.includes(session.team_group) || atividadeDestaSemana.resp.includes('Todos')) {
+          return atividadeDestaSemana; // O grupo bateu! Mostra a notificação.
+        }
+        
+        // O grupo não é o desta semana. Retorna null e esconde o aviso.
+        return null; 
       }, [session.team_group]);
-
-      const approvedExercises = exercises.filter(ex => ex.status === 'approved');
-      const filteredExercises = approvedExercises.filter(ex => 
-        (filterCat === 'all' || ex.category === filterCat) && 
-        (filterSub === 'Todos' || ex.muscleGroup === filterSub) && 
-        (ex.title.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-      const pendingCount = exercises.filter(ex => ex.status === 'pending').length;
-
-      const getYouTubeId = (url) => {
-        if (!url) return null;
-        const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
-        return match ? match[1] : null;
-      };
 
       // ======= FUNÇÕES DE PERFIL =======
       const handleSaveProfile = async (e) => {
