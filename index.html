@@ -989,8 +989,14 @@ Coordenação ATIVIDOSO`;
       const [session, setSession] = useState(null);
       const [loadingAuth, setLoadingAuth] = useState(true);
 
-      useEffect(() => {
-        // if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+     useEffect(() => {
+        // CÓDIGO EXTERMINADOR DE CACHE (Limpa o celular de todos os monitores)
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            for (let reg of registrations) { reg.unregister(); }
+          });
+        }
+
         supabaseClient.auth.getSession().then(async ({ data: { session } }) => {
           if (session) {
             const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
