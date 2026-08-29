@@ -80,37 +80,35 @@
         fetchAll();
       }, [currentView, circuitMode]);
 
-     // Alerta da Agenda (Corrigido Definitivo)
+     // Alerta da Agenda (Corrigido com a trava de equipe)
       const upcomingActivity = useMemo(() => {
         if(!session.team_group || session.team_group === 'Nenhum') return null;
-        
         const today = new Date(); 
         today.setHours(0,0,0,0);
         
+        // 1. Descobre qual é a atividade da SEMANA ATUAL no calendário geral
         let atividadeDestaSemana = null;
         
         for (let item of AGENDA_DATA) {
           const [d, m, y] = item.date.split('/'); 
-          // Retiramos aquele +1 dia que estava segurando a atividade no sábado
           const itemDate = new Date(y, m - 1, d); 
+          itemDate.setDate(itemDate.getDate() + 1); // Mantém a sua lógica original de fuso horário
           
           if (itemDate >= today) {
             atividadeDestaSemana = item;
-            break; 
+            break; // Achou a atividade mais próxima de hoje e para a busca
           }
         }
 
+        // Se não tiver mais nenhuma atividade no semestre, esconde o aviso
         if (!atividadeDestaSemana) return null;
 
-        // Converte os dois para minúsculo para evitar erro de E2 maiúsculo/minúsculo
-        const grupoUsuario = session.team_group.toLowerCase();
-        const responsaveis = atividadeDestaSemana.resp.toLowerCase();
-
-        // A TRAVA BLINDADA:
-        if (responsaveis.includes(grupoUsuario) || responsaveis.includes('todos')) {
-          return atividadeDestaSemana; 
+        // 2. A TRAVA INVISÍVEL: A equipe desta semana é a equipe do usuário logado?
+        if (atividadeDestaSemana.resp.includes(session.team_group) || atividadeDestaSemana.resp.includes('Todos')) {
+          return atividadeDestaSemana; // O grupo bateu! Mostra a notificação.
         }
         
+        // O grupo não é o desta semana. Retorna null e esconde o aviso.
         return null; 
       }, [session.team_group]);
 
@@ -530,7 +528,7 @@ Coordenação ATIVIDOSO`;
                       <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blob-shape rotate-45 mix-blend-overlay"></div>
                       <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shrink-0 border border-white/30 text-3xl"><i className="fa-solid fa-bell animate-bounce"></i></div>
                       <div className="text-center md:text-left relative z-10 flex-1">
-                        <h2 className="text-xl sm:text-2xl font-black mb-1">Atenção, {session.team_group}! É a vez de vocês!</h2>
+                        <h2 className="text-xl sm:text-2xl font-black mb-1">Atenção, {session.team_group}! É a vez de vocês! ✅</h2>
                         <p className="text-emerald-50 font-semibold mb-3">A agenda indica que o seu grupo está responsável pela próxima aula na quadra.</p>
                         <div className="bg-white/10 p-4 rounded-xl border border-white/20 inline-block text-left w-full sm:w-auto">
                           <p className="text-sm"><strong className="uppercase tracking-widest text-[10px] text-emerald-200 block mb-1">Data e Tema</strong></p>
@@ -984,7 +982,7 @@ Coordenação ATIVIDOSO`;
       const [loadingAuth, setLoadingAuth] = useState(true);
 
       useEffect(() => {
-        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+        // if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(()=>{}); }
         supabaseClient.auth.getSession().then(async ({ data: { session } }) => {
           if (session) {
             const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
