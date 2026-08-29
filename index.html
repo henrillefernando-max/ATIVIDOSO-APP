@@ -80,38 +80,46 @@
         fetchAll();
       }, [currentView, circuitMode]);
 
-     // Alerta da Agenda (Corrigido com a trava de equipe)
+     // Alerta da Agenda (Cálculo de Data Blindado contra Fuso Horário)
       const upcomingActivity = useMemo(() => {
         if(!session.team_group || session.team_group === 'Nenhum') return null;
-        const today = new Date(); 
-        today.setHours(0,0,0,0);
         
-        // 1. Descobre qual é a atividade da SEMANA ATUAL no calendário geral
+        // Pega o dia de HOJE de forma pura, sem horas, para não dar erro de fuso
+        const hoje = new Date();
+        const anoAtual = hoje.getFullYear();
+        const mesAtual = hoje.getMonth() + 1; // getMonth começa do 0, então +1
+        const diaAtual = hoje.getDate();
+        
+        // Converte o hoje para um número grande (ex: 20260829) para facilitar a matemática
+        const numeroHoje = parseInt(`${anoAtual}${String(mesAtual).padStart(2, '0')}${String(diaAtual).padStart(2, '0')}`);
+        
         let atividadeDestaSemana = null;
         
         for (let item of AGENDA_DATA) {
           const [d, m, y] = item.date.split('/'); 
-          const itemDate = new Date(y, m - 1, d); 
-          itemDate.setDate(itemDate.getDate() + 1); // Mantém a sua lógica original de fuso horário
           
-          if (itemDate >= today) {
+          // Converte a data da planilha para o mesmo formato de número (ex: 20260828)
+          const numeroAtividade = parseInt(`${y}${m}${d}`);
+          
+          // A REGRA DE OURO: A atividade só é válida se o número dela for MAIOR ou IGUAL a hoje
+          if (numeroAtividade >= numeroHoje) {
             atividadeDestaSemana = item;
-            break; // Achou a atividade mais próxima de hoje e para a busca
+            break; 
           }
         }
 
-        // Se não tiver mais nenhuma atividade no semestre, esconde o aviso
         if (!atividadeDestaSemana) return null;
 
-        // 2. A TRAVA INVISÍVEL: A equipe desta semana é a equipe do usuário logado?
-        if (atividadeDestaSemana.resp.includes(session.team_group) || atividadeDestaSemana.resp.includes('Todos')) {
-          return atividadeDestaSemana; // O grupo bateu! Mostra a notificação.
+        const grupoUsuario = session.team_group.toLowerCase();
+        const responsaveis = atividadeDestaSemana.resp.toLowerCase();
+
+        // A TRAVA BLINDADA:
+        if (responsaveis.includes(grupoUsuario) || responsaveis.includes('todos')) {
+          return atividadeDestaSemana; 
         }
         
-        // O grupo não é o desta semana. Retorna null e esconde o aviso.
         return null; 
       }, [session.team_group]);
-
       // ======= FUNÇÕES DE PERFIL =======
       const handleSaveProfile = async (e) => {
         e.preventDefault(); 
