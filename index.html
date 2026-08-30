@@ -297,19 +297,8 @@
       };
 
       // ======= FUNÇÕES DE AVISOS =======
-      const handleDeleteAnnouncement = async (id) => { 
-        if(window.confirm("Apagar este aviso permanentemente?")) { 
-          const { error } = await supabaseClient.from('announcements').delete().eq('id', id); 
-          
-          // Armadilha para pegar o bloqueio do Supabase
-          if (error) {
-            alert("Erro ao tentar apagar no Supabase: " + error.message);
-          } else {
-            // Só some da tela se o banco realmente apagar
-            setAnnouncements(announcements.filter(a => a.id !== id)); 
-          }
-        } 
-      };
+      const handlePostAnnouncement = async (e) => {
+        e.preventDefault();
         
         // Dispara a tentativa de salvar no banco
         const { data, error } = await supabaseClient.from('announcements').insert([{
