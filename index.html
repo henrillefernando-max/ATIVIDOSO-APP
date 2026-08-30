@@ -1,4 +1,171 @@
-                    <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-5 pr-12 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm transition-all font-semibold" placeholder="••••••••" />
+  <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATIVIDOSO - Plataforma Integrada</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue: '#202b5c',
+              dark: '#161e42',
+              red: '#e63946',
+              redDark: '#c52833'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Babel (JSX Support) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Html2Pdf para Relatórios -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .hover-lift { transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
+    .bg-pattern { background-color: #f8fafc; background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 24px 24px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-red selection:text-white">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const SUPABASE_URL = "https://rewkwzxuogdopzkqliwi.supabase.co";
+    // ATENÇÃO: NÃO ESQUEÇA DE COLAR SUA CHAVE ABAIXO ANTES DE SALVAR!
+    const SUPABASE_ANON_KEY = "COLE_SUA_CHAVE_AQUI"; 
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const AGENDA_DATA = [
+      { act: "17", date: "14/08/2026", title: "RETORNO DAS ATIVIDADES - Gincana/dinâmica", resp: "Todos" },
+      { act: "18", date: "21/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "19", date: "28/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "20", date: "04/09/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "21", date: "11/09/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "22", date: "18/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "23", date: "25/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "24", date: "02/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "25", date: "09/10/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "26", date: "16/10/2026", title: "Atividade educativa em saúde e promoção do autocuidado", resp: "Todos" },
+      { act: "27", date: "23/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "28", date: "30/10/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "29", date: "06/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "30", date: "13/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "31", date: "27/11/2026", title: "Avaliação participativa dos participantes e planejamento das próximas atividades", resp: "Todos" },
+      { act: "32", date: "04/12/2026", title: "Atividade temática de integração/confraternização e encerramento do semestre letivo", resp: "Todos" }
+    ];
+
+    const CATEGORIES = {
+      mmss: { title: "Membros Superiores", shortTitle: "MMSS", icon: "fa-hand-fist", color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100", subgroups: ["Todos", "Ombro", "Cotovelo / Punho", "Mãos / Destreza"] },
+      mmii: { title: "Membros Inferiores", shortTitle: "MMII", icon: "fa-shoe-prints", color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-100", subgroups: ["Todos", "Quadril", "Joelho", "Tornozelo / Pé"] },
+      core: { title: "Core e Tronco", shortTitle: "Core", icon: "fa-child-reaching", color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-100", subgroups: ["Todos", "Abdômen", "Lombar", "Postura"] },
+      aerobic: { title: "Aeróbico e Marcha", shortTitle: "Aeróbico", icon: "fa-heart-pulse", color: "text-rose-600", bg: "bg-rose-50", border: "border-rose-100", subgroups: ["Todos", "Marcha", "Resistência", "Agilidade"] },
+      dual: { title: "Dupla Tarefa", shortTitle: "Dupla Tarefa", icon: "fa-brain", color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-100", subgroups: ["Todos", "Cognitiva + Motora", "Equilíbrio + Fala"] }
+    };
+
+    const DEFAULT_PARTICIPANTS = [
+      { id: "1", name: "Dona Maria Conceição" },
+      { id: "2", name: "Seu José Antonio" },
+      { id: "3", name: "Dona Raimunda Nonata" },
+      { id: "4", name: "Seu Francisco das Chagas" }
+    ];
+
+    const LoginPage = ({ onLogin }) => {
+      const [isLogin, setIsLogin] = useState(true);
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [fullName, setFullName] = useState('');
+      const [teamGroup, setTeamGroup] = useState('E1');
+      const [showPassword, setShowPassword] = useState(false);
+      const [loading, setLoading] = useState(false);
+      const [error, setError] = useState('');
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+
+        if (isLogin) {
+          const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+          if (error) {
+            setError('E-mail ou senha incorretos.');
+            setLoading(false);
+          } else if (data.session) {
+            const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', data.session.user.id).single();
+            onLogin({ ...data.session.user, full_name: profile?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
+          }
+        } else {
+          const { data, error } = await supabaseClient.auth.signUp({ email, password });
+          if (error) {
+            setError(error.message);
+            setLoading(false);
+          } else if (data.user) {
+            await supabaseClient.from('profiles').insert([{ id: data.user.id, full_name: fullName, role: 'Monitor', team_group: teamGroup }]);
+            onLogin({ ...data.user, full_name: fullName, role: 'Monitor', team_group: teamGroup });
+          }
+        }
+      };
+
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-pattern p-6">
+          <div className="bg-white w-full max-w-md p-8 sm:p-10 rounded-[2.5rem] shadow-xl border border-slate-100 animate-fade-in">
+            <div className="text-center mb-8">
+              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-20 mx-auto mb-4 object-contain drop-shadow-sm" onError={(e) => e.target.style.display='none'} />
+              <span className="text-3xl font-black text-brand-blue tracking-tight">ATIV<span className="text-brand-red">IDOSO</span></span>
+              <p className="text-xs font-extrabold text-slate-400 uppercase tracking-widest mt-2">{isLogin ? 'Acesso à Plataforma' : 'Cadastro de Novo Monitor'}</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {!isLogin && (
+                <>
+                  <div>
+                    <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Nome Completo</label>
+                    <input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm transition-all font-semibold" placeholder="Seu nome" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Grupo da Quadra</label>
+                    <select value={teamGroup} onChange={e=>setTeamGroup(e.target.value)} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm transition-all font-bold text-emerald-700">
+                      <option value="E1">Grupo E1</option><option value="E2">Grupo E2</option><option value="E3">Grupo E3</option><option value="E4">Grupo E4</option>
+                    </select>
+                  </div>
+                </>
+              )}
+              <div>
+                <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">E-mail</label>
+                <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm transition-all font-semibold" placeholder="seu.email@faculdade.com" />
+              </div>
+              <div>
+                <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Senha</label>
+                <div className="relative">
+  
+  <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-5 pr-12 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm transition-all font-semibold" placeholder="••••••••" />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-3.5 text-slate-400 p-1 hover:text-brand-blue transition-colors"><i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i></button>
                   </div>
                 </div>
