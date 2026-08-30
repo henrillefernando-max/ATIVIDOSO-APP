@@ -520,12 +520,9 @@ Coordenação ATIVIDOSO`;
             ${stHtml}
             <p><strong>DESAQUECIMENTO:</strong> ${d.coolDown||'-'}</p>
             ${vitHtml}<br>
-            <p><strong>RELATO NARRATIVO DA DINÂMICA:</strong><br/>${d.developmentNarrative?d.developmentNarrative.replace(/
-/g, '<br/>'):'-'}</p><br>
-            <p><strong>EVOLUÇÃO CLÍNICA / INTERCORRÊNCIAS:</strong><br/>${d.dailyEvolution?d.dailyEvolution.replace(/
-/g, '<br/>'):'Sem anotações clínicas.'}</p><br>
-            <p><strong>RESULTADOS OBTIDOS:</strong><br/>${d.resultObtained?d.resultObtained.replace(/
-/g, '<br/>'):'-'}</p><br>
+           <p><strong>RELATO NARRATIVO DA DINÂMICA:</strong><br/>${d.developmentNarrative?d.developmentNarrative.replace(/\n/g, '<br/>'):'-'}</p><br>
+            <p><strong>EVOLUÇÃO CLÍNICA / INTERCORRÊNCIAS:</strong><br/>${d.dailyEvolution?d.dailyEvolution.replace(/\n/g, '<br/>'):'Sem anotações clínicas.'}</p><br>
+            <p><strong>RESULTADOS OBTIDOS:</strong><br/>${d.resultObtained?d.resultObtained.replace(/\n/g, '<br/>'):'-'}</p><br>
             <p><strong>TOTAL DE PRESENTES:</strong> ${d.attendanceCount||'-'}</p>
           </div>
         `;
@@ -700,15 +697,11 @@ Coordenação ATIVIDOSO`;
                         <div className="bg-white p-5 rounded-3xl border border-dashed border-slate-300 mb-6">
                           <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Postar Novo Aviso</p>
                           <form onSubmit={handlePostAnnouncement} className="space-y-3">
-                            <input type="text" placeholder="Título..." value={newAnnouncement.title} onChange={e=>setNewAnnouncement({...newAnnouncement, title: e.target.value})} required className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 outline-none text-sm font-bold" />
-                            <textarea placeholder="Mensagem..." value={newAnnouncement.content} onChange={e=>setNewAnnouncement({...newAnnouncement, content: e.target.value})} required className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 outline-none text-sm font-medium" rows="2"></textarea>
-                            <div className="flex flex-col sm:flex-row gap-3">
-                              <input type="url" placeholder="Link (Opcional)" value={newAnnouncement.link_url} onChange={e=>setNewAnnouncement({...newAnnouncement, link_url: e.target.value})} className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 outline-none text-sm font-semibold" />
-                              <button type="submit" className="px-6 py-2.5 bg-brand-blue text-white font-bold rounded-xl hover:bg-brand-dark transition-colors">Postar</button>
-                            </div>
-                          </form>
-                        </div>
-                      )}
+<div className="relative">
+                  <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-5 pr-12 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm transition-all font-semibold" placeholder="••••••••" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-3.5 text-slate-400 p-1 hover:text-brand-blue transition-colors"><i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i></button>
+                </div>
+              </div>                      )}
 
                       <div className="space-y-4">
                         {announcements.length === 0 ? (
