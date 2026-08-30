@@ -712,22 +712,19 @@
                             const date = new Date(aviso.created_at).toLocaleDateString('pt-BR', {day:'2-digit', month:'short'});
                             return (
                               <div key={aviso.id} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative group">
-                                {isAdmin && <button onClick={() => handleDeleteAnnouncement(aviso.id)} className="absolute top-4 right-4 text-slate-300 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"><i className="fa-solid fa-trash"></i></button>}
-                                <div className="flex items-start gap-4">
-                                  <div className="w-12 h-12 bg-blue-50 text-brand-blue rounded-full flex flex-col items-center justify-center shrink-0 border border-blue-100"><span className="text-[10px] uppercase font-black">{date.split(' ')[2]}</span><span className="text-lg font-black leading-none">{date.split(' ')[0]}</span></div>
-                                  <div>
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1"><i className="fa-solid fa-user-tie"></i> {aviso.author || 'Administração'}</p>
-                                    <h3 className="text-base font-black text-slate-800 mb-1">{aviso.title}</h3>
-                                    <p className="text-sm text-slate-600 whitespace-pre-line mb-3">{aviso.content}</p>
-                                    {aviso.link_url && <a href={aviso.link_url} target="_blank" className="inline-flex items-center gap-2 text-xs font-bold text-white bg-brand-red px-4 py-2 rounded-lg hover:bg-brand-redDark"><i className="fa-solid fa-link"></i> Acessar Link</a>}
-                                  </div>
-                                </div>
-                              </div>
-                            )
-                          })
-                        )}
-                      </div>
-                    </div>
+                                {isAdmin && <button onClick={() => const handleDeleteAnnouncement = async (id) => { 
+        if(window.confirm("Apagar este aviso permanentemente?")) { 
+          const { error } = await supabaseClient.from('announcements').delete().eq('id', id); 
+          
+          // Armadilha para pegar o bloqueio do Supabase
+          if (error) {
+            alert("Erro ao tentar apagar no Supabase: " + error.message);
+          } else {
+            // Só some da tela se o banco realmente apagar
+            setAnnouncements(announcements.filter(a => a.id !== id)); 
+          }
+        } 
+      };
 
                     {/* Coluna Direita: Estatísticas e Lembretes */}
                     <div className="space-y-6">
