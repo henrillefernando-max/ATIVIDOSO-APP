@@ -80,37 +80,35 @@
         fetchAll();
       }, [currentView, circuitMode]);
 
-     // Alerta da Agenda (Cálculo de Data Blindado contra Fuso Horário)
+     // Alerta da Agenda (Corrigido com a trava de equipe)
       const upcomingActivity = useMemo(() => {
         if(!session.team_group || session.team_group === 'Nenhum') return null;
+        const today = new Date(); 
+        today.setHours(0,0,0,0);
         
-        const hoje = new Date();
-        const anoAtual = hoje.getFullYear();
-        const mesAtual = hoje.getMonth() + 1;
-        const diaAtual = hoje.getDate();
-        
-        const numeroHoje = parseInt(`${anoAtual}${String(mesAtual).padStart(2, '0')}${String(diaAtual).padStart(2, '0')}`);
+        // 1. Descobre qual é a atividade da SEMANA ATUAL no calendário geral
         let atividadeDestaSemana = null;
         
         for (let item of AGENDA_DATA) {
           const [d, m, y] = item.date.split('/'); 
-          const numeroAtividade = parseInt(`${y}${m}${d}`);
+          const itemDate = new Date(y, m - 1, d); 
+          itemDate.setDate(itemDate.getDate() + 1); // Mantém a sua lógica original de fuso horário
           
-          if (numeroAtividade >= numeroHoje) {
+          if (itemDate >= today) {
             atividadeDestaSemana = item;
-            break; 
+            break; // Achou a atividade mais próxima de hoje e para a busca
           }
         }
 
+        // Se não tiver mais nenhuma atividade no semestre, esconde o aviso
         if (!atividadeDestaSemana) return null;
 
-        const grupoUsuario = session.team_group.toLowerCase();
-        const responsaveis = atividadeDestaSemana.resp.toLowerCase();
-
-        if (responsaveis.includes(grupoUsuario) || responsaveis.includes('todos')) {
-          return atividadeDestaSemana; 
+        // 2. A TRAVA INVISÍVEL: A equipe desta semana é a equipe do usuário logado?
+        if (atividadeDestaSemana.resp.includes(session.team_group) || atividadeDestaSemana.resp.includes('Todos')) {
+          return atividadeDestaSemana; // O grupo bateu! Mostra a notificação.
         }
         
+        // O grupo não é o desta semana. Retorna null e esconde o aviso.
         return null; 
       }, [session.team_group]);
 
