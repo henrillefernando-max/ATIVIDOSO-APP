@@ -516,6 +516,37 @@ const handleDeleteAnnouncement = async (id) => {
         setCircuit(newCircuit); 
       };
 
+      // ======= GERADOR DE EVOLUÇÃO AUTOMÁTICA =======
+      const handleGenerateAutoEvolution = () => {
+         const presentes = planDetails.attendanceList.filter(p => p.present);
+         
+         if (presentes.length === 0) {
+            alert("Por favor, marque a presença e preencha os sinais vitais de pelo menos um idoso na tabela acima antes de gerar a evolução.");
+            return;
+         }
+
+         const dataFormatada = planDetails.date ? planDetails.date.split('-').reverse().join('/') : 'DD/MM/AAAA';
+         const responsaveis = planDetails.students || 'Não informados';
+         
+         const vitalsText = presentes.map(p => {
+            const pa_in = p.pa_in || '?';
+            const spo2_in = p.spo2_in || '?';
+            const fc_in = p.fc_in || '?';
+            const pa_out = p.pa_out || '?';
+            const spo2_out = p.spo2_out || '?';
+            const fc_out = p.fc_out || '?';
+            return `${p.name} (PA inicial: ${pa_in} mmHg; SpO₂: ${spo2_in}%; FC inicial: ${fc_in} bpm / PA final: ${pa_out} mmHg; SpO₂: ${spo2_out}%; FC final: ${fc_out} bpm)`;
+         }).join(', ');
+
+         const atividades = planDetails.proposedActivities || '[Descreva o resumo das atividades aqui]';
+         const desaquecimento = planDetails.coolDown || '[Descreva o alongamento/relaxamento]';
+
+         const text = `Data: ${dataFormatada}\nResponsáveis: ${responsaveis}\n\nAntes e após a realização das atividades propostas, a pressão arterial (PA), frequência cardíaca (FC) e saturação periférica de oxigênio (SpO₂) dos participantes foram aferidas e registradas nesse prontuário, conforme discriminado a seguir:\n\n${vitalsText}.\n\nForam propostas atividades: ${atividades}.\nAo término da gincana, foi realizado o desaquecimento com ${desaquecimento}.\n\nAs atividades foram conduzidas sem intercorrências, pelos discentes: ${responsaveis}.`;
+
+         // Injeta o texto gigante direto na caixinha de Evolução Clínica
+         setPlanDetails({...planDetails, dailyEvolution: text});
+      };
+
       // ======= GERADOR DE PDF =======
       const handleGeneratePDF = (circuitData) => {
         const d = circuitData.details;
@@ -1120,7 +1151,6 @@ const handleDeleteAnnouncement = async (id) => {
                           <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Relato da Atividade</h3>
                           <div><label className="block text-xs font-black text-brand-blue mb-2 pl-2">Texto Narrativo do Desenvolvimento</label><textarea rows="6" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-5 rounded-2xl bg-blue-50/30 border border-brand-blue/20 focus:bg-white focus:border-brand-blue outline-none text-sm leading-relaxed transition-all font-medium text-slate-700 shadow-inner"></textarea></div>
                           <div><label className="block text-xs font-black text-amber-600 mb-2 pl-2"><i className="fa-solid fa-file-medical mr-1"></i> Evolução Clínica / Intercorrências</label><textarea rows="4" placeholder="Como foi a resposta dos idosos? Houve tontura, dor, pressão alta?..." value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails, dailyEvolution: e.target.value})} className="w-full p-5 rounded-2xl bg-amber-50 border border-amber-200 focus:bg-white focus:border-amber-400 outline-none text-sm leading-relaxed text-amber-900 transition-all font-medium"></textarea></div>
-                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Resultados Obtidos</label><textarea rows="3" value={planDetails.resultObtained} onChange={e=>setPlanDetails({...planDetails, resultObtained: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm font-medium transition-all"></textarea></div>
                           <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Quantitativo Final de Idosos Presentes</label><input type="text" value={planDetails.attendanceCount} onChange={e=>setPlanDetails({...planDetails, attendanceCount: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold text-slate-700" placeholder="Ex: 32 pessoas idosas" /></div>
                         </div>
 
