@@ -1,19 +1,191 @@
-                    <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-5 pr-12 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm transition-all font-semibold" placeholder="••••••••" />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-3.5 text-slate-400 p-1 hover:text-brand-blue transition-colors"><i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i></button>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATIVIDOSO - Plataforma Integrada</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue: '#202b5c',
+              dark: '#161e42',
+              red: '#e63946',
+              redDark: '#c52833'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Babel (JSX Support) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Html2Pdf para Relatórios -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .hover-lift { transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
+    .bg-pattern { background-color: #f8fafc; background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 24px 24px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-red selection:text-white">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    // ==========================================
+    // CONFIGURAÇÃO SUPABASE
+    // ==========================================
+    const SUPABASE_URL = "https://rewkwzxuogdopzkqliwi.supabase.co";
+    // ATENÇÃO: COLE SUA CHAVE VERDADEIRA AQUI EMBAIXO
+    const SUPABASE_ANON_KEY = "COLE_SUA_CHAVE_AQUI";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ==========================================
+    // DADOS FIXOS DA AGENDA SEMESTRAL 2026.2
+    // ==========================================
+    const AGENDA_DATA = [
+      { act: "17", date: "14/08/2026", title: "RETORNO DAS ATIVIDADES - Gincana/dinâmica", resp: "Todos" },
+      { act: "18", date: "21/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "19", date: "28/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "20", date: "04/09/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "21", date: "11/09/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "22", date: "18/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "23", date: "25/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "24", date: "02/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "25", date: "09/10/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "26", date: "16/10/2026", title: "Atividade educativa em saúde e promoção do autocuidado", resp: "Todos" },
+      { act: "27", date: "23/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "28", date: "30/10/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "29", date: "06/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "30", date: "13/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "31", date: "27/11/2026", title: "Avaliação participativa dos participantes e planejamento das próximas atividades", resp: "Todos" },
+      { act: "32", date: "04/12/2026", title: "Atividade temática de integração/confraternização e encerramento do semestre letivo", resp: "Todos" }
+    ];
+
+    const CATEGORIES = {
+      mmss: { title: "Membros Superiores", shortTitle: "MMSS", icon: "fa-hand-fist", color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100", subgroups: ["Todos", "Ombro", "Cotovelo / Punho", "Mãos / Destreza"] },
+      mmii: { title: "Membros Inferiores", shortTitle: "MMII", icon: "fa-shoe-prints", color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-100", subgroups: ["Todos", "Quadril", "Joelho", "Tornozelo / Pé"] },
+      core: { title: "Core e Tronco", shortTitle: "Core", icon: "fa-child-reaching", color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-100", subgroups: ["Todos", "Abdômen", "Lombar", "Postura"] },
+      aerobic: { title: "Aeróbico e Marcha", shortTitle: "Aeróbico", icon: "fa-heart-pulse", color: "text-rose-600", bg: "bg-rose-50", border: "border-rose-100", subgroups: ["Todos", "Marcha", "Resistência", "Agilidade"] },
+      dual: { title: "Dupla Tarefa", shortTitle: "Dupla Tarefa", icon: "fa-brain", color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-100", subgroups: ["Todos", "Cognitiva + Motora", "Equilíbrio + Fala"] }
+    };
+
+    const DEFAULT_PARTICIPANTS = [
+      { id: "1", name: "Dona Maria Conceição" },
+      { id: "2", name: "Seu José Antonio" },
+      { id: "3", name: "Dona Raimunda Nonata" },
+      { id: "4", name: "Seu Francisco das Chagas" }
+    ];
+
+    // ==========================================
+    // TELA DE LOGIN / CADASTRO
+    // ==========================================
+    const LoginPage = ({ onLogin }) => {
+      const [isLogin, setIsLogin] = useState(true);
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [fullName, setFullName] = useState('');
+      const [teamGroup, setTeamGroup] = useState('E1');
+      const [showPassword, setShowPassword] = useState(false);
+      const [loading, setLoading] = useState(false);
+      const [error, setError] = useState('');
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+
+        if (isLogin) {
+          const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+          if (error) {
+            setError('E-mail ou senha incorretos.');
+            setLoading(false);
+          } else if (data.session) {
+            const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', data.session.user.id).single();
+            onLogin({ ...data.session.user, full_name: profile?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
+          }
+        } else {
+          const { data, error } = await supabaseClient.auth.signUp({ email, password });
+          if (error) {
+            setError(error.message);
+            setLoading(false);
+          } else if (data.user) {
+            await supabaseClient.from('profiles').insert([{ id: data.user.id, full_name: fullName, role: 'Monitor', team_group: teamGroup }]);
+            onLogin({ ...data.user, full_name: fullName, role: 'Monitor', team_group: teamGroup });
+          }
+        }
+      };
+
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-pattern p-6">
+          <div className="bg-white w-full max-w-md p-8 sm:p-10 rounded-[2.5rem] shadow-xl border border-slate-100 animate-fade-in">
+            <div className="text-center mb-8">
+              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-20 mx-auto mb-4 object-contain drop-shadow-sm" onError={(e) => e.target.style.display='none'} />
+              <span className="text-3xl font-black text-brand-blue tracking-tight">ATIV<span className="text-brand-red">IDOSO</span></span>
+              <p className="text-xs font-extrabold text-slate-400 uppercase tracking-widest mt-2">{isLogin ? 'Acesso à Plataforma' : 'Cadastro de Novo Monitor'}</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {!isLogin && (
+                <>
+                  <div>
+                    <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Nome Completo</label>
+                    <input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-semibold" placeholder="Seu nome" />
                   </div>
-                </div>
-                
-                {error && <div className="bg-rose-50 text-rose-600 p-4 rounded-2xl text-xs font-bold border border-rose-100 flex items-center gap-2"><i className="fa-solid fa-circle-exclamation text-lg"></i> {error}</div>}
-                
-                <button type="submit" disabled={loading} className="w-full bg-brand-red hover:bg-brand-redDark text-white font-black py-4 rounded-2xl transition-all shadow-md mt-4 text-base">
-                  {loading ? <i className="fa-solid fa-spinner fa-spin"></i> : (isLogin ? 'Entrar no Aplicativo' : 'Criar Conta')}
-                </button>
-              </form>
-              <div className="mt-8 text-center border-t border-slate-100 pt-6">
-                <button onClick={() => {setIsLogin(!isLogin); setError('');}} className="text-sm font-bold text-slate-500 hover:text-brand-blue transition-colors">
-                  {isLogin ? "Primeira vez na equipe? Cadastre-se." : "Já é da equipe? Clique para Entrar."}
-                </button>
+                  <div>
+                    <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Grupo da Quadra</label>
+                    <select value={teamGroup} onChange={e=>setTeamGroup(e.target.value)} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-bold text-emerald-700">
+                      <option value="E1">Grupo E1</option><option value="E2">Grupo E2</option><option value="E3">Grupo E3</option><option value="E4">Grupo E4</option>
+                    </select>
+                  </div>
+                </>
+              )}
+              <div>
+                <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">E-mail</label>
+                <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-semibold" placeholder="seu.email@faculdade.com" />
               </div>
+              <div>
+                <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Senha</label>
+                <div className="relative">
+                  <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-5 pr-12 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-semibold" placeholder="••••••••" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-3.5 text-slate-400 p-1 hover:text-brand-blue"><i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i></button>
+                </div>
+              </div>
+              {error && <div className="bg-rose-50 text-rose-600 p-4 rounded-2xl text-xs font-bold border border-rose-100 flex items-center gap-2"><i className="fa-solid fa-circle-exclamation text-lg"></i> {error}</div>}
+              <button type="submit" disabled={loading} className="w-full bg-brand-red hover:bg-brand-redDark text-white font-black py-4 rounded-2xl transition-all shadow-md mt-4 text-base">
+                {loading ? <i className="fa-solid fa-spinner fa-spin"></i> : (isLogin ? 'Entrar no Aplicativo' : 'Criar Conta')}
+              </button>
+            </form>
+            <div className="mt-8 text-center border-t border-slate-100 pt-6">
+              <button onClick={() => {setIsLogin(!isLogin); setError('');}} className="text-sm font-bold text-slate-500 hover:text-brand-blue">
+                {isLogin ? "Primeira vez na equipe? Cadastre-se." : "Já é da equipe? Clique para Entrar."}
+              </button>
             </div>
           </div>
         </div>
@@ -28,7 +200,6 @@
 
       const [currentView, setCurrentView] = useState('home');
       const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-      
       const [searchQuery, setSearchQuery] = useState('');
       const [filterCat, setFilterCat] = useState('all');
       const [filterSub, setFilterSub] = useState('Todos');
@@ -38,7 +209,7 @@
       const [savedCircuits, setSavedCircuits] = useState([]);
       const [announcements, setAnnouncements] = useState([]);
       const [participantsList, setParticipantsList] = useState(DEFAULT_PARTICIPANTS);
-      
+
       // Cadastro Exercicio
       const [formCat, setFormCat] = useState('');
       const [formMuscleSelect, setFormMuscleSelect] = useState('');
@@ -80,37 +251,54 @@
         fetchAll();
       }, [currentView, circuitMode]);
 
-     // Alerta da Agenda (Corrigido com a trava de equipe)
+      // Alerta da Agenda (Cálculo de Data Blindado contra Fuso Horário)
       const upcomingActivity = useMemo(() => {
         if(!session.team_group || session.team_group === 'Nenhum') return null;
-        const today = new Date(); 
-        today.setHours(0,0,0,0);
         
-        // 1. Descobre qual é a atividade da SEMANA ATUAL no calendário geral
+        const hoje = new Date();
+        const anoAtual = hoje.getFullYear();
+        const mesAtual = hoje.getMonth() + 1; // getMonth começa do 0, então +1
+        const diaAtual = hoje.getDate();
+        
+        const numeroHoje = parseInt(`${anoAtual}${String(mesAtual).padStart(2, '0')}${String(diaAtual).padStart(2, '0')}`);
+        
         let atividadeDestaSemana = null;
         
         for (let item of AGENDA_DATA) {
           const [d, m, y] = item.date.split('/'); 
-          const itemDate = new Date(y, m - 1, d); 
-          itemDate.setDate(itemDate.getDate() + 1); // Mantém a sua lógica original de fuso horário
+          const numeroAtividade = parseInt(`${y}${m}${d}`);
           
-          if (itemDate >= today) {
+          if (numeroAtividade >= numeroHoje) {
             atividadeDestaSemana = item;
-            break; // Achou a atividade mais próxima de hoje e para a busca
+            break; 
           }
         }
 
-        // Se não tiver mais nenhuma atividade no semestre, esconde o aviso
         if (!atividadeDestaSemana) return null;
 
-        // 2. A TRAVA INVISÍVEL: A equipe desta semana é a equipe do usuário logado?
-        if (atividadeDestaSemana.resp.includes(session.team_group) || atividadeDestaSemana.resp.includes('Todos')) {
-          return atividadeDestaSemana; // O grupo bateu! Mostra a notificação.
+        const grupoUsuario = session.team_group.toLowerCase();
+        const responsaveis = atividadeDestaSemana.resp.toLowerCase();
+
+        if (responsaveis.includes(grupoUsuario) || responsaveis.includes('todos')) {
+          return atividadeDestaSemana; 
         }
         
-        // O grupo não é o desta semana. Retorna null e esconde o aviso.
         return null; 
       }, [session.team_group]);
+
+      const approvedExercises = exercises.filter(ex => ex.status === 'approved');
+      const filteredExercises = approvedExercises.filter(ex => 
+        (filterCat === 'all' || ex.category === filterCat) && 
+        (filterSub === 'Todos' || ex.muscleGroup === filterSub) && 
+        (ex.title.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+      const pendingCount = exercises.filter(ex => ex.status === 'pending').length;
+
+      const getYouTubeId = (url) => {
+        if (!url) return null;
+        const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+        return match ? match[1] : null;
+      };
 
       // ======= FUNÇÕES DE PERFIL =======
       const handleSaveProfile = async (e) => {
@@ -163,17 +351,9 @@
         } 
       };
 
-      // ======= FUNÇÃO NOTIFICAR POR EMAIL =======
       const handleSendEmail = () => {
          const subject = "ATIVIDOSO - Lembrete de Planejamento da Aula";
-         const body = `Olá Monitor(a),
-
-Lembramos que o seu grupo está responsável por realizar a próxima atividade na quadra.
-
-Por favor, acesse a plataforma ATIVIDOSO para realizar o planejamento prévio e enviar a aula na aba 'Aulas e Relatórios'.
-
-Atenciosamente,
-Coordenação ATIVIDOSO`;
+         const body = `Olá Monitor(a),\n\nLembramos que o seu grupo está responsável por realizar a próxima atividade na quadra.\n\nPor favor, acesse a plataforma ATIVIDOSO para realizar o planejamento prévio e enviar a aula na aba 'Aulas e Relatórios'.\n\nAtenciosamente,\nCoordenação ATIVIDOSO`;
          const emailLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
          window.open(emailLink, '_blank');
       };
@@ -249,7 +429,6 @@ Coordenação ATIVIDOSO`;
                setPlanDetails({...planDetails, attendanceList: [...planDetails.attendanceList, newP].sort((a,b)=>a.name.localeCompare(b.name))});
             }
           } else {
-             // Fallback local se a tabela não existir
              const fallbackId = Date.now().toString();
              const newP = { id: fallbackId, name: name };
              setParticipantsList([...participantsList, newP].sort((a,b)=>a.name.localeCompare(b.name)));
@@ -321,6 +500,12 @@ Coordenação ATIVIDOSO`;
         } 
       };
       
+      const updateStationResponsible = (idx, val) => {
+        const newResp = [...planDetails.stationResponsibles];
+        newResp[idx] = val;
+        setPlanDetails({...planDetails, stationResponsibles: newResp});
+      };
+
       const addToCircuit = (stationIndex, exerciseId) => { 
         if (!exerciseId) return; 
         const exercise = approvedExercises.find(ex => ex.id === exerciseId); 
@@ -371,12 +556,9 @@ Coordenação ATIVIDOSO`;
             ${stHtml}
             <p><strong>DESAQUECIMENTO:</strong> ${d.coolDown||'-'}</p>
             ${vitHtml}<br>
-            <p><strong>RELATO NARRATIVO DA DINÂMICA:</strong><br/>${d.developmentNarrative?d.developmentNarrative.replace(/
-/g, '<br/>'):'-'}</p><br>
-            <p><strong>EVOLUÇÃO CLÍNICA / INTERCORRÊNCIAS:</strong><br/>${d.dailyEvolution?d.dailyEvolution.replace(/
-/g, '<br/>'):'Sem anotações clínicas.'}</p><br>
-            <p><strong>RESULTADOS OBTIDOS:</strong><br/>${d.resultObtained?d.resultObtained.replace(/
-/g, '<br/>'):'-'}</p><br>
+            <p><strong>RELATO NARRATIVO DA DINÂMICA:</strong><br/>${d.developmentNarrative?d.developmentNarrative.replace(/\n/g, '<br/>'):'-'}</p><br>
+            <p><strong>EVOLUÇÃO CLÍNICA / INTERCORRÊNCIAS:</strong><br/>${d.dailyEvolution?d.dailyEvolution.replace(/\n/g, '<br/>'):'Sem anotações clínicas.'}</p><br>
+            <p><strong>RESULTADOS OBTIDOS:</strong><br/>${d.resultObtained?d.resultObtained.replace(/\n/g, '<br/>'):'-'}</p><br>
             <p><strong>TOTAL DE PRESENTES:</strong> ${d.attendanceCount||'-'}</p>
           </div>
         `;
@@ -403,14 +585,9 @@ Coordenação ATIVIDOSO`;
       return (
         <div className="min-h-screen flex bg-slate-50 relative">
           
-          {/* Overlay Escuro Mobile */}
           {isMobileMenuOpen && <div className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-sm transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>}
           
-          {/* ==========================================
-              MENU LATERAL
-          ========================================== */}
           <aside className={`w-72 bg-white flex flex-col h-screen fixed md:relative z-50 transition-transform duration-300 ease-out border-r border-slate-200 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-            
             <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden absolute top-6 right-6 text-slate-400 hover:text-brand-red bg-slate-50 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark"></i></button>
 
             <div className="p-8 flex flex-col items-center justify-center gap-2 mt-4">
@@ -455,9 +632,6 @@ Coordenação ATIVIDOSO`;
             <div className="p-6 border-t border-slate-100"><button onClick={onLogout} className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-sm font-bold text-slate-500 hover:bg-rose-50 hover:text-rose-600 w-full transition-colors"><i className="fa-solid fa-arrow-right-from-bracket text-lg"></i> Sair do App</button></div>
           </aside>
 
-          {/* ==========================================
-              ÁREA PRINCIPAL
-          ========================================== */}
           <main className="flex-1 flex flex-col h-screen overflow-hidden w-full bg-slate-50/50 relative">
             <header className="h-20 bg-white border-b border-slate-100 px-6 sm:px-8 flex items-center justify-between shrink-0 z-10 pt-4">
               <div className="flex items-center gap-4">
@@ -540,7 +714,6 @@ Coordenação ATIVIDOSO`;
                   )}
 
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Coluna Esquerda: Mural */}
                     <div className="lg:col-span-2 space-y-6">
                       <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
                         <div className="w-10 h-10 bg-brand-red/10 text-brand-red rounded-xl flex items-center justify-center text-lg"><i className="fa-solid fa-bullhorn"></i></div>
@@ -586,7 +759,6 @@ Coordenação ATIVIDOSO`;
                       </div>
                     </div>
 
-                    {/* Coluna Direita: Estatísticas e Lembretes */}
                     <div className="space-y-6">
                       <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
                         <div className="w-10 h-10 bg-slate-200 text-slate-500 rounded-xl flex items-center justify-center text-lg"><i className="fa-solid fa-chart-simple"></i></div>
@@ -619,7 +791,176 @@ Coordenação ATIVIDOSO`;
                         </>
                       )}
                     </div>
+                  </div>
+                </div>
+              )}
 
+              {/* === TELA: APROVAÇÕES E CADASTRO === */}
+              {currentView === 'aprovacoes' && isAdmin && (
+                <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
+                  <div className="flex items-center justify-between mb-8 bg-amber-50 p-6 rounded-3xl border border-amber-200">
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 bg-amber-500 text-white rounded-2xl flex items-center justify-center text-2xl shadow-inner"><i className="fa-solid fa-clipboard-check"></i></div>
+                      <div><h2 className="text-2xl font-black text-amber-900">Aprovação de Exercícios</h2><p className="text-sm font-semibold text-amber-700">Analise os conteúdos enviados pela equipe.</p></div>
+                    </div>
+                    <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-amber-100"><p className="text-xs font-extrabold text-amber-600 uppercase tracking-widest">Pendentes</p><p className="text-3xl font-black text-slate-800 text-center">{pendingCount}</p></div>
+                  </div>
+                  
+                  {pendingCount === 0 ? (
+                    <div className="bg-white p-12 rounded-[3rem] text-center border border-slate-100 shadow-sm"><div className="w-24 h-24 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"><i className="fa-solid fa-check"></i></div><h3 className="text-xl font-black text-slate-800">Tudo em dia!</h3><p className="text-slate-500 mt-2 font-medium">Nenhum exercício aguardando aprovação no momento.</p></div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {exercises.filter(ex => ex.status === 'pending').map(ex => {
+                        const ytId = getYouTubeId(ex.videoUrl);
+                        const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null;
+                        const isImage = ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i);
+                        const isVideo = ex.mediaUrl && ex.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i);
+                        
+                        return (
+                          <div key={ex.id} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col hover-lift">
+                            <div className="h-48 bg-slate-100 relative">
+                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : 
+                               isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : 
+                               isVideo ? ( <div className="w-full h-full bg-slate-200 flex items-center justify-center"><i className="fa-solid fa-video text-4xl text-slate-400"></i></div> ) : 
+                               ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-image text-4xl text-slate-300"></i></div> )}
+                              <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border border-white/20"><i className="fa-solid fa-clock text-amber-400 mr-1"></i> Em Análise</div>
+                            </div>
+                            <div className="p-6 flex-1 flex flex-col">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1"><i className="fa-solid fa-user-pen mr-1"></i> Enviado por {ex.author || 'Monitor'}</p>
+                              <h3 className="font-extrabold text-slate-800 text-lg leading-tight mb-2">{ex.title}</h3>
+                              <div className="flex flex-wrap gap-2 mb-6">
+                                <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded-md">{ex.category.toUpperCase()}</span>
+                                <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded-md">{ex.muscleGroup}</span>
+                              </div>
+                              <div className="mt-auto grid grid-cols-2 gap-3">
+                                <button onClick={() => handleApprove(ex.id)} className="bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white font-bold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2"><i className="fa-solid fa-check"></i> Aprovar</button>
+                                <button onClick={() => handleReject(ex.id)} className="bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white font-bold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2"><i className="fa-solid fa-xmark"></i> Rejeitar</button>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {currentView === 'cadastro' && (
+                <div className="max-w-4xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-8">
+                    <div className="border-b border-slate-100 pb-6 mb-8">
+                      <h2 className="text-2xl font-black text-slate-800 flex items-center gap-3"><i className="fa-solid fa-circle-plus text-brand-red bg-rose-50 w-12 h-12 rounded-xl flex items-center justify-center"></i> Adicionar Exercício</h2>
+                      <p className="text-slate-500 font-medium mt-2">Enriqueça a biblioteca da faculdade enviando novos conteúdos. {isAdmin ? 'Como você é admin, ele será aprovado automaticamente.' : 'Seu envio passará por aprovação do professor.'}</p>
+                    </div>
+
+                    {formStatus.success && <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 text-emerald-700 flex items-center justify-center gap-3 text-lg font-bold mb-8 animate-fade-in"><i className="fa-solid fa-circle-check text-2xl"></i> Exercício enviado com sucesso!</div>}
+
+                    <form onSubmit={handleFormSubmit} className="space-y-8">
+                      <div className="space-y-6">
+                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Informações Principais</h3>
+                        <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Nome do Exercício *</label><input type="text" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} required className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold" placeholder="Ex: Agachamento isométrico na cadeira" /></div>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          <div>
+                            <label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Categoria Geral *</label>
+                            <select value={formCat} onChange={e=>{setFormCat(e.target.value); setFormMuscleSelect('');}} required className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold">
+                              <option value="">Selecione...</option>
+                              {Object.keys(CATEGORIES).map(k => <option key={k} value={k}>{CATEGORIES[k].title}</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Foco / Subgrupo *</label>
+                            <select value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} required disabled={!formCat} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold disabled:opacity-50">
+                              <option value="">Selecione...</option>
+                              {formCat && CATEGORIES[formCat].subgroups.map(sub => <option key={sub} value={sub}>{sub}</option>)}
+                              <option value="Outro">Outro (Digitar manualmente)</option>
+                            </select>
+                          </div>
+                        </div>
+                        {formMuscleSelect === 'Outro' && <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Qual o foco principal?</label><input type="text" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold" placeholder="Ex: Panturrilha" /></div>}
+                      </div>
+
+                      <div className="space-y-6 pt-6 border-t border-slate-100">
+                         <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Parâmetros Clínicos</h3>
+                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Dificuldade Estimada</label><select value={formData.difficulty} onChange={e=>setFormData({...formData, difficulty: e.target.value})} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-semibold"><option>Iniciante / Leve</option><option>Intermediário / Moderado</option><option>Avançado / Intenso</option></select></div>
+                            <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Materiais / Equipamentos</label><input type="text" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-semibold" placeholder="Ex: Bastão, Faixa Elástica..." /></div>
+                            <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Dosagem Recomendada</label><input type="text" value={formData.dosage} onChange={e=>setFormData({...formData, dosage: e.target.value})} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-semibold" placeholder="Ex: 3 séries de 10 reps" /></div>
+                         </div>
+                      </div>
+
+                      <div className="space-y-6 pt-6 border-t border-slate-100">
+                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Passo a Passo e Cuidados</h3>
+                        <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Instruções de Execução (Como fazer) *</label><textarea required rows="4" value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})} className="w-full p-5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm leading-relaxed font-medium transition-all" placeholder="Descreva o movimento passo a passo..."></textarea></div>
+                        <div><label className="block text-xs font-extrabold text-amber-600 mb-2 pl-2"><i className="fa-solid fa-triangle-exclamation mr-1"></i> Precauções e Contraindicações</label><textarea rows="3" value={formData.precautions} onChange={e=>setFormData({...formData, precautions: e.target.value})} className="w-full p-5 rounded-2xl bg-amber-50 border border-amber-200 focus:bg-white focus:border-amber-400 outline-none text-sm leading-relaxed text-amber-900 font-medium transition-all" placeholder="Quais idosos não devem fazer? O que observar?"></textarea></div>
+                      </div>
+
+                      <div className="space-y-6 pt-6 border-t border-slate-100 bg-slate-50/50 p-6 rounded-3xl border">
+                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2 mb-4"><i className="fa-solid fa-photo-film mr-2 text-brand-blue"></i> Mídia de Demonstração</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                           <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Link do YouTube</label><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className="w-full px-5 py-4 rounded-2xl bg-white border border-slate-200 focus:border-brand-red outline-none text-sm font-semibold" placeholder="https://youtube.com/watch?v=..." /></div>
+                           <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Ou envie Foto/Vídeo curto</label><input type="file" accept="image/*,video/mp4" onChange={e=>setMediaFile(e.target.files[0])} className="w-full px-3 py-3 rounded-2xl border border-slate-200 bg-white text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-blue file:text-white cursor-pointer" /></div>
+                        </div>
+                      </div>
+
+                      <div className="pt-8 flex justify-end">
+                        <button type="submit" disabled={formStatus.loading} className="w-full sm:w-auto px-10 py-4 bg-brand-red hover:bg-brand-redDark text-white font-black rounded-2xl shadow-md transition-all text-base disabled:opacity-50 flex items-center justify-center gap-3">
+                          {formStatus.loading ? <i className="fa-solid fa-spinner fa-spin"></i> : <><i className="fa-solid fa-paper-plane"></i> Enviar para Biblioteca</>}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+
+              {/* === TELA: DETALHES DO EXERCÍCIO === */}
+              {currentView === 'detail' && selectedExercise && (
+                <div className="max-w-4xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="flex items-center justify-between bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-100">
+                    <button onClick={() => setCurrentView('library')} className="px-6 py-3 bg-slate-50 hover:bg-slate-100 text-slate-600 font-extrabold rounded-2xl transition-colors text-sm flex items-center"><i className="fa-solid fa-arrow-left mr-2"></i> Voltar</button>
+                    {isAdmin && <button onClick={() => handleDeleteExercise(selectedExercise.id)} className="px-6 py-3 bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 font-extrabold rounded-2xl transition-colors text-sm flex items-center"><i className="fa-solid fa-trash mr-2"></i> Apagar</button>}
+                  </div>
+
+                  <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+                    <div className="h-64 sm:h-96 bg-slate-900 relative">
+                      {getYouTubeId(selectedExercise.videoUrl) ? (
+                        <iframe className="w-full h-full absolute inset-0" src={`https://www.youtube.com/embed/${getYouTubeId(selectedExercise.videoUrl)}`} title="YouTube" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                      ) : selectedExercise.mediaUrl ? (
+                        selectedExercise.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i) ? 
+                          <video src={selectedExercise.mediaUrl} controls className="w-full h-full object-contain bg-black"></video> : 
+                          <img src={selectedExercise.mediaUrl} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center text-slate-600"><i className="fa-solid fa-dumbbell text-6xl mb-4 opacity-50"></i><p className="font-bold tracking-widest uppercase text-sm">Sem mídia anexada</p></div>
+                      )}
+                    </div>
+                    
+                    <div className="p-8 sm:p-12">
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        <span className="text-[10px] font-black uppercase tracking-widest bg-brand-blue text-white px-3 py-1.5 rounded-lg shadow-sm">{CATEGORIES[selectedExercise.category]?.title || selectedExercise.category}</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-200">{selectedExercise.muscleGroup}</span>
+                      </div>
+                      
+                      <h1 className="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight leading-tight mb-8">{selectedExercise.title}</h1>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+                        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100"><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"><i className="fa-solid fa-gauge-high mr-1"></i> Dificuldade</p><p className="font-bold text-slate-700">{selectedExercise.difficulty}</p></div>
+                        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100"><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"><i className="fa-solid fa-box-open mr-1"></i> Materiais</p><p className="font-bold text-slate-700">{selectedExercise.equipment}</p></div>
+                        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100"><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"><i className="fa-solid fa-clock-rotate-left mr-1"></i> Dosagem</p><p className="font-bold text-slate-700">{selectedExercise.dosage}</p></div>
+                      </div>
+
+                      <div className="space-y-10">
+                        <div><h3 className="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><i className="fa-solid fa-person-running text-brand-blue"></i> Instruções de Execução</h3><div className="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed bg-slate-50/50 p-6 rounded-3xl border border-slate-100 whitespace-pre-line">{selectedExercise.instructions}</div></div>
+                        
+                        {selectedExercise.precautions && (
+                          <div><h3 className="text-lg font-black text-amber-600 mb-4 flex items-center gap-2"><i className="fa-solid fa-triangle-exclamation"></i> Precauções e Cuidados</h3><div className="bg-amber-50 p-6 rounded-3xl border border-amber-200 text-amber-900 font-medium leading-relaxed whitespace-pre-line">{selectedExercise.precautions}</div></div>
+                        )}
+                      </div>
+                      
+                      <div className="mt-12 pt-8 border-t border-slate-100 flex items-center gap-3">
+                        <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400"><i className="fa-solid fa-user-pen"></i></div>
+                        <div><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Enviado por</p><p className="text-sm font-bold text-slate-700">{selectedExercise.author || 'Monitor'}</p></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -982,7 +1323,13 @@ Coordenação ATIVIDOSO`;
       const [loadingAuth, setLoadingAuth] = useState(true);
 
       useEffect(() => {
-        // if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+        // CÓDIGO EXTERMINADOR DE CACHE (Limpa o celular de todos os monitores)
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            for (let reg of registrations) { reg.unregister(); }
+          });
+        }
+
         supabaseClient.auth.getSession().then(async ({ data: { session } }) => {
           if (session) {
             const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
@@ -1003,4 +1350,4 @@ Coordenação ATIVIDOSO`;
     root.render(<App />);
   </script>
 </body>
-</html>
+</html>git add .
