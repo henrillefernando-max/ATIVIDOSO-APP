@@ -299,24 +299,22 @@
       // ======= FUNÇÕES DE AVISOS =======
       const handlePostAnnouncement = async (e) => {
         e.preventDefault();
-        const { data } = await supabaseClient.from('announcements').insert([{
+        
+        // Dispara a tentativa de salvar no banco
+        const { data, error } = await supabaseClient.from('announcements').insert([{
           title: newAnnouncement.title, 
           content: newAnnouncement.content, 
-          link_url: newAnnouncement.link_url,
+          link_url: newAnnouncement.link_url || null, // Proteção: se o link estiver vazio, envia nulo para não bugar o banco
           author: session.full_name 
         }]).select();
         
-        if(data) { 
+        // Se o Supabase barrar, ele vai jogar o erro na sua tela agora!
+        if (error) {
+          alert("O Supabase recusou a postagem! Erro: " + error.message);
+        } else if (data) { 
           setAnnouncements([data[0], ...announcements]); 
           setNewAnnouncement({ title: '', content: '', link_url: '' }); 
         }
-      };
-      
-      const handleDeleteAnnouncement = async (id) => { 
-        if(window.confirm("Apagar este aviso permanentemente?")) { 
-          await supabaseClient.from('announcements').delete().eq('id', id); 
-          setAnnouncements(announcements.filter(a => a.id !== id)); 
-        } 
       };
 
       // ======= FUNÇÃO NOTIFICAR POR EMAIL =======
