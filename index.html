@@ -317,6 +317,18 @@
         }
       };
 
+const handleDeleteAnnouncement = async (id) => { 
+        if(window.confirm("Apagar este aviso permanentemente?")) { 
+          const { error } = await supabaseClient.from('announcements').delete().eq('id', id); 
+          
+          if (error) {
+            alert("Erro ao tentar apagar no Supabase: " + error.message);
+          } else {
+            setAnnouncements(announcements.filter(a => a.id !== id)); 
+          }
+        } 
+      };
+
       // ======= FUNÇÃO NOTIFICAR POR EMAIL =======
       const handleSendEmail = () => {
          const subject = "ATIVIDOSO - Lembrete de Planejamento da Aula";
