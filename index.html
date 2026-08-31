@@ -385,7 +385,12 @@ const handleDeleteAnnouncement = async (id) => {
             setEmailStatus('Cliente de e-mail aberto!');
          }
       };
-
+const handleSendEmail = () => {
+         const subject = "ATIVIDOSO - Lembrete de Planejamento da Aula";
+         const body = `Olá Monitor(a),\n\nLembramos que o seu grupo está responsável por realizar a próxima atividade na quadra.\n\nPor favor, acesse a plataforma ATIVIDOSO para realizar o planejamento prévio e enviar a aula na aba 'Aulas e Relatórios'.\n\nAtenciosamente,\nCoordenação ATIVIDOSO`;
+         const emailLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+         window.open(emailLink, '_blank');
+      }; 
       // ======= FUNÇÕES DE EXERCÍCIOS =======
       const handleFormSubmit = async (e) => {
         e.preventDefault(); 
@@ -871,17 +876,38 @@ const handleDeleteAnnouncement = async (id) => {
                           </div>
 
                           <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mt-6 relative overflow-hidden">
-                             <div className="absolute -right-4 -bottom-4 opacity-10"><i className="fa-solid fa-envelope text-8xl text-brand-blue"></i></div>
-                             <h4 className="font-black text-slate-800 mb-2">Comunicação</h4>
-                             <p className="text-xs text-slate-500 mb-4 font-medium leading-relaxed">Envie um alerta automático para os monitores sobre o planejamento da próxima atividade.</p>
-                             <button onClick={handleSendEmail} className="w-full bg-brand-blue hover:bg-brand-dark text-white font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 relative z-10 shadow-md"><i className="fa-solid fa-paper-plane"></i> Enviar Lembrete</button>
-                          </div>
-                        </>
-                      )}
-                    </div>
+                             <div className="absolute -right-4 -bottom-4 opacity-10"><i className="fa-solid fa-paper-plane text-8xl text-brand-blue"></i></div>
+                             <h4 className="font-black text-slate-800 mb-2">Comunicação & Convites</h4>
+                             <p className="text-xs text-slate-500 mb-4 font-medium leading-relaxed">Mande um convite direto ou um lembrete geral para a equipe.</p>
+                             
+                             <form onSubmit={handleSendCustomEmail} className="space-y-3 relative z-10">
+                                <input 
+                                  type="email" 
+                                  placeholder="E-mail da pessoa (ex: novo@email.com)" 
+                                  value={customEmailDest} 
+                                  onChange={e => setCustomEmailDest(e.target.value)} 
+                                  required 
+                                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 outline-none text-xs font-semibold focus:border-brand-blue"
+                                />
+                                <textarea 
+                                  placeholder="Escreva a mensagem..." 
+                                  value={customEmailMessage} 
+                                  onChange={e => setCustomEmailMessage(e.target.value)} 
+                                  rows="2"
+                                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 outline-none text-xs font-medium focus:border-brand-blue"
+                                ></textarea>
+                                <button type="submit" className="w-full bg-brand-blue hover:bg-brand-dark text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-md text-xs">
+                                   <i className="fa-solid fa-envelope-open-text"></i> Enviar E-mail Específico
+                                </button>
+                                {emailStatus && <p className="text-[10px] font-bold text-center text-emerald-600 mt-2">{emailStatus}</p>}
+                             </form>
 
-                  </div>
-                </div>
+                             <div className="mt-5 pt-5 border-t border-slate-100 relative z-10">
+                                <button onClick={handleSendEmail} className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-xs">
+                                   <i className="fa-solid fa-bell"></i> Lembrete p/ Todos os Monitores
+                                </button>
+                             </div>
+                          </div>
               )}
 
               {/* === TELA: APROVAÇÕES E CADASTRO === */}
