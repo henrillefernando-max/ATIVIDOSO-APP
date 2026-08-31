@@ -768,7 +768,7 @@
           <main className="flex-1 flex flex-col h-screen overflow-hidden w-full bg-blue-50/40 relative">
             <header className="h-20 bg-white border-b border-slate-100 px-6 sm:px-8 flex items-center justify-between shrink-0 z-10 pt-4">
               <div className="flex items-center gap-4">
-                <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden w-10 h-10 bg-white rounded-full shadow-sm border border-slate-200 text-brand-red flex items-center justify-center hover:bg-rose-50 transition"><i className="fa-solid fa-bars text-lg"></i></button>
+                <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden w-10 h-10 bg-white rounded-full shadow-sm border border-slate-200 text-brand-red flex items-center justify-center active:scale-90 active:bg-rose-100 transition-all touch-manipulation"><i className="fa-solid fa-bars text-lg"></i></button>
                 <div>
                   <h2 className="font-black text-slate-800 text-xl sm:text-2xl tracking-tight leading-none">
                     {currentView === 'home' && "Início e Mural"}
@@ -1562,7 +1562,7 @@
                                isVideo ? ( <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex flex-col items-center justify-center group-hover:scale-105 transition-transform duration-700"><i className="fa-solid fa-circle-play text-4xl text-brand-red mb-2 drop-shadow-md"></i><span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Vídeo Anexado</span></div> ) : 
                                ( <i className="fa-solid fa-dumbbell text-4xl text-slate-300"></i> )}
                               
-                              <div className="absolute inset-0 bg-brand-dark/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"><div className="bg-white/90 w-12 h-12 rounded-full flex items-center justify-center shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-300 delay-100"><i className="fa-solid fa-eye text-brand-blue text-xl"></i></div></div>
+                              <div className="absolute inset-0 bg-brand-dark/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex items-center justify-center"><div className="bg-white/90 w-12 h-12 rounded-full flex items-center justify-center shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-300 delay-100"><i className="fa-solid fa-eye text-brand-blue text-xl"></i></div></div>
                             </div>
                             
                             <div className="p-5 sm:p-6 flex-1 flex flex-col bg-white">
