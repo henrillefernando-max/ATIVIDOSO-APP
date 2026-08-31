@@ -185,6 +185,23 @@
 
       const [currentView, setCurrentView] = useState('home');
       const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+      // Controle de Gestos do Celular (Puxar Menu)
+      const [touchStart, setTouchStart] = useState(null);
+      const [touchEnd, setTouchEnd] = useState(null);
+
+      const onTouchStart = (e) => {
+        setTouchEnd(null);
+        setTouchStart(e.targetTouches[0].clientX);
+      };
+      const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+      const onTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+        const distance = touchStart - touchEnd;
+        // Se puxar da beiradinha esquerda para a direita, abre o menu
+        if (distance < -40 && touchStart < 50 && !isMobileMenuOpen) setIsMobileMenuOpen(true);
+        // Se puxar da direita para a esquerda, fecha o menu
+        if (distance > 40 && isMobileMenuOpen) setIsMobileMenuOpen(false);
+      };
       
       const [searchQuery, setSearchQuery] = useState('');
       const [filterCat, setFilterCat] = useState('all');
@@ -686,7 +703,7 @@
       );
 
       return (
-        <div className="min-h-screen flex bg-slate-50 relative">
+        <div className="min-h-screen flex bg-slate-50 relative" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
           
           {/* Overlay Escuro Mobile */}
           {isMobileMenuOpen && <div className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-sm transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>}
@@ -751,7 +768,7 @@
           <main className="flex-1 flex flex-col h-screen overflow-hidden w-full bg-blue-50/40 relative">
             <header className="h-20 bg-white border-b border-slate-100 px-6 sm:px-8 flex items-center justify-between shrink-0 z-10 pt-4">
               <div className="flex items-center gap-4">
-                <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden w-10 h-10 bg-white rounded-full shadow-sm border border-slate-200 text-slate-600 flex items-center justify-center hover:text-brand-blue transition"><i className="fa-solid fa-bars"></i></button>
+                <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden w-10 h-10 bg-white rounded-full shadow-sm border border-slate-200 text-brand-red flex items-center justify-center hover:bg-rose-50 transition"><i className="fa-solid fa-bars text-lg"></i></button>
                 <div>
                   <h2 className="font-black text-slate-800 text-xl sm:text-2xl tracking-tight leading-none">
                     {currentView === 'home' && "Início e Mural"}
