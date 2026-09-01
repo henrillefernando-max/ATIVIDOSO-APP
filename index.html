@@ -210,6 +210,16 @@
         if (distance > 40 && isMobileMenuOpen) setIsMobileMenuOpen(false);
       };
       
+      const [searchQuery, setSearchQuery] = useState('');
+      const [filterCat, setFilterCat] = useState('all');
+      const [filterSub, setFilterSub] = useState('Todos');
+      const [selectedExercise, setSelectedExercise] = useState(null);
+      
+      const [exercises, setExercises] = useState([]);
+      const [savedCircuits, setSavedCircuits] = useState([]);
+      const [announcements, setAnnouncements] = useState([]);
+      const [participantsList, setParticipantsList] = useState(DEFAULT_PARTICIPANTS);
+      
       // Gestão de Equipe
       const [teamMembers, setTeamMembers] = useState([]);
       const [editingMember, setEditingMember] = useState(null);
