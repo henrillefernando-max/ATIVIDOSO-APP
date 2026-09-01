@@ -395,6 +395,10 @@
       };
 
       // ======= FUNÇÕES DE E-MAIL E CONVITE (VIA EMAILJS) =======
+      const [customEmailDest, setCustomEmailDest] = useState('');
+      const [customEmailMessage, setCustomEmailMessage] = useState('');
+      const [emailStatus, setEmailStatus] = useState('');
+
       const handleSendCustomEmail = async (e) => {
          e.preventDefault();
          if (!customEmailDest) return alert("Digite o e-mail do destinatário!");
@@ -407,9 +411,9 @@
                method: 'POST',
                headers: { 'Content-Type': 'application/json' },
                body: JSON.stringify({
-                  service_id: 'COLE_SEU_SERVICE_ID_AQUI',
-                  template_id: 'COLE_SEU_TEMPLATE_ID_AQUI',
-                  user_id: 'COLE_SUA_PUBLIC_KEY_AQUI',
+                  service_id: 'service_kciprxo',
+                  template_id: 'template_0gf0p9l',
+                  user_id: 'GiJe0KFVPsrE8JpC8',
                   template_params: {
                      to_email: customEmailDest,
                      message: customEmailMessage
@@ -434,6 +438,7 @@
          const body = `Olá Monitor(a),\n\nLembramos que o seu grupo está responsável por realizar a próxima atividade na quadra.\n\nPor favor, acesse a plataforma ATIVIDOSO para realizar o planejamento prévio e enviar a aula na aba 'Aulas e Relatórios'.\n\nAtenciosamente,\nCoordenação ATIVIDOSO`;
          const emailLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
          window.open(emailLink, '_blank');
+      
       }; 
 
       // ======= FUNÇÕES DE EXERCÍCIOS =======
