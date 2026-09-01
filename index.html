@@ -6,10 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ATIVIDOSO - Plataforma Integrada</title>
   
-  <!-- Ícone da aba do navegador no PC (Sua logo original transparente) -->
   <link rel="icon" href="Logo_ATV_2024_Colorido_v2.png?v=3" type="image/png">
   
-  <!-- Ícone do aplicativo no celular -->
   <link rel="apple-touch-icon" href="icone-app.png?v=3">
   <meta name="apple-mobile-web-app-title" content="ATIVIDOSO">
   <meta name="mobile-web-app-capable" content="yes">
@@ -17,15 +15,7 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { 
-      theme: { 
-        extend: { 
-          colors: { 
-            brand: { blue: '#202b5c', dark: '#161e42', red: '#e63946', redDark: '#c52833' } 
-          } 
-        } 
-      } 
-    }
+    tailwind.config = { theme: { extend: { colors: { brand: { blue: '#202b5c', dark: '#161e42', red: '#e63946', redDark: '#c52833' } } } } }
   </script>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -48,7 +38,6 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-red selection:text-white">
   <div id="root">
-    <!-- Tela de Carregamento Nativa -->
     <div class="min-h-screen flex flex-col items-center justify-center bg-slate-50 relative overflow-hidden">
       <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl"></div>
       <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-rose-100/50 rounded-full blur-3xl"></div>
@@ -404,7 +393,7 @@
                body: JSON.stringify({
                   service_id: 'service_kciprxo',
                   template_id: 'template_0gf0p9l',
-                  user_id: 'GlJe0KFVPsrE8JpC8', // <-- CHAVE CORRIGIDA! Letra L minúscula.
+                  user_id: 'GiJe0KFVPsrE8JpC8', // <-- CHAVE 100% CORRETA AGORA (letra i minúscula)
                   template_params: {
                      to_email: customEmailDest,
                      message: customEmailMessage
