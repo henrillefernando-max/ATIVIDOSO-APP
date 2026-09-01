@@ -1,3 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta name="google" content="notranslate">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATIVIDOSO - Plataforma Integrada</title>
+  
+  <!-- Ícone da aba do navegador no PC (Sua logo original transparente) -->
+  <link rel="icon" href="Logo_ATV_2024_Colorido_v2.png?v=3" type="image/png">
+  
+  <!-- Ícone do aplicativo no celular (Aquele quadradinho preenchido que você fez) -->
+  <link rel="apple-touch-icon" href="icone-app.png?v=3">
+  <meta name="apple-mobile-web-app-title" content="ATIVIDOSO">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { brand: { blue: '#202b5c', dark: '#161e42', red: '#e63946', redDark: '#c52833' } } } } }
+  </script>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; overscroll-behavior-x: none; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .hover-lift { transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
+    .bg-pattern { background-color: #f8fafc; background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 24px 24px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-red selection:text-white">
+  <div id="root">
+    <!-- Tela de Carregamento Nativa -->
+    <div class="min-h-screen flex flex-col items-center justify-center bg-slate-50 relative overflow-hidden">
+      <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-rose-100/50 rounded-full blur-3xl"></div>
+      <div class="relative z-10 flex flex-col items-center animate-pulse">
+        <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" class="h-24 mb-4 drop-shadow-sm" onerror="this.style.display='none'" />
+        <span class="text-3xl font-black text-[#202b5c] tracking-tight drop-shadow-sm">ATIV<span class="text-[#e63946]">IDOSO</span></span>
+        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mt-2">Carregando plataforma do ATIVIDOSO...</p>
+      </div>
+      <div class="flex gap-2 mt-8 relative z-10">
+        <div class="w-3 h-3 rounded-full bg-[#e63946] animate-bounce shadow-sm"></div>
+        <div class="w-3 h-3 rounded-full bg-[#202b5c] animate-bounce shadow-sm" style="animation-delay: 0.1s"></div>
+        <div class="w-3 h-3 rounded-full bg-[#10b981] animate-bounce shadow-sm" style="animation-delay: 0.2s"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const SUPABASE_URL = "https://rewkwzxuogdopzkqliwi.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_WtX-V75sKhWRnm7G_x6W1Q_fzuagXGH"; 
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const AGENDA_DATA = [
+      { act: "17", date: "14/08/2026", title: "RETORNO DAS ATIVIDADES - Gincana/dinâmica", resp: "Todos" },
+      { act: "18", date: "21/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "19", date: "28/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "20", date: "04/09/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "21", date: "11/09/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "22", date: "18/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "23", date: "25/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "24", date: "02/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "25", date: "09/10/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "26", date: "16/10/2026", title: "Atividade educativa em saúde e promoção do autocuidado", resp: "Todos" },
+      { act: "27", date: "23/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "28", date: "30/10/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "29", date: "06/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "30", date: "13/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "31", date: "27/11/2026", title: "Avaliação participativa dos participantes e planejamento das próximas atividades", resp: "Todos" },
+      { act: "32", date: "04/12/2026", title: "Atividade temática de integração/confraternização e encerramento do semestre letivo", resp: "Todos" }
+    ];
+
+    const CATEGORIES = {
+      mmss: { title: "Membros Superiores", shortTitle: "MMSS", icon: "fa-hand-fist", color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100", subgroups: ["Todos", "Costas", "Tríceps", "Biceps", "Ombro", "Punho", "Mãos / Destreza"] },
+      mmii: { title: "Membros Inferiores", shortTitle: "MMII", icon: "fa-shoe-prints", color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-100", subgroups: ["Todos", "Isquiostibiais", "Quadriceps", "Panturrilha", "Tornozelo / Pé"] },
+      core: { title: "Core e Tronco", shortTitle: "Core", icon: "fa-child-reaching", color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-100", subgroups: ["Todos", "Abdômen", "Lombar", "Postura"] },
+      aerobic: { title: "Aeróbico e Marcha", shortTitle: "Aeróbico", icon: "fa-heart-pulse", color: "text-rose-600", bg: "bg-rose-50", border: "border-rose-100", subgroups: ["Todos", "Marcha", "Resistência", "Agilidade"] },
+      dual: { title: "Dupla Tarefa", shortTitle: "Dupla Tarefa", icon: "fa-brain", color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-100", subgroups: ["Todos", "Cognitiva + Motora", "Equilíbrio + Fala"] }
+    };
+
+    const DEFAULT_PARTICIPANTS = [
+      { id: "1", name: "Dona Maria Conceição" }, { id: "2", name: "Seu José Antonio" }, { id: "3", name: "Dona Raimunda Nonata" }, { id: "4", name: "Seu Francisco das Chagas" }
+    ];
 
     const LoginPage = ({ onLogin }) => {
       const [isLogin, setIsLogin] = useState(true);
@@ -338,14 +434,7 @@
 
       const handleSendEmail = () => {
          const subject = "ATIVIDOSO - Lembrete de Planejamento da Aula";
-         const body = `Olá Monitor(a),
-
-Lembramos que o seu grupo está responsável por realizar a próxima atividade na quadra.
-
-Por favor, acesse a plataforma ATIVIDOSO para realizar o planejamento prévio e enviar a aula na aba 'Aulas e Relatórios'.
-
-Atenciosamente,
-Coordenação ATIVIDOSO`;
+         const body = `Olá Monitor(a),\n\nLembramos que o seu grupo está responsável por realizar a próxima atividade na quadra.\n\nPor favor, acesse a plataforma ATIVIDOSO para realizar o planejamento prévio e enviar a aula na aba 'Aulas e Relatórios'.\n\nAtenciosamente,\nCoordenação ATIVIDOSO`;
          const emailLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
          window.open(emailLink, '_blank');
       }; 
@@ -534,17 +623,7 @@ Coordenação ATIVIDOSO`;
          const atividades = planDetails.proposedActivities || '[Descreva o resumo das atividades aqui]';
          const desaquecimento = planDetails.coolDown || '[Descreva o alongamento/relaxamento]';
 
-         const text = `Data: ${dataFormatada}
-Responsáveis: ${responsaveis}
-
-Antes e após a realização das atividades propostas, a pressão arterial (PA), frequência cardíaca (FC) e saturação periférica de oxigênio (SpO₂) dos participantes foram aferidas e registradas nesse prontuário, conforme discriminado a seguir:
-
-${vitalsText}.
-
-Foram propostas atividades: ${atividades}.
-Ao término da gincana, foi realizado o desaquecimento com ${desaquecimento}.
-
-As atividades foram conduzidas sem intercorrências, pelos discentes: ${responsaveis}.`;
+         const text = `Data: ${dataFormatada}\nResponsáveis: ${responsaveis}\n\nAntes e após a realização das atividades propostas, a pressão arterial (PA), frequência cardíaca (FC) e saturação periférica de oxigênio (SpO₂) dos participantes foram aferidas e registradas nesse prontuário, conforme discriminado a seguir:\n\n${vitalsText}.\n\nForam propostas atividades: ${atividades}.\nAo término da gincana, foi realizado o desaquecimento com ${desaquecimento}.\n\nAs atividades foram conduzidas sem intercorrências, pelos discentes: ${responsaveis}.`;
 
          setPlanDetails({...planDetails, dailyEvolution: text});
       };
@@ -580,10 +659,8 @@ As atividades foram conduzidas sem intercorrências, pelos discentes: ${responsa
             ${stHtml}
             <p><strong>DESAQUECIMENTO:</strong> ${d.coolDown||'-'}</p>
             ${vitHtml}<br>
-            <p><strong>RELATO NARRATIVO DA DINÂMICA:</strong><br/>${d.developmentNarrative?d.developmentNarrative.replace(/
-/g, '<br/>'):'-'}</p><br>
-            <p><strong>RESULTADOS OBTIDOS:</strong><br/>${d.resultObtained?d.resultObtained.replace(/
-/g, '<br/>'):'-'}</p><br>
+            <p><strong>RELATO NARRATIVO DA DINÂMICA:</strong><br/>${d.developmentNarrative?d.developmentNarrative.replace(/\n/g, '<br/>'):'-'}</p><br>
+            <p><strong>RESULTADOS OBTIDOS:</strong><br/>${d.resultObtained?d.resultObtained.replace(/\n/g, '<br/>'):'-'}</p><br>
             <p><strong>TOTAL DE PRESENTES:</strong> ${d.attendanceCount||'-'}</p>
           </div>
         `;
@@ -604,8 +681,7 @@ As atividades foram conduzidas sem intercorrências, pelos discentes: ${responsa
             <p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students||'-'}</p><br>
             <div style="padding: 20px; background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 8px;">
                <h3 style="color: #b45309; margin-top: 0; font-size: 14px; text-transform: uppercase;">Evolução Clínica, Sinais Vitais e Intercorrências</h3>
-               <p style="white-space: pre-wrap; font-size: 13px;">${d.dailyEvolution?d.dailyEvolution.replace(/
-/g, '<br/>'):'Sem anotações clínicas registradas para esta data.'}</p>
+               <p style="white-space: pre-wrap; font-size: 13px;">${d.dailyEvolution?d.dailyEvolution.replace(/\n/g, '<br/>'):'Sem anotações clínicas registradas para esta data.'}</p>
             </div>
             <br><br><br>
             <div style="text-align:center; margin-top: 50px;">
