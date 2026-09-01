@@ -192,31 +192,23 @@
       const [currentView, setCurrentView] = useState('home');
       const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
       
-      // Controle de Gestos do Celular (Puxar Menu)
-      const [touchStart, setTouchStart] = useState(null);
-      const [touchEnd, setTouchEnd] = useState(null);
+      // Controle de Gestos do Celular (Puxar Menu) - CORRIGIDO
+      const touchStartX = React.useRef(null);
+      const touchEndX = React.useRef(null);
 
       const onTouchStart = (e) => {
-        setTouchEnd(null);
-        setTouchStart(e.targetTouches[0].clientX);
+        touchEndX.current = null;
+        touchStartX.current = e.targetTouches[0].clientX;
       };
-      const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+      const onTouchMove = (e) => {
+        touchEndX.current = e.targetTouches[0].clientX;
+      };
       const onTouchEnd = () => {
-        if (!touchStart || !touchEnd) return;
-        const distance = touchStart - touchEnd;
-        if (distance < -40 && touchStart < 50 && !isMobileMenuOpen) setIsMobileMenuOpen(true);
+        if (!touchStartX.current || !touchEndX.current) return;
+        const distance = touchStartX.current - touchEndX.current;
+        if (distance < -40 && touchStartX.current < 50 && !isMobileMenuOpen) setIsMobileMenuOpen(true);
         if (distance > 40 && isMobileMenuOpen) setIsMobileMenuOpen(false);
       };
-      
-      const [searchQuery, setSearchQuery] = useState('');
-      const [filterCat, setFilterCat] = useState('all');
-      const [filterSub, setFilterSub] = useState('Todos');
-      const [selectedExercise, setSelectedExercise] = useState(null);
-      
-      const [exercises, setExercises] = useState([]);
-      const [savedCircuits, setSavedCircuits] = useState([]);
-      const [announcements, setAnnouncements] = useState([]);
-      const [participantsList, setParticipantsList] = useState(DEFAULT_PARTICIPANTS);
       
       // Gestão de Equipe
       const [teamMembers, setTeamMembers] = useState([]);
