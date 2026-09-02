@@ -69,19 +69,19 @@
 
     const AGENDA_DATA = [
       { act: "17", date: "14/08/2026", title: "RETORNO DAS ATIVIDADES - Gincana/dinâmica", resp: "Todos" },
-      { act: "18", date: "21/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "Equipe 1: Emyle, Vitória E, Vitória A. Gustavo" },
-      { act: "19", date: "28/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "Equipe 2: Henrille, Clara, Lívia, Raíssa" },
-      { act: "20", date: "04/09/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "Equipe 3: Sarah, Ellen, Maria Clara, Davi" },
-      { act: "21", date: "11/09/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "Equipe 4: Letícia R., Nyslanny, Danyllo" },
-      { act: "22", date: "18/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "Equipe 2: Henrille, Clara, Lívia, Raíssa" },
-      { act: "23", date: "25/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "Equipe 1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "18", date: "21/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "19", date: "28/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "20", date: "04/09/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "21", date: "11/09/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "4: Letícia R., Nyslanny, Danyllo" },
+      { act: "22", date: "18/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "23", date: "25/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "1: Emyle, Vitória E, Vitória A. Gustavo" },
       { act: "24", date: "02/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E4: Letícia R., Nyslanny, Danyllo" },
-      { act: "25", date: "09/10/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "Equipe 3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "25", date: "09/10/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "3: Sarah, Ellen, Maria Clara, Davi" },
       { act: "26", date: "16/10/2026", title: "Atividade educativa em saúde e promoção do autocuidado", resp: "Todos" },
-      { act: "27", date: "23/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "Equipe 1: Emyle, Vitória E, Vitória A. Gustavo" },
-      { act: "28", date: "30/10/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "Equipe 2: Henrille, Clara, Lívia, Raíssa" },
-      { act: "29", date: "06/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "Equipe 4: Letícia R., Nyslanny, Danyllo" },
-      { act: "30", date: "13/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "Equipe 3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "27", date: "23/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E 1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "28", date: "30/10/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "29", date: "06/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "4: Letícia R., Nyslanny, Danyllo" },
+      { act: "30", date: "13/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "3: Sarah, Ellen, Maria Clara, Davi" },
       { act: "31", date: "27/11/2026", title: "Avaliação participativa dos participantes e planejamento das próximas atividades", resp: "Todos" },
       { act: "32", date: "04/12/2026", title: "Atividade temática de integração/confraternização e encerramento do semestre letivo", resp: "Todos" }
     ];
@@ -797,7 +797,7 @@
                     <div className="bg-white dark:bg-slate-900 border-l-4 border-emerald-500 p-6 rounded-xl shadow-sm flex flex-col md:flex-row items-center md:items-start gap-4 transition-colors">
                       <div className="text-center md:text-left flex-1">
                         <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Atividade Pendente: {session.team_group}</h3>
-                        <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">O {session.team_group} está responsável pela documentação da próxima atividade na quadra.</p>
+                        <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">A {session.team_group} está responsável pela documentação da próxima atividade no ATIVIDOSO.</p>
                         <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg border border-slate-100 dark:border-slate-700 mt-3 inline-block">
                           <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-0.5 font-semibold">Cronograma Base</p>
                           <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{upcomingActivity.date} — {upcomingActivity.title}</p>
