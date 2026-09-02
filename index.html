@@ -10,7 +10,6 @@
   <meta name="application-name" content="ATIVIDOSO">
   
   <link rel="icon" href="Logo_ATV_2024_Colorido_v2.png?v=3" type="image/png">
-  
   <link rel="apple-touch-icon" href="icone-app.png?v=3">
   <meta name="apple-mobile-web-app-title" content="ATIVIDOSO">
   <meta name="mobile-web-app-capable" content="yes">
@@ -28,36 +27,32 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; overscroll-behavior-x: none; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; overscroll-behavior-x: none; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    .hover-lift { transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
-    .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
-    .bg-pattern { background-color: #f8fafc; background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 24px 24px; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-red selection:text-white">
   <div id="root">
+    <!-- Tela de Carregamento Nativa Limpa -->
     <div class="min-h-screen flex flex-col items-center justify-center bg-slate-50 relative overflow-hidden">
-      <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-rose-100/50 rounded-full blur-3xl"></div>
-      <div class="relative z-10 flex flex-col items-center animate-pulse">
+      <div class="relative z-10 flex flex-col items-center">
         <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" class="h-28 drop-shadow-sm" onerror="this.style.display='none'" />
-        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mt-4">Carregando plataforma...</p>
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-6">Carregando plataforma...</p>
       </div>
-      <div class="flex gap-2 mt-8 relative z-10">
-        <div class="w-3 h-3 rounded-full bg-[#e63946] animate-bounce shadow-sm"></div>
-        <div class="w-3 h-3 rounded-full bg-[#202b5c] animate-bounce shadow-sm" style="animation-delay: 0.1s"></div>
-        <div class="w-3 h-3 rounded-full bg-[#10b981] animate-bounce shadow-sm" style="animation-delay: 0.2s"></div>
+      <div class="flex gap-2 mt-4 relative z-10">
+        <div class="w-2 h-2 rounded-full bg-slate-300 animate-pulse"></div>
+        <div class="w-2 h-2 rounded-full bg-slate-400 animate-pulse" style="animation-delay: 0.2s"></div>
+        <div class="w-2 h-2 rounded-full bg-slate-500 animate-pulse" style="animation-delay: 0.4s"></div>
       </div>
     </div>
   </div>
 
   <script type="text/babel">
-    const { useState, useEffect, useMemo } = React;
+    const { useState, useEffect, useMemo, useRef } = React;
 
     const SUPABASE_URL = "https://rewkwzxuogdopzkqliwi.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_WtX-V75sKhWRnm7G_x6W1Q_fzuagXGH"; 
@@ -83,11 +78,11 @@
     ];
 
     const CATEGORIES = {
-      mmss: { title: "Membros Superiores", shortTitle: "MMSS", icon: "fa-hand-fist", color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100", subgroups: ["Todos", "Costas", "Tríceps", "Biceps", "Ombro", "Punho", "Mãos / Destreza"] },
-      mmii: { title: "Membros Inferiores", shortTitle: "MMII", icon: "fa-shoe-prints", color: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-100", subgroups: ["Todos", "Isquiostibiais", "Quadriceps", "Panturrilha", "Tornozelo / Pé"] },
-      core: { title: "Core e Tronco", shortTitle: "Core", icon: "fa-child-reaching", color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-100", subgroups: ["Todos", "Abdômen", "Lombar", "Postura"] },
-      aerobic: { title: "Aeróbico e Marcha", shortTitle: "Aeróbico", icon: "fa-heart-pulse", color: "text-rose-600", bg: "bg-rose-50", border: "border-rose-100", subgroups: ["Todos", "Marcha", "Resistência", "Agilidade"] },
-      dual: { title: "Dupla Tarefa", shortTitle: "Dupla Tarefa", icon: "fa-brain", color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-100", subgroups: ["Todos", "Cognitiva + Motora", "Equilíbrio + Fala"] }
+      mmss: { title: "Membros Superiores", shortTitle: "MMSS", icon: "fa-hand-fist", color: "text-blue-700", bg: "bg-blue-50", border: "border-blue-200", subgroups: ["Todos", "Costas", "Tríceps", "Biceps", "Ombro", "Punho", "Mãos / Destreza"] },
+      mmii: { title: "Membros Inferiores", shortTitle: "MMII", icon: "fa-shoe-prints", color: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-200", subgroups: ["Todos", "Isquiostibiais", "Quadriceps", "Panturrilha", "Tornozelo / Pé"] },
+      core: { title: "Core e Tronco", shortTitle: "Core", icon: "fa-child-reaching", color: "text-amber-700", bg: "bg-amber-50", border: "border-amber-200", subgroups: ["Todos", "Abdômen", "Lombar", "Postura"] },
+      aerobic: { title: "Aeróbico e Marcha", shortTitle: "Aeróbico", icon: "fa-heart-pulse", color: "text-rose-700", bg: "bg-rose-50", border: "border-rose-200", subgroups: ["Todos", "Marcha", "Resistência", "Agilidade"] },
+      dual: { title: "Dupla Tarefa", shortTitle: "Dupla Tarefa", icon: "fa-brain", color: "text-purple-700", bg: "bg-purple-50", border: "border-purple-200", subgroups: ["Todos", "Cognitiva + Motora", "Equilíbrio + Fala"] }
     };
 
     const DEFAULT_PARTICIPANTS = [
@@ -114,7 +109,7 @@
         if (isLogin) {
           const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
           if (error) { 
-            setError('E-mail ou senha incorretos.'); 
+            setError('Credenciais incorretas.'); 
             setLoading(false); 
           } else if (data.session) {
             const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', data.session.user.id).single();
@@ -133,23 +128,23 @@
       };
 
       return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 bg-pattern p-6">
-          <div className="bg-[#161e42] w-full max-w-md p-8 sm:p-10 rounded-[2.5rem] shadow-2xl border border-white/10 animate-fade-in text-white">
-            <div className="text-center mb-10 mt-2">
-              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-24 mx-auto mb-6 object-contain drop-shadow-lg" onError={(e) => e.target.style.display='none'} />
-              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-wide mb-2">Bem-vindo(a)</h2>
-              <p className="text-xs font-bold text-slate-300 uppercase tracking-widest">App do Projeto</p>
+        <div className="min-h-screen flex items-center justify-center bg-slate-100 p-6">
+          <div className="bg-white w-full max-w-md p-8 rounded-xl shadow-lg border border-slate-200 animate-fade-in text-slate-800">
+            <div className="text-center mb-8">
+              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-20 mx-auto mb-4 object-contain" onError={(e) => e.target.style.display='none'} />
+              <h2 className="text-2xl font-bold text-slate-800">Acesso Restrito</h2>
+              <p className="text-xs text-slate-500 uppercase tracking-wider mt-1">Plataforma Clínica Atividoso</p>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
                 <>
                   <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase mb-2 pl-2 tracking-widest">Nome Completo</label>
-                    <input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required className="w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-brand-red focus:bg-white/10 outline-none text-sm transition-all font-semibold text-white placeholder-slate-500" placeholder="Seu nome" />
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">Nome Completo</label>
+                    <input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors" placeholder="Nome completo" />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase mb-2 pl-2 tracking-widest">Grupo da Quadra</label>
-                    <select value={teamGroup} onChange={e=>setTeamGroup(e.target.value)} className="w-full px-5 py-4 rounded-2xl bg-[#161e42] border border-white/10 focus:border-brand-red outline-none text-sm transition-all font-bold text-white">
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">Grupo de Extensão</label>
+                    <select value={teamGroup} onChange={e=>setTeamGroup(e.target.value)} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors bg-white">
                       <option value="E1">Grupo E1</option>
                       <option value="E2">Grupo E2</option>
                       <option value="E3">Grupo E3</option>
@@ -159,25 +154,25 @@
                 </>
               )}
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase mb-2 pl-2 tracking-widest">E-mail</label>
-                <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-brand-red focus:bg-white/10 outline-none text-sm transition-all font-semibold text-white placeholder-slate-500" placeholder="seu.email@faculdade.com" />
+                <label className="block text-xs font-semibold text-slate-600 mb-1">E-mail Institucional ou Pessoal</label>
+                <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors" placeholder="usuario@email.com" />
               </div>
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase mb-2 pl-2 tracking-widest">Senha</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1">Senha</label>
                 <div className="relative">
-                  <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-5 pr-12 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-brand-red focus:bg-white/10 outline-none text-sm transition-all font-semibold text-white placeholder-slate-500" placeholder="••••••••" />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-4 text-slate-400 p-1 hover:text-white transition-colors"><i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i></button>
+                  <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-4 pr-10 py-2.5 rounded-lg border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors" placeholder="••••••••" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 transition-colors"><i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i></button>
                 </div>
               </div>
                 
-              {error && <div className="bg-rose-500/20 text-rose-300 p-4 rounded-2xl text-xs font-bold border border-rose-500/30 flex items-center gap-2"><i className="fa-solid fa-circle-exclamation text-lg"></i> {error}</div>}
-              <button type="submit" disabled={loading} className="w-full bg-brand-red hover:bg-brand-redDark text-white font-black py-4 rounded-2xl transition-all shadow-[0_8px_20px_-6px_rgba(230,57,70,0.5)] mt-6 text-base hover:-translate-y-1">
-                {loading ? <i className="fa-solid fa-spinner fa-spin"></i> : (isLogin ? 'Entrar no Aplicativo' : 'Criar Conta')}
+              {error && <div className="bg-rose-50 text-rose-600 p-3 rounded-lg text-xs font-semibold border border-rose-200">{error}</div>}
+              <button type="submit" disabled={loading} className="w-full bg-brand-blue hover:bg-brand-dark text-white font-semibold py-3 rounded-lg transition-colors mt-2 text-sm">
+                {loading ? <i className="fa-solid fa-spinner fa-spin"></i> : (isLogin ? 'Entrar no Sistema' : 'Registrar Usuário')}
               </button>
             </form>
-            <div className="mt-8 text-center border-t border-white/10 pt-6">
-              <button onClick={() => {setIsLogin(!isLogin); setError('');}} className="text-xs font-bold text-slate-400 hover:text-white transition-colors">
-                {isLogin ? "Primeira vez na equipe? Cadastre-se." : "Já é da equipe? Clique para Entrar."}
+            <div className="mt-6 text-center pt-4 border-t border-slate-100">
+              <button onClick={() => {setIsLogin(!isLogin); setError('');}} className="text-xs font-medium text-brand-blue hover:underline">
+                {isLogin ? "Novo membro? Criar cadastro." : "Já possui cadastro? Acessar."}
               </button>
             </div>
           </div>
@@ -185,18 +180,14 @@
       );
     };
 
-    // ==========================================
-    // PLATAFORMA / DASHBOARD
-    // ==========================================
     const Dashboard = ({ session, onLogout, updateSessionData }) => {
       const isAdmin = session.role === 'admin' || session.role === 'Coordenador / Admin';
 
       const [currentView, setCurrentView] = useState('home');
       const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
       
-      // Controle de Gestos do Celular (Puxar Menu) - CORRIGIDO
-      const touchStartX = React.useRef(null);
-      const touchEndX = React.useRef(null);
+      const touchStartX = useRef(null);
+      const touchEndX = useRef(null);
 
       const onTouchStart = (e) => {
         touchEndX.current = null;
@@ -222,11 +213,9 @@
       const [announcements, setAnnouncements] = useState([]);
       const [participantsList, setParticipantsList] = useState(DEFAULT_PARTICIPANTS);
       
-      // Gestão de Equipe
       const [teamMembers, setTeamMembers] = useState([]);
       const [editingMember, setEditingMember] = useState(null);
 
-      // Cadastro Exercicio
       const [formCat, setFormCat] = useState('');
       const [formMuscleSelect, setFormMuscleSelect] = useState('');
       const [formCustomMuscle, setFormCustomMuscle] = useState('');
@@ -234,7 +223,6 @@
       const [formData, setFormData] = useState({ title: '', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '', videoUrl: '', instructions: '', precautions: '' });
       const [formStatus, setFormStatus] = useState({ loading: false, success: false });
 
-      // Circuitos / Aula
       const [circuitMode, setCircuitMode] = useState('agenda');
       const [circuit, setCircuit] = useState([[], [], [], [], []]);
       const [viewingCircuit, setViewingCircuit] = useState(null);
@@ -244,7 +232,6 @@
         developmentNarrative: '', dailyEvolution: '', resultObtained: '', attendanceCount: '', attendanceList: [] 
       });
 
-      // Sistema de Salva-Vidas (Rascunho Offline)
       const [hasDraft, setHasDraft] = useState(false);
       const [autoSaveMsg, setAutoSaveMsg] = useState('');
 
@@ -260,10 +247,10 @@
                localStorage.setItem('atv_draft_mode', circuitMode);
                if (viewingCircuit) localStorage.setItem('atv_draft_viewing', JSON.stringify(viewingCircuit));
                
-               setAutoSaveMsg('Salvo no celular: ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+               setAutoSaveMsg('Salvo localmente.');
                setTimeout(() => setAutoSaveMsg(''), 3000);
                setHasDraft(true);
-            }, 1500); // Salva silenciosamente 1.5s após parar de digitar
+            }, 1500); 
             return () => clearTimeout(timer);
          }
       }, [planDetails, circuit, circuitMode, viewingCircuit]);
@@ -288,18 +275,15 @@
          setHasDraft(false);
       };
 
-      // Perfil & Avisos
       const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '', link_url: '' });
       const [profileForm, setProfileForm] = useState({ full_name: session.full_name, team_group: session.team_group || '' });
       const [profileAvatarFile, setProfileAvatarFile] = useState(null);
       const [profileStatus, setProfileStatus] = useState('');
 
-      // Emails (EmailJS)
       const [customEmailDest, setCustomEmailDest] = useState('');
       const [customEmailMessage, setCustomEmailMessage] = useState('');
       const [emailStatus, setEmailStatus] = useState('');
 
-      // Busca inicial
       useEffect(() => {
         const fetchAll = async () => {
           const [{data:ex}, {data:ci}, {data:an}, {data:pa}, {data:pr}] = await Promise.all([
@@ -361,10 +345,9 @@
         return null; 
       }, [session.team_group]);
 
-      // ======= FUNÇÕES DE PERFIL =======
       const handleSaveProfile = async (e) => {
         e.preventDefault(); 
-        setProfileStatus('Salvando...');
+        setProfileStatus('Salvando alterações...');
         let newAvatarUrl = session.avatar_url;
         if (profileAvatarFile) {
           const fileName = `avatar_${session.id}_${Date.now()}.${profileAvatarFile.name.split('.').pop()}`;
@@ -374,14 +357,13 @@
         
         const { error } = await supabaseClient.from('profiles').update({ full_name: profileForm.full_name, team_group: profileForm.team_group, avatar_url: newAvatarUrl }).eq('id', session.id);
         if(!error) { 
-          setProfileStatus('Salvo com sucesso!'); 
+          setProfileStatus('Perfil atualizado com sucesso.'); 
           updateSessionData({ ...session, full_name: profileForm.full_name, team_group: profileForm.team_group, avatar_url: newAvatarUrl }); 
         } else { 
-          setProfileStatus('Erro ao salvar.'); 
+          setProfileStatus('Erro ao atualizar perfil.'); 
         }
       };
 
-      // ======= FUNÇÕES DE GESTÃO DA EQUIPE =======
       const handleUpdateMember = async (e) => {
         e.preventDefault();
         const { error } = await supabaseClient.from('profiles').update({ 
@@ -393,13 +375,12 @@
         if(!error) {
           setTeamMembers(teamMembers.map(m => m.id === editingMember.id ? editingMember : m));
           setEditingMember(null);
-          alert("Perfil do monitor atualizado com sucesso!");
+          alert("Perfil modificado com sucesso.");
         } else {
-          alert("Erro: " + error.message);
+          alert("Erro na atualização: " + error.message);
         }
       };
 
-      // ======= FUNÇÕES DE AVISOS =======
       const handlePostAnnouncement = async (e) => {
         e.preventDefault();
         const { data, error } = await supabaseClient.from('announcements').insert([{ 
@@ -409,7 +390,7 @@
           author: session.full_name 
         }]).select();
         if (error) {
-          alert("Erro: " + error.message);
+          alert("Falha na submissão: " + error.message);
         } else if (data) { 
           setAnnouncements([data[0], ...announcements]); 
           setNewAnnouncement({ title: '', content: '', link_url: '' }); 
@@ -417,22 +398,21 @@
       };
 
       const handleDeleteAnnouncement = async (id) => { 
-        if(window.confirm("Apagar este aviso permanentemente?")) { 
+        if(window.confirm("Confirmar exclusão deste registro?")) { 
           const { error } = await supabaseClient.from('announcements').delete().eq('id', id); 
           if (error) {
-            alert("Erro: " + error.message); 
+            alert("Erro na exclusão: " + error.message); 
           } else {
             setAnnouncements(announcements.filter(a => a.id !== id)); 
           }
         } 
       };
 
-      // ======= FUNÇÕES DE E-MAIL E CONVITE (VIA EMAILJS) =======
       const handleSendCustomEmail = async (e) => {
          e.preventDefault();
-         if (!customEmailDest) return alert("Digite o e-mail do destinatário!");
+         if (!customEmailDest) return alert("Preencha o campo de e-mail do destinatário.");
          
-         setEmailStatus('Testando código novo com a chave certa...');
+         setEmailStatus('Processando envio...');
 
          try {
             const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
@@ -450,29 +430,28 @@
             });
 
             if (response.ok) {
-               setEmailStatus('E-mail enviado com sucesso!');
+               setEmailStatus('');
                setCustomEmailDest('');
                setCustomEmailMessage('');
-               alert("VITÓRIA! O E-mail chegou na Vercel e foi enviado!");
+               alert("E-mail encaminhado com sucesso.");
             } else {
                const errorText = await response.text();
-               alert("Erro no código NOVO: " + errorText);
-               setEmailStatus('Erro ao enviar.');
+               alert("Falha no servidor SMTP: " + errorText);
+               setEmailStatus('Erro na operação.');
             }
          } catch (err) {
-            alert("Erro de conexão na internet: " + err.message);
-            setEmailStatus('Erro de conexão.');
+            alert("Falha de rede: " + err.message);
+            setEmailStatus('Erro na conexão.');
          }
       };
 
       const handleSendEmail = () => {
-         const subject = "ATIVIDOSO - Lembrete de Planejamento da Aula";
-         const body = `Olá Monitor(a),\n\nLembramos que o seu grupo está responsável por realizar a próxima atividade no atividoso.\n\nPor favor, acesse a plataforma ATIVIDOSO para realizar o planejamento prévio e enviar a atividade na aba 'Aulas e Relatórios'.\n\nAtenciosamente,\nCoordenação ATIVIDOSO`;
+         const subject = "Aviso Coordenação ATIVIDOSO - Planejamento";
+         const body = `Monitor(a),\n\nLembramos que o seu grupo está responsável por realizar a próxima atividade.\n\nAcesse o sistema ATIVIDOSO para realizar o planejamento prévio e documentar a atividade na aba 'Aulas e Diário Clínico'.\n\nCoordenação ATIVIDOSO`;
          const emailLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
          window.open(emailLink, '_blank');
       }; 
 
-      // ======= FUNÇÕES DE EXERCÍCIOS =======
       const handleFormSubmit = async (e) => {
         e.preventDefault(); 
         setFormStatus({ loading: true, success: false });
@@ -508,7 +487,7 @@
           setMediaFile(null); 
         } else { 
           setFormStatus({ loading: false, success: false }); 
-          alert("Erro ao enviar: " + error.message); 
+          alert("Falha no envio de dados: " + error.message); 
         }
       };
 
@@ -523,16 +502,15 @@
       };
       
       const handleDeleteExercise = async (id) => { 
-        if(window.confirm("Apagar exercício definitivamente do acervo?")) { 
+        if(window.confirm("Confirmar exclusão definitiva do registro clínico?")) { 
           await supabaseClient.from('exercises').delete().eq('id', id); 
           setExercises(exercises.filter(ex => ex.id !== id)); 
           setCurrentView('library'); 
         } 
       };
 
-      // ======= FUNÇÕES DE RELATÓRIO E PRESENÇA =======
       const handleAddParticipant = async () => {
-        const name = prompt('Digite o nome completo do idoso:');
+        const name = prompt('Insira o nome completo do paciente/participante:');
         if(name) {
           const { data, error } = await supabaseClient.from('participants').insert([{ name }]).select();
           if(!error && data) {
@@ -581,33 +559,33 @@
       };
 
       const handleSavePlan = async () => {
-        if (!planDetails.date || !planDetails.theme || !planDetails.activityNum) return alert('Por favor, preencha o Número, Tema e Data!');
+        if (!planDetails.date || !planDetails.theme || !planDetails.activityNum) return alert('Campos obrigatórios: Número, Tema e Data.');
         const { data, error } = await supabaseClient.from('circuits').insert([{ activity_date: planDetails.date, stations: circuit, details: planDetails, author: session.full_name }]).select();
         if (!error) { 
-          alert('Planejamento Salvo!'); 
+          alert('Registro efetuado no sistema.'); 
           setSavedCircuits([data[0], ...savedCircuits]); 
           setCircuitMode('history');
           clearDraft(); 
         } else {
-          alert('Erro: ' + error.message);
+          alert('Erro de persistência: ' + error.message);
         }
       };
 
       const handleUpdateReport = async () => {
         const { error } = await supabaseClient.from('circuits').update({ details: planDetails }).eq('id', viewingCircuit.id);
         if (!error) { 
-          alert('Relatório Clínico Salvo!'); 
+          alert('Documento clínico atualizado.'); 
           setSavedCircuits(savedCircuits.map(c => c.id === viewingCircuit.id ? { ...c, details: planDetails } : c)); 
           setViewingCircuit({ ...viewingCircuit, details: planDetails }); 
           setCircuitMode('view');
           clearDraft(); 
         } else {
-          alert('Erro: ' + error.message);
+          alert('Falha na atualização: ' + error.message);
         }
       };
 
       const handleDeleteCircuit = async (id) => { 
-        if(window.confirm("Apagar permanentemente este relatório?")) { 
+        if(window.confirm("Confirmar exclusão deste documento na base de dados?")) { 
           await supabaseClient.from('circuits').delete().eq('id', id); 
           setSavedCircuits(savedCircuits.filter(c => c.id !== id)); 
           setCircuitMode('history'); 
@@ -631,22 +609,20 @@
         setCircuit(newCircuit); 
       };
 
-      // ======= GERADOR DE EVOLUÇÃO AUTOMÁTICA =======
       const handleGenerateAutoEvolution = () => {
          const presentes = planDetails.attendanceList.filter(p => p.present);
-         if (presentes.length === 0) return alert("Marque a presença e preencha os sinais vitais de pelo menos um idoso antes de gerar a evolução.");
+         if (presentes.length === 0) return alert("Aviso: Requer presença confirmada e parâmetros vitais inseridos na ficha para processar evolução.");
          
          const dataFormatada = planDetails.date ? planDetails.date.split('-').reverse().join('/') : 'DD/MM/AAAA';
          const responsaveis = planDetails.students || 'Não informados';
          const vitalsText = presentes.map(p => `${p.name} (PA inicial: ${p.pa_in||'?'} mmHg; SpO₂: ${p.spo2_in||'?'}%; FC inicial: ${p.fc_in||'?'} bpm / PA final: ${p.pa_out||'?'} mmHg; SpO₂: ${p.spo2_out||'?'}%; FC final: ${p.fc_out||'?'} bpm)`).join(', ');
-         const atividades = planDetails.proposedActivities || '[Descreva o resumo das atividades aqui]';
+         const atividades = planDetails.proposedActivities || '[Descreva as atividades]';
          const desaquecimento = planDetails.coolDown || '[Descreva o alongamento/relaxamento]';
          
-         const text = `Data: ${dataFormatada}\nResponsáveis: ${responsaveis}\n\nAntes e após a realização das atividades propostas, a pressão arterial (PA), frequência cardíaca (FC) e saturação periférica de oxigênio (SpO₂) dos participantes foram aferidas e registradas nesse prontuário, conforme discriminado a seguir:\n\n${vitalsText}.\n\nForam propostas atividades: ${atividades}.\nAo término da gincana, foi realizado o desaquecimento com ${desaquecimento}.\n\nAs atividades foram conduzidas sem intercorrências, pelos discentes: ${responsaveis}.`;
+         const text = `Data: ${dataFormatada}\nResponsáveis: ${responsaveis}\n\nAntes e após a realização das atividades propostas, a pressão arterial (PA), frequência cardíaca (FC) e saturação periférica de oxigênio (SpO₂) dos participantes foram aferidas e registradas, conforme discriminado a seguir:\n\n${vitalsText}.\n\nForam propostas atividades: ${atividades}.\nAo término da dinâmica, foi realizado o desaquecimento com ${desaquecimento}.\n\nAs atividades foram conduzidas sem intercorrências, pelos discentes: ${responsaveis}.`;
          setPlanDetails({...planDetails, dailyEvolution: text});
       };
 
-      // ======= GERADORES DE PDF SEPARADOS =======
       const handleGenerateReportPDF = (circuitData) => {
         const d = circuitData.details;
         let stHtml = ''; 
@@ -660,14 +636,14 @@
         }
         
         const element = document.createElement('div');
-        element.innerHTML = `<div style="font-family:Arial; font-size:14px; color:#333; line-height:1.5; padding:30px;"><div style="text-align:center; margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px; margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0; font-size:18px; color:#161E42; text-transform:uppercase;">RELATÓRIO DE ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</h2></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students||'-'}</p><br><p><strong>OBJETIVOS:</strong> ${d.objectives||'-'}</p><p><strong>ATIVIDADES PROPOSTAS:</strong> ${d.proposedActivities||'-'}</p><p><strong>MATERIAIS:</strong> ${d.materials||'-'}</p><p><strong>OPERAÇÃO (SV, Som, Cuid.):</strong> ${d.vitalSigns||'-'} | ${d.soundAndPhotos||'-'} | ${d.specialCare||'-'}</p><br><p><strong>AQUECIMENTO:</strong> ${d.warmUp||'-'}</p>${stHtml}<p><strong>DESAQUECIMENTO:</strong> ${d.coolDown||'-'}</p>${vitHtml}<br><p><strong>RELATO NARRATIVO DA DINÂMICA:</strong><br/>${d.developmentNarrative?d.developmentNarrative.replace(/\n/g, '<br/>'):'-'}</p><br><p><strong>RESULTADOS OBTIDOS:</strong><br/>${d.resultObtained?d.resultObtained.replace(/\n/g, '<br/>'):'-'}</p><br><p><strong>TOTAL DE PRESENTES:</strong> ${d.attendanceCount||'-'}</p></div>`;
+        element.innerHTML = `<div style="font-family:Arial; font-size:14px; color:#333; line-height:1.5; padding:30px;"><div style="text-align:center; margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px; margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0; font-size:16px; color:#161E42; text-transform:uppercase; font-weight:bold;">RELATÓRIO DE ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</h2></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students||'-'}</p><br><p><strong>OBJETIVOS:</strong> ${d.objectives||'-'}</p><p><strong>ATIVIDADES PROPOSTAS:</strong> ${d.proposedActivities||'-'}</p><p><strong>MATERIAIS:</strong> ${d.materials||'-'}</p><p><strong>OPERAÇÃO (SV, Som, Cuid.):</strong> ${d.vitalSigns||'-'} | ${d.soundAndPhotos||'-'} | ${d.specialCare||'-'}</p><br><p><strong>AQUECIMENTO:</strong> ${d.warmUp||'-'}</p>${stHtml}<p><strong>DESAQUECIMENTO:</strong> ${d.coolDown||'-'}</p>${vitHtml}<br><p><strong>RELATO NARRATIVO DA DINÂMICA:</strong><br/>${d.developmentNarrative?d.developmentNarrative.replace(/\n/g, '<br/>'):'-'}</p><br><p><strong>RESULTADOS OBTIDOS:</strong><br/>${d.resultObtained?d.resultObtained.replace(/\n/g, '<br/>'):'-'}</p><br><p><strong>TOTAL DE PRESENTES:</strong> ${d.attendanceCount||'-'}</p></div>`;
         html2pdf().set({ margin: 0.4, filename: `Relatorio_Atividade_${d.activityNum||'00'}.pdf`, html2canvas: { scale: 2, useCORS: true } }).from(element).save();
       };
 
       const handleGenerateEvolutionPDF = (circuitData) => {
         const d = circuitData.details;
         const element = document.createElement('div');
-        element.innerHTML = `<div style="font-family:Arial; font-size:14px; color:#333; line-height:1.5; padding:30px;"><div style="text-align:center; margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px; margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0; font-size:18px; color:#e63946; text-transform:uppercase;">DOCUMENTO DE EVOLUÇÃO CLÍNICA</h2><p style="margin:0; font-size:14px; color:#64748b; font-weight:bold;">ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</p></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students||'-'}</p><br><div style="padding: 20px; background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 8px;"><h3 style="color: #b45309; margin-top: 0; font-size: 14px; text-transform: uppercase;">Evolução Clínica, Sinais Vitais e Intercorrências</h3><p style="white-space: pre-wrap; font-size: 13px;">${d.dailyEvolution?d.dailyEvolution.replace(/\n/g, '<br/>'):'Sem anotações clínicas.'}</p></div><br><br><br><div style="text-align:center; margin-top: 50px;"><p>___________________________________________________</p><p style="font-size: 12px; color: #666;">Assinatura do Monitor / Supervisor</p></div></div>`;
+        element.innerHTML = `<div style="font-family:Arial; font-size:14px; color:#333; line-height:1.5; padding:30px;"><div style="text-align:center; margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px; margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0; font-size:16px; color:#161E42; text-transform:uppercase; font-weight:bold;">DOCUMENTO DE EVOLUÇÃO CLÍNICA</h2><p style="margin:0; font-size:13px; color:#64748b;">ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</p></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students||'-'}</p><br><div style="padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;"><h3 style="color: #334155; margin-top: 0; font-size: 13px; text-transform: uppercase;">Evolução Clínica, Sinais Vitais e Intercorrências</h3><p style="white-space: pre-wrap; font-size: 13px;">${d.dailyEvolution?d.dailyEvolution.replace(/\n/g, '<br/>'):'Sem anotações clínicas.'}</p></div><br><br><br><div style="text-align:center; margin-top: 50px;"><p>___________________________________________________</p><p style="font-size: 12px; color: #666;">Assinatura do Responsável Técnico</p></div></div>`;
         html2pdf().set({ margin: 0.4, filename: `Evolucao_Clinica_Ativ_${d.activityNum||'00'}.pdf`, html2canvas: { scale: 2, useCORS: true } }).from(element).save();
       };
 
@@ -678,8 +654,8 @@
       };
 
       const NavBtn = ({v, icon, text}) => ( 
-        <button onClick={() => handleNavClick(v)} className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-bold w-full transition-all ${currentView === v ? 'bg-brand-blue text-white shadow-md' : 'text-slate-600 hover:bg-slate-50 hover:text-brand-blue'}`}>
-          <i className={`fa-solid ${icon} w-5 text-center text-lg`}></i> {text}
+        <button onClick={() => handleNavClick(v)} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === v ? 'bg-slate-100 text-brand-blue font-semibold border-l-4 border-brand-blue' : 'text-slate-600 hover:bg-slate-50 border-l-4 border-transparent'}`}>
+          <i className={`fa-solid ${icon} w-5 text-center`}></i> {text}
         </button> 
       );
 
@@ -687,107 +663,99 @@
         <div className="min-h-screen flex bg-slate-50 relative" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
           
           {isMobileMenuOpen && (
-            <div className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-sm transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>
+            <div className="fixed inset-0 bg-slate-900/50 z-40 md:hidden transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>
           )}
           
-          <aside className={`w-72 bg-white flex flex-col h-screen fixed md:relative z-50 transition-transform duration-150 ease-out border-r border-slate-200 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-            <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden absolute top-6 right-6 text-slate-400 hover:text-brand-red bg-slate-50 w-8 h-8 rounded-full flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark"></i></button>
+          <aside className={`w-64 bg-white flex flex-col h-screen fixed md:relative z-50 transition-transform duration-200 ease-in-out border-r border-slate-200 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+            <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden absolute top-4 right-4 text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark"></i></button>
 
-            <div className="p-8 flex flex-col items-center justify-center gap-2 mt-4">
-              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-16 object-contain drop-shadow-sm" onError={(e) => { e.target.style.display = 'none'; document.getElementById('sidebarTextLogo').classList.remove('hidden'); }} />
-              <div id="sidebarTextLogo" className="hidden"><span className="text-2xl font-black text-brand-blue">ATIV<span className="text-brand-red">IDOSO</span></span></div>
+            <div className="p-6 flex flex-col items-center justify-center gap-2 mt-2">
+              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-12 object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
             </div>
             
-            <div className="px-6 pb-6 mb-2 border-b border-slate-100 flex items-center gap-4 cursor-pointer hover:bg-slate-50 transition p-2 rounded-2xl mx-4" onClick={() => handleNavClick('perfil')}>
+            <div className="px-5 pb-5 mb-2 border-b border-slate-200 flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition p-2 rounded-lg mx-2" onClick={() => handleNavClick('perfil')}>
               {session.avatar_url ? ( 
-                <img src={session.avatar_url} className="w-12 h-12 rounded-full object-cover shadow-md ring-4 ring-slate-50 shrink-0"/> 
+                <img src={session.avatar_url} className="w-10 h-10 rounded-full object-cover border border-slate-200 shrink-0"/> 
               ) : ( 
-                <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-red to-orange-400 flex items-center justify-center text-white font-black text-xl shadow-md uppercase shrink-0 ring-4 ring-red-50">{session.full_name.charAt(0)}</div> 
+                <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold shadow-inner shrink-0">{session.full_name.charAt(0)}</div> 
               )}
               <div className="overflow-hidden">
-                <p className="text-sm font-extrabold text-slate-800 leading-tight truncate">{session.full_name}</p>
+                <p className="text-sm font-semibold text-slate-800 leading-tight truncate">{session.full_name}</p>
                 <div className="flex gap-1 mt-1">
-                  <span className="text-[9px] text-brand-blue font-bold uppercase tracking-widest bg-blue-50 px-2 py-0.5 rounded-full inline-block">{session.role}</span>
-                  {session.team_group && session.team_group !== 'Nenhum' && <span className="text-[9px] text-emerald-600 font-bold uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full inline-block border border-emerald-100"><i className="fa-solid fa-users"></i> {session.team_group}</span>}
+                  <span className="text-[10px] text-brand-blue font-medium bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 inline-block">{session.role}</span>
                 </div>
               </div>
             </div>
 
-            <nav className="flex-1 px-4 py-4 flex flex-col gap-1.5 overflow-y-auto">
-              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 pl-3">Meu Espaço</p>
-              <NavBtn v="home" icon="fa-house-chimney-medical" text="Início & Mural" />
-              <NavBtn v="perfil" icon="fa-user-astronaut" text="Meu Perfil" />
+            <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto">
+              <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-2 pl-3">Módulos</p>
+              <NavBtn v="home" icon="fa-desktop" text="Painel do Monitor" />
+              <NavBtn v="perfil" icon="fa-user" text="Configurações de Conta" />
               
-              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 mt-6 pl-3">Atividades e Saúde</p>
-              <NavBtn v="library" icon="fa-dumbbell" text="Acervo de Exercícios" />
-              <NavBtn v="circuito" icon="fa-clipboard-list" text="Aulas e Diário Clínico" />
+              <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-2 mt-6 pl-3">Clínico</p>
+              <NavBtn v="library" icon="fa-book-medical" text="Acervo de Exercícios" />
+              <NavBtn v="circuito" icon="fa-clipboard-check" text="Aulas e Diário Clínico" />
               
-              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 mt-6 pl-3">Gestão</p>
-              <button onClick={() => { handleNavClick('cadastro'); setFormStatus({loading: false, success: false}); }} className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-bold w-full transition-all ${currentView === 'cadastro' ? 'bg-brand-red text-white shadow-md shadow-brand-red/20' : 'text-slate-600 hover:bg-rose-50 hover:text-brand-red'}`}><i className="fa-solid fa-circle-plus w-5 text-center text-lg"></i> Criar Exercício</button>
+              <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-2 mt-6 pl-3">Ações</p>
+              <button onClick={() => { handleNavClick('cadastro'); setFormStatus({loading: false, success: false}); }} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'cadastro' ? 'bg-slate-100 text-brand-blue border-l-4 border-brand-blue' : 'text-slate-600 hover:bg-slate-50 border-l-4 border-transparent'}`}><i className="fa-solid fa-plus w-5 text-center"></i> Cadastrar Exercício</button>
               
               {isAdmin && (
                 <>
-                  <button onClick={() => handleNavClick('aprovacoes')} className={`flex items-center justify-between px-4 py-3.5 rounded-2xl text-sm font-bold w-full transition-all ${currentView === 'aprovacoes' ? 'bg-amber-500 text-white shadow-md shadow-amber-500/20' : 'text-slate-600 hover:bg-amber-50 hover:text-amber-600'}`}>
-                    <div className="flex items-center gap-3"><i className="fa-solid fa-check-double w-5 text-center text-lg"></i> Aprovações</div>
-                    {pendingCount > 0 && <span className={`text-[10px] px-2.5 py-1 rounded-full font-black ${currentView === 'aprovacoes' ? 'bg-white text-amber-600' : 'bg-amber-100 text-amber-700'}`}>{pendingCount}</span>}
+                  <button onClick={() => handleNavClick('aprovacoes')} className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'aprovacoes' ? 'bg-slate-100 text-brand-blue border-l-4 border-brand-blue' : 'text-slate-600 hover:bg-slate-50 border-l-4 border-transparent'}`}>
+                    <div className="flex items-center gap-3"><i className="fa-solid fa-list-check w-5 text-center"></i> Análise Pendente</div>
+                    {pendingCount > 0 && <span className="text-[10px] px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold">{pendingCount}</span>}
                   </button>
-                  <button onClick={() => handleNavClick('equipe')} className={`flex items-center justify-between px-4 py-3.5 mt-1.5 rounded-2xl text-sm font-bold w-full transition-all ${currentView === 'equipe' ? 'bg-indigo-500 text-white shadow-md shadow-indigo-500/20' : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'}`}>
-                    <div className="flex items-center gap-3"><i className="fa-solid fa-users-gear w-5 text-center text-lg"></i> Gerenciar Equipe</div>
+                  <button onClick={() => handleNavClick('equipe')} className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'equipe' ? 'bg-slate-100 text-brand-blue border-l-4 border-brand-blue' : 'text-slate-600 hover:bg-slate-50 border-l-4 border-transparent'}`}>
+                    <div className="flex items-center gap-3"><i className="fa-solid fa-users w-5 text-center"></i> Gestão de Equipe</div>
                   </button>
                 </>
               )}
             </nav>
-            <div className="p-6 border-t border-slate-100">
-              <button onClick={onLogout} className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-sm font-bold text-slate-500 hover:bg-rose-50 hover:text-rose-600 w-full transition-colors"><i className="fa-solid fa-arrow-right-from-bracket text-lg"></i> Sair do App</button>
+            <div className="p-4 border-t border-slate-200">
+              <button onClick={onLogout} className="flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-800 w-full transition-colors"><i className="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i> Encerrar Sessão</button>
             </div>
           </aside>
 
-          <main className="flex-1 flex flex-col h-screen overflow-hidden w-full bg-blue-50/40 relative">
-            <header className="h-20 bg-white border-b border-slate-100 px-6 sm:px-8 flex items-center justify-between shrink-0 z-10 pt-4">
-              <div className="flex items-center gap-4">
-                <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden w-10 h-10 bg-white rounded-full shadow-sm border border-slate-200 text-brand-red flex items-center justify-center active:scale-90 active:bg-rose-100 transition-all touch-manipulation"><i className="fa-solid fa-bars text-lg"></i></button>
-                <div>
-                  <h2 className="font-black text-slate-800 text-xl sm:text-2xl tracking-tight leading-none">
-                    {currentView === 'home' && "Início e Mural"}
-                    {currentView === 'perfil' && "Meu Perfil"}
-                    {currentView === 'library' && "Biblioteca Clínica"}
-                    {currentView === 'detail' && "Detalhes Clínicos"}
-                    {currentView === 'cadastro' && "Novo Conteúdo"}
-                    {currentView === 'aprovacoes' && "Central de Aprovações"}
-                    {currentView === 'circuito' && "Aulas e Diário"}
-                    {currentView === 'equipe' && "Gestão da Equipe"}
-                  </h2>
-                  <p className="text-xs font-bold text-slate-400 mt-1 hidden sm:block">Gerenciamento do Projeto ATIVIDOSO</p>
-                </div>
-              </div>
+          <main className="flex-1 flex flex-col h-screen overflow-hidden w-full bg-slate-50 relative">
+            <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center shrink-0 z-10">
+              <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden w-8 h-8 text-slate-500 flex items-center justify-center mr-4"><i className="fa-solid fa-bars text-lg"></i></button>
+              <h2 className="font-semibold text-slate-800 text-lg tracking-tight">
+                {currentView === 'home' && "Painel Geral"}
+                {currentView === 'perfil' && "Configurações de Conta"}
+                {currentView === 'library' && "Acervo Clínico"}
+                {currentView === 'detail' && "Documento do Exercício"}
+                {currentView === 'cadastro' && "Cadastro de Conteúdo"}
+                {currentView === 'aprovacoes' && "Central de Análise"}
+                {currentView === 'circuito' && "Módulo de Aulas e Diário"}
+                {currentView === 'equipe' && "Controle de Permissões"}
+              </h2>
             </header>
             
-            <div className="flex-1 overflow-y-auto p-4 sm:p-8 pt-6">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-8">
               
               {/* === TELA: PERFIL === */}
               {currentView === 'perfil' && (
                 <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
-                  <div className="bg-white p-8 sm:p-10 rounded-[2.5rem] shadow-sm border border-slate-100">
-                    <h2 className="text-2xl font-black text-slate-800 mb-8 border-b border-slate-100 pb-4"><i className="fa-solid fa-user-astronaut text-brand-blue mr-2"></i> Configurações do Perfil</h2>
-                    {profileStatus && <div className="mb-6 p-4 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold text-center border border-emerald-100"><i className="fa-solid fa-check-circle mr-2"></i>{profileStatus}</div>}
+                  <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
+                    <h3 className="text-lg font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">Dados Pessoais</h3>
+                    {profileStatus && <div className="mb-6 p-3 bg-slate-50 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium">{profileStatus}</div>}
                     <form onSubmit={handleSaveProfile} className="space-y-6">
-                      <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                      <div className="flex flex-col sm:flex-row items-center gap-6 mb-6">
                         <div className="relative">
-                          {session.avatar_url ? ( <img src={session.avatar_url} className="w-24 h-24 rounded-full object-cover shadow-md" /> ) : ( <div className="w-24 h-24 rounded-full bg-brand-blue text-white flex items-center justify-center text-4xl font-black">{session.full_name.charAt(0)}</div> )}
-                          <div className="absolute bottom-0 right-0 bg-white p-1.5 rounded-full shadow-sm border border-slate-200"><i className="fa-solid fa-camera text-slate-400 text-xs m-1"></i></div>
+                          {session.avatar_url ? ( <img src={session.avatar_url} className="w-20 h-20 rounded-full object-cover border border-slate-200" /> ) : ( <div className="w-20 h-20 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-3xl font-bold">{session.full_name.charAt(0)}</div> )}
                         </div>
                         <div className="flex-1 w-full">
-                          <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Alterar Foto</label>
-                          <input type="file" accept="image/*" onChange={e => setProfileAvatarFile(e.target.files[0])} className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brand-blue file:text-white cursor-pointer" />
+                          <label className="block text-xs font-semibold text-slate-600 mb-2">Substituir Imagem</label>
+                          <input type="file" accept="image/*" onChange={e => setProfileAvatarFile(e.target.files[0])} className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-600 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-slate-700 cursor-pointer" />
                         </div>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div><label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Nome de Exibição</label><input type="text" value={profileForm.full_name} onChange={e=>setProfileForm({...profileForm, full_name: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-semibold" required /></div>
+                        <div><label className="block text-xs font-semibold text-slate-600 mb-2">Identificação de Exibição</label><input type="text" value={profileForm.full_name} onChange={e=>setProfileForm({...profileForm, full_name: e.target.value})} className="w-full px-4 py-2.5 rounded-lg bg-white border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors" required /></div>
                         <div>
-                          <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Seu Grupo na Quadra</label>
-                          <select value={profileForm.team_group} onChange={e=>setProfileForm({...profileForm, team_group: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-bold text-emerald-700">
+                          <label className="block text-xs font-semibold text-slate-600 mb-2">Vínculo com Grupo de Extensão</label>
+                          <select value={profileForm.team_group} onChange={e=>setProfileForm({...profileForm, team_group: e.target.value})} className="w-full px-4 py-2.5 rounded-lg bg-white border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors">
                             <option value="">Selecione...</option>
-                            <option value="Nenhum">Nenhum / Não aplicável</option>
+                            <option value="Nenhum">Não aplicável</option>
                             <option value="E1">Grupo E1</option>
                             <option value="E2">Grupo E2</option>
                             <option value="E3">Grupo E3</option>
@@ -795,8 +763,8 @@
                           </select>
                         </div>
                       </div>
-                      <div className="pt-6 border-t border-slate-100 flex justify-end">
-                        <button type="submit" className="w-full sm:w-auto px-8 py-3.5 bg-brand-blue hover:bg-brand-dark text-white font-black rounded-2xl shadow-md transition-all flex items-center justify-center gap-2">Salvar Perfil</button>
+                      <div className="pt-6 flex justify-end">
+                        <button type="submit" className="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-medium rounded-lg transition-colors text-sm">Atualizar Registros</button>
                       </div>
                     </form>
                   </div>
@@ -805,117 +773,101 @@
 
               {/* === TELA: DASHBOARD / HOME === */}
               {currentView === 'home' && (
-                <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
-                  <div className="bg-gradient-to-r from-brand-blue to-brand-dark p-6 sm:p-8 rounded-[2rem] text-white shadow-[0_10px_30px_-10px_rgba(32,43,92,0.4)] relative overflow-hidden hover-lift">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
-                    <div className="relative z-10">
-                      <h1 className="text-2xl sm:text-3xl font-black mb-1">Olá, {session.full_name.split(' ')[0]}! 👋</h1>
-                      <p className="text-blue-100 font-medium">Que bom ter você de volta à equipe do ATIVIDOSO.</p>
-                    </div>
+                <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
+                  <div className="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm">
+                    <h1 className="text-xl sm:text-2xl font-bold text-slate-800">Painel do Monitor. Bem-vindo(a), {session.full_name.split(' ')[0]}.</h1>
+                    <p className="text-slate-500 mt-1 text-sm">Sistema de gerenciamento das atividades de extensão.</p>
                   </div>
                   
                   {upcomingActivity && (
-                    <div className="bg-emerald-500 p-6 sm:p-8 rounded-[2rem] text-white shadow-[0_15px_30px_-10px_rgba(16,185,129,0.4)] relative overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-6 hover-lift border border-emerald-400">
-                      <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blob-shape rotate-45 mix-blend-overlay"></div>
-                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shrink-0 border border-white/30 text-3xl"><i className="fa-solid fa-bell animate-bounce"></i></div>
-                      <div className="text-center md:text-left relative z-10 flex-1">
-                        <h2 className="text-xl sm:text-2xl font-black mb-1">Atenção, {session.team_group}! É a vez de vocês!</h2>
-                        <p className="text-emerald-50 font-semibold mb-3">A agenda indica que o seu grupo está responsável pela próxima atividade no ATIVIDOSO.</p>
-                        <div className="bg-white/10 p-4 rounded-xl border border-white/20 inline-block text-left w-full sm:w-auto">
-                          <p className="text-sm"><strong className="uppercase tracking-widest text-[10px] text-emerald-200 block mb-1">Data e Tema</strong></p>
-                          <p className="font-bold">{upcomingActivity.date} — {upcomingActivity.title}</p>
+                    <div className="bg-white border-l-4 border-emerald-500 p-6 rounded-xl shadow-sm flex flex-col md:flex-row items-center md:items-start gap-4">
+                      <div className="text-center md:text-left flex-1">
+                        <h3 className="text-base font-bold text-slate-800">Atividade Pendente: {session.team_group}</h3>
+                        <p className="text-slate-600 text-sm mt-1">O {session.team_group} está responsável pela documentação da próxima atividade na quadra.</p>
+                        <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 mt-3 inline-block">
+                          <p className="text-xs text-slate-500 uppercase tracking-wider mb-0.5 font-semibold">Cronograma Base</p>
+                          <p className="text-sm font-medium text-slate-800">{upcomingActivity.date} — {upcomingActivity.title}</p>
                         </div>
                       </div>
-                      <button onClick={() => handleNavClick('circuito', 'plan')} className="w-full md:w-auto px-6 py-3 bg-white text-emerald-600 font-black rounded-xl shadow-sm hover:bg-emerald-50 transition-colors relative z-10 mt-4 md:mt-0 self-center">Planejar Aula</button>
+                      <button onClick={() => handleNavClick('circuito', 'plan')} className="w-full md:w-auto px-5 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors mt-2 md:mt-0 text-sm">Prosseguir ao Planejamento</button>
                     </div>
                   )}
 
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
-                      <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
-                        <div className="w-10 h-10 bg-brand-red/10 text-brand-red rounded-xl flex items-center justify-center text-lg"><i className="fa-solid fa-bullhorn"></i></div>
-                        <h2 className="text-xl font-black text-slate-800">Mural da Coordenação</h2>
-                      </div>
-                      {isAdmin && (
-                        <div className="bg-white p-5 rounded-3xl border border-dashed border-slate-300 mb-6">
-                          <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Postar Novo Aviso</p>
-                          <form onSubmit={handlePostAnnouncement} className="space-y-3">
-                            <input type="text" placeholder="Título..." value={newAnnouncement.title} onChange={e=>setNewAnnouncement({...newAnnouncement, title: e.target.value})} required className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 outline-none text-sm font-bold" />
-                            <textarea placeholder="Mensagem..." value={newAnnouncement.content} onChange={e=>setNewAnnouncement({...newAnnouncement, content: e.target.value})} required className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 outline-none text-sm font-medium" rows="2"></textarea>
-                            <div className="flex flex-col sm:flex-row gap-3">
-                              <input type="url" placeholder="Link (Opcional)" value={newAnnouncement.link_url} onChange={e=>setNewAnnouncement({...newAnnouncement, link_url: e.target.value})} className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 outline-none text-sm font-semibold" />
-                              <button type="submit" className="px-6 py-2.5 bg-brand-blue text-white font-bold rounded-xl hover:bg-brand-dark transition-colors">Postar</button>
-                            </div>
-                          </form>
+                      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+                          <i className="fa-solid fa-bullhorn text-slate-400"></i>
+                          <h3 className="font-bold text-slate-800">Mural de Avisos</h3>
                         </div>
-                      )}
-                      <div className="space-y-4">
-                        {announcements.length === 0 ? ( 
-                          <div className="text-center py-10 bg-white rounded-3xl border border-slate-100 text-slate-400 text-sm font-medium">Nenhum aviso no momento.</div> 
-                        ) : ( 
-                          announcements.map(aviso => { 
-                            const date = new Date(aviso.created_at).toLocaleDateString('pt-BR', {day:'2-digit', month:'short'}); 
-                            return ( 
-                              <div key={aviso.id} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative group">
-                                {isAdmin && <button onClick={() => handleDeleteAnnouncement(aviso.id)} className="absolute top-4 right-4 text-slate-300 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"><i className="fa-solid fa-trash"></i></button>}
-                                <div className="flex items-start gap-4">
-                                  <div className="w-12 h-12 bg-blue-50 text-brand-blue rounded-full flex flex-col items-center justify-center shrink-0 border border-blue-100">
-                                    <span className="text-[10px] uppercase font-black">{date.split(' ')[2]}</span>
-                                    <span className="text-lg font-black leading-none">{date.split(' ')[0]}</span>
-                                  </div>
-                                  <div>
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1"><i className="fa-solid fa-user-tie"></i> {aviso.author || 'Administração'}</p>
-                                    <h3 className="text-base font-black text-slate-800 mb-1">{aviso.title}</h3>
-                                    <p className="text-sm text-slate-600 whitespace-pre-line mb-3">{aviso.content}</p>
-                                    {aviso.link_url && <a href={aviso.link_url} target="_blank" className="inline-flex items-center gap-2 text-xs font-bold text-white bg-brand-red px-4 py-2 rounded-lg hover:bg-brand-redDark"><i className="fa-solid fa-link"></i> Acessar Link</a>}
-                                  </div>
+                        <div className="p-6 space-y-6">
+                          {isAdmin && (
+                            <div className="bg-slate-50 p-5 rounded-lg border border-slate-200 mb-6">
+                              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Inserir Novo Registro</p>
+                              <form onSubmit={handlePostAnnouncement} className="space-y-3">
+                                <input type="text" placeholder="Título do comunicado" value={newAnnouncement.title} onChange={e=>setNewAnnouncement({...newAnnouncement, title: e.target.value})} required className="w-full px-4 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" />
+                                <textarea placeholder="Conteúdo da mensagem..." value={newAnnouncement.content} onChange={e=>setNewAnnouncement({...newAnnouncement, content: e.target.value})} required className="w-full px-4 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" rows="2"></textarea>
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                  <input type="url" placeholder="URL Referência (Opcional)" value={newAnnouncement.link_url} onChange={e=>setNewAnnouncement({...newAnnouncement, link_url: e.target.value})} className="flex-1 px-4 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" />
+                                  <button type="submit" className="px-5 py-2 bg-slate-800 text-white font-medium rounded hover:bg-slate-900 transition-colors text-sm">Registrar</button>
                                 </div>
-                              </div> 
-                            ) 
-                          }) 
-                        )}
+                              </form>
+                            </div>
+                          )}
+                          <div className="space-y-4">
+                            {announcements.length === 0 ? ( 
+                              <div className="text-center py-8 text-slate-400 text-sm">Nenhum aviso emitido pela coordenação.</div> 
+                            ) : ( 
+                              announcements.map(aviso => { 
+                                const date = new Date(aviso.created_at).toLocaleDateString('pt-BR', {day:'2-digit', month:'short'}); 
+                                return ( 
+                                  <div key={aviso.id} className="border-l-2 border-slate-300 pl-4 py-1 relative group">
+                                    {isAdmin && <button onClick={() => handleDeleteAnnouncement(aviso.id)} className="absolute top-0 right-0 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"><i className="fa-solid fa-trash text-xs"></i></button>}
+                                    <p className="text-[10px] font-semibold text-slate-400 uppercase mb-1">{date} - {aviso.author}</p>
+                                    <h4 className="text-sm font-bold text-slate-800 mb-1">{aviso.title}</h4>
+                                    <p className="text-sm text-slate-600 whitespace-pre-line mb-2">{aviso.content}</p>
+                                    {aviso.link_url && <a href={aviso.link_url} target="_blank" className="text-xs font-medium text-brand-blue hover:underline">Acessar link externo</a>}
+                                  </div> 
+                                ) 
+                              }) 
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     <div className="space-y-6">
-                      <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
-                        <div className="w-10 h-10 bg-slate-200 text-slate-500 rounded-xl flex items-center justify-center text-lg"><i className="fa-solid fa-chart-simple"></i></div>
-                        <h2 className="text-xl font-black text-slate-800">Métricas</h2>
-                      </div>
-                      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5 hover-lift">
-                        <div className="w-16 h-16 rounded-full bg-sky-50 text-sky-500 flex items-center justify-center text-3xl shadow-inner shrink-0"><i className="fa-solid fa-dumbbell"></i></div>
-                        <div><p className="text-4xl font-black text-slate-800">{approvedExercises.length}</p><p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Exercícios</p></div>
-                      </div>
-                      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5 hover-lift">
-                        <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center text-3xl shadow-inner shrink-0"><i className="fa-regular fa-calendar-check"></i></div>
-                        <div><p className="text-4xl font-black text-slate-800">{savedCircuits.length}</p><p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Aulas Feitas</p></div>
+                      <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
+                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                          <div><p className="text-2xl font-bold text-slate-800">{approvedExercises.length}</p><p className="text-xs font-medium text-slate-500 uppercase">Exercícios</p></div>
+                          <div className="text-slate-300 text-2xl"><i className="fa-solid fa-dumbbell"></i></div>
+                        </div>
+                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                          <div><p className="text-2xl font-bold text-slate-800">{savedCircuits.length}</p><p className="text-xs font-medium text-slate-500 uppercase">Relatórios</p></div>
+                          <div className="text-slate-300 text-2xl"><i className="fa-regular fa-folder-open"></i></div>
+                        </div>
                       </div>
 
                       {isAdmin && (
                         <>
-                          <div className="bg-white p-6 rounded-3xl border border-amber-200 shadow-sm flex items-center gap-5 relative overflow-hidden bg-amber-50/30 hover-lift cursor-pointer" onClick={() => handleNavClick('aprovacoes')}>
-                            <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-inner shrink-0 ${pendingCount > 0 ? 'bg-amber-500 text-white shadow-amber-500/30' : 'bg-slate-200 text-slate-400'}`}>
-                              <i className="fa-solid fa-clock-rotate-left"></i>
+                          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:bg-slate-50 transition-colors" onClick={() => handleNavClick('aprovacoes')}>
+                            <div className="flex items-center justify-between">
+                              <div><p className="text-2xl font-bold text-slate-800">{pendingCount}</p><p className="text-xs font-medium text-slate-500 uppercase">Análises Pendentes</p></div>
+                              <div className={pendingCount > 0 ? "text-amber-500 text-2xl" : "text-slate-300 text-2xl"}><i className="fa-solid fa-clock-rotate-left"></i></div>
                             </div>
-                            <div><p className="text-4xl font-black text-slate-800">{pendingCount}</p><p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Pendentes</p></div>
                           </div>
 
-                          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mt-6 relative overflow-hidden">
-                             <div className="absolute -right-4 -bottom-4 opacity-10"><i className="fa-solid fa-paper-plane text-8xl text-brand-blue"></i></div>
-                             <h4 className="font-black text-slate-800 mb-2">Comunicação & Convites</h4>
-                             <p className="text-xs text-slate-500 mb-4 font-medium leading-relaxed">Mande um convite direto ou um lembrete geral para a equipe.</p>
-                             <form onSubmit={handleSendCustomEmail} className="space-y-3 relative z-10">
-                                <input type="email" placeholder="E-mail da pessoa (ex: novo@email.com)" value={customEmailDest} onChange={e => setCustomEmailDest(e.target.value.replace(/\s/g, ''))} required className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 outline-none text-xs font-semibold focus:border-brand-blue" />
-                                <textarea placeholder="Escreva a mensagem..." value={customEmailMessage} onChange={e => setCustomEmailMessage(e.target.value)} rows="2" className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 outline-none text-xs font-medium focus:border-brand-blue" ></textarea>
-                                <button type="submit" className="w-full bg-brand-blue hover:bg-brand-dark text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-md text-xs">
-                                  <i className="fa-solid fa-envelope-open-text"></i> Enviar E-mail Específico
-                                </button>
-                                {emailStatus && <p className="text-[10px] font-bold text-center text-emerald-600 mt-2">{emailStatus}</p>}
+                          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                             <h4 className="font-bold text-slate-800 mb-1 text-sm">Disparo de Comunicado</h4>
+                             <p className="text-xs text-slate-500 mb-4">Envio de notificação SMTP via EmailJS.</p>
+                             <form onSubmit={handleSendCustomEmail} className="space-y-3">
+                                <input type="email" placeholder="Destinatário" value={customEmailDest} onChange={e => setCustomEmailDest(e.target.value.replace(/\s/g, ''))} required className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-xs focus:border-brand-blue" />
+                                <textarea placeholder="Corpo do texto..." value={customEmailMessage} onChange={e => setCustomEmailMessage(e.target.value)} rows="2" className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-xs focus:border-brand-blue" ></textarea>
+                                <button type="submit" className="w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-2 rounded transition text-xs">Transmitir Mensagem</button>
+                                {emailStatus && <p className="text-[10px] font-medium text-slate-600 mt-2">{emailStatus}</p>}
                              </form>
-                             <div className="mt-5 pt-5 border-t border-slate-100 relative z-10">
-                               <button onClick={handleSendEmail} className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-xs">
-                                 <i className="fa-solid fa-bell"></i> Lembrete p/ Todos os Monitores
-                               </button>
+                             <div className="mt-4 pt-4 border-t border-slate-100">
+                               <button onClick={handleSendEmail} className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 rounded transition text-xs">Notificar Equipe de Monitores</button>
                              </div>
                           </div>
                         </>
@@ -928,22 +880,20 @@
               {/* === TELA: APROVAÇÕES === */}
               {currentView === 'aprovacoes' && isAdmin && (
                 <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
-                  <div className="flex items-center justify-between mb-8 bg-amber-50 p-6 rounded-3xl border border-amber-200">
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 bg-amber-500 text-white rounded-2xl flex items-center justify-center text-2xl shadow-inner"><i className="fa-solid fa-clipboard-check"></i></div>
-                      <div><h2 className="text-2xl font-black text-amber-900">Aprovação de Exercícios</h2><p className="text-sm font-semibold text-amber-700">Analise os conteúdos enviados pela equipe.</p></div>
+                  <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between mb-6">
+                    <div>
+                      <h2 className="text-xl font-bold text-slate-800">Central de Análise</h2>
+                      <p className="text-sm text-slate-500 mt-1">Revisão e homologação de conteúdos técnicos.</p>
                     </div>
-                    <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-amber-100">
-                      <p className="text-xs font-extrabold text-amber-600 uppercase tracking-widest">Pendentes</p>
-                      <p className="text-3xl font-black text-slate-800 text-center">{pendingCount}</p>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-slate-800">{pendingCount}</p>
+                      <p className="text-xs font-semibold text-slate-500 uppercase">Documentos</p>
                     </div>
                   </div>
                   
                   {pendingCount === 0 ? ( 
-                    <div className="bg-white p-12 rounded-[3rem] text-center border border-slate-100 shadow-sm">
-                      <div className="w-24 h-24 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"><i className="fa-solid fa-check"></i></div>
-                      <h3 className="text-xl font-black text-slate-800">Tudo em dia!</h3>
-                      <p className="text-slate-500 mt-2 font-medium">Nenhum exercício aguardando aprovação no momento.</p>
+                    <div className="bg-white py-16 text-center border border-slate-200 rounded-xl shadow-sm">
+                      <p className="text-slate-500 text-sm">Não há exercícios pendentes para análise no momento.</p>
                     </div> 
                   ) : ( 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -953,21 +903,21 @@
                         const isImage = ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i); 
                         const isVideo = ex.mediaUrl && ex.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i); 
                         return ( 
-                          <div key={ex.id} className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col hover-lift">
-                            <div className="h-48 bg-slate-100 relative">
-                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="w-full h-full bg-slate-200 flex items-center justify-center"><i className="fa-solid fa-video text-4xl text-slate-400"></i></div> ) : ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-image text-4xl text-slate-300"></i></div> )}
-                              <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border border-white/20"><i className="fa-solid fa-clock text-amber-400 mr-1"></i> Em Análise</div>
+                          <div key={ex.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                            <div className="h-40 bg-slate-100 relative">
+                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="w-full h-full bg-slate-200 flex items-center justify-center"><i className="fa-solid fa-video text-3xl text-slate-400"></i></div> ) : ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-image text-3xl text-slate-300"></i></div> )}
+                              <div className="absolute top-2 right-2 bg-slate-800/80 text-white text-[10px] font-medium px-2 py-1 rounded">Aguardando Avaliação</div>
                             </div>
-                            <div className="p-6 flex-1 flex flex-col">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1"><i className="fa-solid fa-user-pen mr-1"></i> Enviado por {ex.author || 'Monitor'}</p>
-                              <h3 className="font-extrabold text-slate-800 text-lg leading-tight mb-2">{ex.title}</h3>
-                              <div className="flex flex-wrap gap-2 mb-6">
-                                <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded-md">{ex.category.toUpperCase()}</span>
-                                <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded-md">{ex.muscleGroup}</span>
+                            <div className="p-5 flex-1 flex flex-col">
+                              <p className="text-[10px] font-semibold text-slate-400 uppercase mb-1">Autor: {ex.author || 'Monitor'}</p>
+                              <h3 className="font-bold text-slate-800 text-base leading-tight mb-2">{ex.title}</h3>
+                              <div className="flex gap-2 mb-4">
+                                <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-1 rounded">{ex.category.toUpperCase()}</span>
+                                <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-1 rounded">{ex.muscleGroup}</span>
                               </div>
-                              <div className="mt-auto grid grid-cols-2 gap-3">
-                                <button onClick={() => handleApprove(ex.id)} className="bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white font-bold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2"><i className="fa-solid fa-check"></i> Aprovar</button>
-                                <button onClick={() => handleReject(ex.id)} className="bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white font-bold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2"><i className="fa-solid fa-xmark"></i> Rejeitar</button>
+                              <div className="mt-auto grid grid-cols-2 gap-2">
+                                <button onClick={() => handleApprove(ex.id)} className="bg-slate-800 hover:bg-slate-900 text-white font-medium py-2 rounded text-xs transition-colors">Homologar</button>
+                                <button onClick={() => handleReject(ex.id)} className="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-2 rounded text-xs transition-colors">Recusar</button>
                               </div>
                             </div>
                           </div> 
@@ -980,41 +930,31 @@
 
               {/* === TELA: GESTÃO DE EQUIPE === */}
               {currentView === 'equipe' && isAdmin && (
-                <div className="max-w-6xl mx-auto space-y-6 animate-fade-in pb-12">
-                  <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] shadow-sm border border-slate-100">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-6 mb-8 gap-4">
-                      <div>
-                        <h2 className="text-2xl font-black text-slate-800 flex items-center gap-3"><i className="fa-solid fa-users-gear text-indigo-500 bg-indigo-50 w-12 h-12 rounded-xl flex items-center justify-center"></i> Gestão de Monitores</h2>
-                        <p className="text-sm font-semibold text-slate-500 mt-2">Edite os grupos, cargos e nomes de todos os membros cadastrados na plataforma.</p>
-                      </div>
-                      <div className="bg-slate-50 px-6 py-3 rounded-2xl border border-slate-200">
-                        <p className="text-xs font-extrabold text-slate-500 uppercase tracking-widest">Total da Equipe</p>
-                        <p className="text-2xl font-black text-slate-800">{teamMembers.length} membros</p>
-                      </div>
+                <div className="max-w-5xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
+                    <div className="mb-6 border-b border-slate-100 pb-4">
+                      <h2 className="text-xl font-bold text-slate-800">Controle de Permissões e Equipe</h2>
+                      <p className="text-sm text-slate-500 mt-1">Gerenciamento de acesso e vinculação de grupos ({teamMembers.length} registros ativos).</p>
                     </div>
 
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm text-left border-collapse">
-                        <thead className="bg-slate-50 text-slate-500 font-extrabold uppercase text-[10px] tracking-widest border-b border-slate-200">
-                          <tr><th className="px-6 py-4 rounded-tl-xl">Monitor</th><th className="px-6 py-4">Grupo da Quadra</th><th className="px-6 py-4">Cargo no Sistema</th><th className="px-6 py-4 text-center rounded-tr-xl">Editar</th></tr>
+                    <div className="overflow-x-auto border border-slate-200 rounded-lg">
+                      <table className="w-full text-sm text-left">
+                        <thead className="bg-slate-50 text-slate-600 font-semibold text-xs border-b border-slate-200">
+                          <tr><th className="px-4 py-3">Identificação</th><th className="px-4 py-3">Agrupamento</th><th className="px-4 py-3">Nível de Acesso</th><th className="px-4 py-3 text-center">Ações</th></tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                           {teamMembers.map(member => ( 
-                            <tr key={member.id} className="hover:bg-slate-50 transition-colors group">
-                              <td className="px-6 py-4">
+                            <tr key={member.id} className="hover:bg-slate-50 transition-colors">
+                              <td className="px-4 py-3">
                                 <div className="flex items-center gap-3">
-                                  {member.avatar_url ? ( <img src={member.avatar_url} className="w-10 h-10 rounded-full object-cover shadow-sm" /> ) : ( <div className="w-10 h-10 rounded-full bg-brand-blue text-white flex items-center justify-center font-black shadow-sm">{member.full_name.charAt(0)}</div> )}
-                                  <div><p className="font-bold text-slate-800">{member.full_name}</p></div>
+                                  {member.avatar_url ? ( <img src={member.avatar_url} className="w-8 h-8 rounded-full object-cover border border-slate-200" /> ) : ( <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">{member.full_name.charAt(0)}</div> )}
+                                  <p className="font-medium text-slate-800">{member.full_name}</p>
                                 </div>
                               </td>
-                              <td className="px-6 py-4">
-                                <span className={`text-xs font-bold px-3 py-1 rounded-lg border ${member.team_group && member.team_group !== 'Nenhum' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>{member.team_group || 'Nenhum'}</span>
-                              </td>
-                              <td className="px-6 py-4">
-                                <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md ${member.role === 'Coordenador / Admin' || member.role === 'admin' ? 'bg-amber-100 text-amber-700' : 'bg-blue-50 text-brand-blue'}`}>{member.role}</span>
-                              </td>
-                              <td className="px-6 py-4 text-center">
-                                <button onClick={() => setEditingMember(member)} className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-brand-blue hover:border-brand-blue hover:bg-blue-50 transition-all shadow-sm"><i className="fa-solid fa-pen"></i></button>
+                              <td className="px-4 py-3 text-slate-600">{member.team_group || 'Não designado'}</td>
+                              <td className="px-4 py-3"><span className="text-[10px] font-medium bg-slate-100 text-slate-700 px-2 py-1 rounded">{member.role}</span></td>
+                              <td className="px-4 py-3 text-center">
+                                <button onClick={() => setEditingMember(member)} className="text-brand-blue hover:underline text-xs font-medium">Modificar</button>
                               </td>
                             </tr> 
                           ))}
@@ -1024,39 +964,37 @@
                   </div>
 
                   {editingMember && (
-                    <div className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
-                      <div className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col">
-                        <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                          <h3 className="text-lg font-black text-slate-800"><i className="fa-solid fa-user-pen text-brand-blue mr-2"></i> Editar Perfil</h3>
-                          <button onClick={() => setEditingMember(null)} className="w-8 h-8 rounded-full bg-slate-200 text-slate-500 hover:bg-rose-100 hover:text-rose-600 flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark"></i></button>
+                    <div className="fixed inset-0 bg-slate-900/60 z-[60] flex items-center justify-center p-4 transition-opacity animate-fade-in">
+                      <div className="bg-white w-full max-w-md rounded-xl shadow-lg overflow-hidden">
+                        <div className="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                          <h3 className="text-base font-bold text-slate-800">Alterar Registro do Usuário</h3>
+                          <button onClick={() => setEditingMember(null)} className="text-slate-400 hover:text-slate-700"><i className="fa-solid fa-xmark"></i></button>
                         </div>
-                        <form onSubmit={handleUpdateMember} className="p-8 space-y-6">
+                        <form onSubmit={handleUpdateMember} className="p-6 space-y-4">
                           <div>
-                            <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Nome Completo</label>
-                            <input type="text" value={editingMember.full_name} onChange={e=>setEditingMember({...editingMember, full_name: e.target.value})} required className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-semibold" />
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Nome Completo</label>
+                            <input type="text" value={editingMember.full_name} onChange={e=>setEditingMember({...editingMember, full_name: e.target.value})} required className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" />
                           </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Grupo da Quadra</label>
-                              <select value={editingMember.team_group} onChange={e=>setEditingMember({...editingMember, team_group: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-bold text-emerald-700">
-                                <option value="Nenhum">Nenhum</option>
-                                <option value="E1">Grupo E1</option>
-                                <option value="E2">Grupo E2</option>
-                                <option value="E3">Grupo E3</option>
-                                <option value="E4">Grupo E4</option>
-                              </select>
-                            </div>
-                            <div>
-                              <label className="block text-xs font-extrabold text-slate-500 uppercase mb-2 pl-2">Cargo no Sistema</label>
-                              <select value={editingMember.role} onChange={e=>setEditingMember({...editingMember, role: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-bold text-brand-blue">
-                                <option value="Monitor">Monitor</option>
-                                <option value="Coordenador / Admin">Admin</option>
-                              </select>
-                            </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Agrupamento</label>
+                            <select value={editingMember.team_group} onChange={e=>setEditingMember({...editingMember, team_group: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue bg-white">
+                              <option value="Nenhum">Não designado</option>
+                              <option value="E1">Grupo E1</option>
+                              <option value="E2">Grupo E2</option>
+                              <option value="E3">Grupo E3</option>
+                              <option value="E4">Grupo E4</option>
+                            </select>
                           </div>
-                          <div className="pt-6 mt-6 border-t border-slate-100 flex justify-end gap-3">
-                            <button type="button" onClick={() => setEditingMember(null)} className="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition-colors text-sm">Cancelar</button>
-                            <button type="submit" className="px-8 py-3.5 bg-brand-blue hover:bg-brand-dark text-white font-black rounded-xl shadow-md transition-all text-sm flex items-center gap-2"><i className="fa-solid fa-floppy-disk"></i> Salvar</button>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Nível de Acesso</label>
+                            <select value={editingMember.role} onChange={e=>setEditingMember({...editingMember, role: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue bg-white">
+                              <option value="Monitor">Monitor</option>
+                              <option value="Coordenador / Admin">Administrador</option>
+                            </select>
+                          </div>
+                          <div className="pt-4 flex justify-end gap-2">
+                            <button type="button" onClick={() => setEditingMember(null)} className="px-4 py-2 border border-slate-300 text-slate-600 font-medium rounded hover:bg-slate-50 text-sm">Cancelar</button>
+                            <button type="submit" className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-medium rounded text-sm">Salvar Dados</button>
                           </div>
                         </form>
                       </div>
@@ -1067,62 +1005,58 @@
 
               {/* === TELA: CADASTRO === */}
               {currentView === 'cadastro' && (
-                <div className="max-w-4xl mx-auto space-y-6 animate-fade-in pb-12">
-                  <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-8">
-                    <div className="border-b border-slate-100 pb-6 mb-8">
-                      <h2 className="text-2xl font-black text-slate-800 flex items-center gap-3"><i className="fa-solid fa-circle-plus text-brand-red bg-rose-50 w-12 h-12 rounded-xl flex items-center justify-center"></i> Adicionar Exercício</h2>
-                      <p className="text-slate-500 font-medium mt-2">Enriqueça a biblioteca da faculdade enviando novos conteúdos. {isAdmin ? 'Como você é admin, ele será aprovado automaticamente.' : 'Seu envio passará por aprovação do professor.'}</p>
+                <div className="max-w-3xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
+                    <div className="border-b border-slate-100 pb-4 mb-6">
+                      <h2 className="text-xl font-bold text-slate-800">Cadastro de Conteúdo</h2>
+                      <p className="text-slate-500 text-sm mt-1">Preencha os dados clínicos para submissão do exercício ao acervo.</p>
                     </div>
-                    {formStatus.success && <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 text-emerald-700 flex items-center justify-center gap-3 text-lg font-bold mb-8 animate-fade-in"><i className="fa-solid fa-circle-check text-2xl"></i> Exercício enviado com sucesso!</div>}
-                    <form onSubmit={handleFormSubmit} className="space-y-8">
-                      <div className="space-y-6">
-                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Informações Principais</h3>
+                    {formStatus.success && <div className="bg-slate-50 p-4 rounded border border-slate-200 text-slate-800 text-sm font-medium mb-6">Registro submetido com êxito no sistema.</div>}
+                    <form onSubmit={handleFormSubmit} className="space-y-6">
+                      <div className="space-y-4">
                         <div>
-                          <label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Nome do Exercício *</label>
-                          <input type="text" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} required className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold" placeholder="Ex: Agachamento isométrico na cadeira" />
+                          <label className="block text-xs font-semibold text-slate-600 mb-1">Nomenclatura do Exercício *</label>
+                          <input type="text" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} required className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" />
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Categoria Geral *</label>
-                            <select value={formCat} onChange={e=>{setFormCat(e.target.value); setFormMuscleSelect('');}} required className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold">
-                              <option value="">Selecione...</option>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Categoria *</label>
+                            <select value={formCat} onChange={e=>{setFormCat(e.target.value); setFormMuscleSelect('');}} required className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm bg-white focus:border-brand-blue">
+                              <option value="">A selecionar...</option>
                               {Object.keys(CATEGORIES).map(k => <option key={k} value={k}>{CATEGORIES[k].title}</option>)}
                             </select>
                           </div>
                           <div>
-                            <label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Foco / Subgrupo *</label>
-                            <select value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} required disabled={!formCat} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold disabled:opacity-50">
-                              <option value="">Selecione...</option>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Foco Específico *</label>
+                            <select value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} required disabled={!formCat} className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm bg-white focus:border-brand-blue disabled:bg-slate-50">
+                              <option value="">A selecionar...</option>
                               {formCat && CATEGORIES[formCat].subgroups.map(sub => <option key={sub} value={sub}>{sub}</option>)}
-                              <option value="Outro">Outro (Digitar manualmente)</option>
+                              <option value="Outro">Inserção manual</option>
                             </select>
                           </div>
                         </div>
-                        {formMuscleSelect === 'Outro' && <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Qual o foco principal?</label><input type="text" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold" placeholder="Ex: Panturrilha" /></div>}
+                        {formMuscleSelect === 'Outro' && <div><label className="block text-xs font-semibold text-slate-600 mb-1">Descrever Foco</label><input type="text" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" /></div>}
                       </div>
-                      <div className="space-y-6 pt-6 border-t border-slate-100">
-                         <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Parâmetros Clínicos</h3>
-                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                            <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Dificuldade Estimada</label><select value={formData.difficulty} onChange={e=>setFormData({...formData, difficulty: e.target.value})} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-semibold"><option>Iniciante / Leve</option><option>Intermediário / Moderado</option><option>Avançado / Intenso</option></select></div>
-                            <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Materiais / Equipamentos</label><input type="text" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-semibold" placeholder="Ex: Bastão, Faixa Elástica..." /></div>
-                            <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Dosagem Recomendada</label><input type="text" value={formData.dosage} onChange={e=>setFormData({...formData, dosage: e.target.value})} className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-sm font-semibold" placeholder="Ex: 3 séries de 10 reps" /></div>
+                      <div className="space-y-4 pt-4 border-t border-slate-100">
+                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Intensidade Base</label><select value={formData.difficulty} onChange={e=>setFormData({...formData, difficulty: e.target.value})} className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm bg-white"><option>Iniciante / Leve</option><option>Intermediário / Moderado</option><option>Avançado / Intenso</option></select></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Material Exigido</label><input type="text" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})} className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm" /></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Prescrição Típica</label><input type="text" value={formData.dosage} onChange={e=>setFormData({...formData, dosage: e.target.value})} className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm" placeholder="Ex: 3x10" /></div>
                          </div>
                       </div>
-                      <div className="space-y-6 pt-6 border-t border-slate-100">
-                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Passo a Passo e Cuidados</h3>
-                        <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Instruções de Execução (Como fazer) *</label><textarea required rows="4" value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})} className="w-full p-5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm leading-relaxed font-medium transition-all" placeholder="Descreva o movimento passo a passo..."></textarea></div>
-                        <div><label className="block text-xs font-extrabold text-amber-600 mb-2 pl-2"><i className="fa-solid fa-triangle-exclamation mr-1"></i> Precauções e Contraindicações</label><textarea rows="3" value={formData.precautions} onChange={e=>setFormData({...formData, precautions: e.target.value})} className="w-full p-5 rounded-2xl bg-amber-50 border border-amber-200 focus:bg-white focus:border-amber-400 outline-none text-sm leading-relaxed text-amber-900 font-medium transition-all" placeholder="Quais idosos não devem fazer? O que observar?"></textarea></div>
+                      <div className="space-y-4 pt-4 border-t border-slate-100">
+                        <div><label className="block text-xs font-semibold text-slate-600 mb-1">Diretrizes de Execução *</label><textarea required rows="3" value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue"></textarea></div>
+                        <div><label className="block text-xs font-semibold text-slate-600 mb-1">Contraindicações Clínicas</label><textarea rows="2" value={formData.precautions} onChange={e=>setFormData({...formData, precautions: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue"></textarea></div>
                       </div>
-                      <div className="space-y-6 pt-6 border-t border-slate-100 bg-slate-50/50 p-6 rounded-3xl border">
-                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2 mb-4"><i className="fa-solid fa-photo-film mr-2 text-brand-blue"></i> Mídia de Demonstração</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                           <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Link do YouTube</label><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className="w-full px-5 py-4 rounded-2xl bg-white border border-slate-200 focus:border-brand-red outline-none text-sm font-semibold" placeholder="https://youtube.com/watch?v=..." /></div>
-                           <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Ou envie Foto/Vídeo curto</label><input type="file" accept="image/*,video/mp4" onChange={e=>setMediaFile(e.target.files[0])} className="w-full px-3 py-3 rounded-2xl border border-slate-200 bg-white text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-blue file:text-white cursor-pointer" /></div>
+                      <div className="space-y-4 pt-4 border-t border-slate-100">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <div><label className="block text-xs font-semibold text-slate-600 mb-1">Referência em Vídeo (URL)</label><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" placeholder="https://" /></div>
+                           <div><label className="block text-xs font-semibold text-slate-600 mb-1">Anexo Local (Mídia)</label><input type="file" accept="image/*,video/mp4" onChange={e=>setMediaFile(e.target.files[0])} className="w-full px-2 py-2 rounded border border-slate-300 text-xs text-slate-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-slate-700 cursor-pointer" /></div>
                         </div>
                       </div>
-                      <div className="pt-8 flex justify-end">
-                        <button type="submit" disabled={formStatus.loading} className="w-full sm:w-auto px-10 py-4 bg-brand-red hover:bg-brand-redDark text-white font-black rounded-2xl shadow-md transition-all text-base disabled:opacity-50 flex items-center justify-center gap-3">
-                          {formStatus.loading ? <i className="fa-solid fa-spinner fa-spin"></i> : <><i className="fa-solid fa-paper-plane"></i> Enviar para Biblioteca</>}
+                      <div className="pt-6 border-t border-slate-100 flex justify-end">
+                        <button type="submit" disabled={formStatus.loading} className="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-medium rounded-lg transition-colors text-sm disabled:opacity-50">
+                          {formStatus.loading ? "Processando..." : "Submeter Documento"}
                         </button>
                       </div>
                     </form>
@@ -1132,49 +1066,48 @@
 
               {/* === TELA: DETALHES DO EXERCÍCIO === */}
               {currentView === 'detail' && selectedExercise && (
-                <div className="max-w-4xl mx-auto space-y-6 animate-fade-in pb-12">
-                  <div className="flex items-center justify-between bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <button onClick={() => setCurrentView('library')} className="px-6 py-3 bg-slate-50 hover:bg-slate-100 text-slate-600 font-extrabold rounded-2xl transition-colors text-sm flex items-center"><i className="fa-solid fa-arrow-left mr-2"></i> Voltar</button>
-                    {isAdmin && <button onClick={() => handleDeleteExercise(selectedExercise.id)} className="px-6 py-3 bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 font-extrabold rounded-2xl transition-colors text-sm flex items-center"><i className="fa-solid fa-trash mr-2"></i> Apagar</button>}
+                <div className="max-w-3xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="flex items-center justify-between mb-4">
+                    <button onClick={() => setCurrentView('library')} className="text-slate-500 hover:text-slate-800 text-sm font-medium"><i className="fa-solid fa-arrow-left mr-2"></i> Retornar ao Acervo</button>
+                    {isAdmin && <button onClick={() => handleDeleteExercise(selectedExercise.id)} className="text-red-500 hover:underline text-sm font-medium">Excluir Registro</button>}
                   </div>
-                  <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
-                    <div className="h-64 sm:h-96 bg-slate-900 relative">
+                  <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div className="h-64 bg-slate-100 border-b border-slate-200 relative">
                       {getYouTubeId(selectedExercise.videoUrl) ? ( 
-                        <iframe className="w-full h-full absolute inset-0" src={`https://www.youtube.com/embed/${getYouTubeId(selectedExercise.videoUrl)}`} title="YouTube" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe> 
+                        <iframe className="w-full h-full absolute inset-0" src={`https://www.youtube.com/embed/${getYouTubeId(selectedExercise.videoUrl)}`} title="YouTube" frameBorder="0" allowFullScreen></iframe> 
                       ) : selectedExercise.mediaUrl ? ( 
                         selectedExercise.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i) ? 
                           <video src={selectedExercise.mediaUrl} controls className="w-full h-full object-contain bg-black"></video> : 
                           <img src={selectedExercise.mediaUrl} className="w-full h-full object-cover" /> 
                       ) : ( 
-                        <div className="w-full h-full flex flex-col items-center justify-center text-slate-600"><i className="fa-solid fa-dumbbell text-6xl mb-4 opacity-50"></i><p className="font-bold tracking-widest uppercase text-sm">Sem mídia anexada</p></div> 
+                        <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">Sem mídia de referência cadastrada.</div> 
                       )}
                     </div>
-                    <div className="p-8 sm:p-12">
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        <span className="text-[10px] font-black uppercase tracking-widest bg-brand-blue text-white px-3 py-1.5 rounded-lg shadow-sm">{CATEGORIES[selectedExercise.category]?.title || selectedExercise.category}</span>
-                        <span className="text-[10px] font-black uppercase tracking-widest bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg border border-slate-200">{selectedExercise.muscleGroup}</span>
+                    <div className="p-6 sm:p-8">
+                      <div className="flex gap-2 mb-4">
+                        <span className="text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-1 rounded">{CATEGORIES[selectedExercise.category]?.title || selectedExercise.category}</span>
+                        <span className="text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-1 rounded">{selectedExercise.muscleGroup}</span>
                       </div>
-                      <h1 className="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight leading-tight mb-8">{selectedExercise.title}</h1>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-                        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100"><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"><i className="fa-solid fa-gauge-high mr-1"></i> Dificuldade</p><p className="font-bold text-slate-700">{selectedExercise.difficulty}</p></div>
-                        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100"><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"><i className="fa-solid fa-box-open mr-1"></i> Materiais</p><p className="font-bold text-slate-700">{selectedExercise.equipment}</p></div>
-                        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100"><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1"><i className="fa-solid fa-clock-rotate-left mr-1"></i> Dosagem</p><p className="font-bold text-slate-700">{selectedExercise.dosage}</p></div>
+                      <h1 className="text-2xl font-bold text-slate-800 mb-6">{selectedExercise.title}</h1>
+                      <div className="grid grid-cols-3 gap-4 mb-8">
+                        <div className="bg-slate-50 p-3 rounded border border-slate-200"><p className="text-[10px] font-semibold text-slate-500 uppercase mb-1">Intensidade</p><p className="font-medium text-sm text-slate-800">{selectedExercise.difficulty}</p></div>
+                        <div className="bg-slate-50 p-3 rounded border border-slate-200"><p className="text-[10px] font-semibold text-slate-500 uppercase mb-1">Materiais</p><p className="font-medium text-sm text-slate-800">{selectedExercise.equipment}</p></div>
+                        <div className="bg-slate-50 p-3 rounded border border-slate-200"><p className="text-[10px] font-semibold text-slate-500 uppercase mb-1">Prescrição</p><p className="font-medium text-sm text-slate-800">{selectedExercise.dosage}</p></div>
                       </div>
-                      <div className="space-y-10">
+                      <div className="space-y-6 text-sm">
                         <div>
-                          <h3 className="text-lg font-black text-slate-800 mb-4 flex items-center gap-2"><i className="fa-solid fa-person-running text-brand-blue"></i> Instruções de Execução</h3>
-                          <div className="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed bg-slate-50/50 p-6 rounded-3xl border border-slate-100 whitespace-pre-line">{selectedExercise.instructions}</div>
+                          <h3 className="font-bold text-slate-800 mb-2">Instruções Práticas</h3>
+                          <div className="text-slate-600 whitespace-pre-line leading-relaxed">{selectedExercise.instructions}</div>
                         </div>
                         {selectedExercise.precautions && ( 
                           <div>
-                            <h3 className="text-lg font-black text-amber-600 mb-4 flex items-center gap-2"><i className="fa-solid fa-triangle-exclamation"></i> Precauções e Cuidados</h3>
-                            <div className="bg-amber-50 p-6 rounded-3xl border border-amber-200 text-amber-900 font-medium leading-relaxed whitespace-pre-line">{selectedExercise.precautions}</div>
+                            <h3 className="font-bold text-slate-800 mb-2">Contraindicações e Cuidados</h3>
+                            <div className="text-slate-600 whitespace-pre-line leading-relaxed">{selectedExercise.precautions}</div>
                           </div> 
                         )}
                       </div>
-                      <div className="mt-12 pt-8 border-t border-slate-100 flex items-center gap-3">
-                        <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400"><i className="fa-solid fa-user-pen"></i></div>
-                        <div><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Enviado por</p><p className="text-sm font-bold text-slate-700">{selectedExercise.author || 'Monitor'}</p></div>
+                      <div className="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-500">
+                        Registro inserido por {selectedExercise.author || 'Membro da Equipe'}
                       </div>
                     </div>
                   </div>
@@ -1184,42 +1117,38 @@
               {/* === TELA: AULAS E RELATÓRIOS === */}
               {currentView === 'circuito' && (
                 <div className="max-w-5xl mx-auto space-y-6">
-                  <div className="flex gap-2 sm:gap-3 p-2 bg-white rounded-full shadow-sm border border-slate-200 overflow-x-auto no-scrollbar relative w-max max-w-full">
-                    <button onClick={() => setCircuitMode('agenda')} className={`px-5 sm:px-6 py-3 rounded-full text-xs sm:text-sm font-extrabold transition-all whitespace-nowrap ${circuitMode === 'agenda' ? 'bg-slate-800 text-white shadow-md' : 'text-slate-500 hover:bg-slate-100'}`}><i className="fa-regular fa-calendar-days mr-2"></i> Cronograma</button>
-                    <button onClick={startPlanning} className={`px-5 sm:px-6 py-3 rounded-full text-xs sm:text-sm font-extrabold transition-all whitespace-nowrap ${circuitMode === 'plan' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20' : 'text-slate-500 hover:bg-slate-100'}`}><i className="fa-solid fa-route mr-2"></i> Planejar Aula</button>
-                    <button onClick={() => setCircuitMode('history')} className={`px-5 sm:px-6 py-3 rounded-full text-xs sm:text-sm font-extrabold transition-all whitespace-nowrap ${circuitMode === 'history' || circuitMode === 'view' || circuitMode === 'report_edit' ? 'bg-brand-blue text-white shadow-md shadow-brand-blue/20' : 'text-slate-500 hover:bg-slate-100'}`}><i className="fa-solid fa-folder-open mr-2"></i> Histórico de PDF</button>
+                  <div className="flex gap-2 border-b border-slate-200 pb-3 mb-6 overflow-x-auto no-scrollbar">
+                    <button onClick={() => setCircuitMode('agenda')} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'agenda' ? 'text-brand-blue border-b-2 border-brand-blue' : 'text-slate-500 hover:text-slate-800'}`}>Agenda Base</button>
+                    <button onClick={startPlanning} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'plan' ? 'text-brand-blue border-b-2 border-brand-blue' : 'text-slate-500 hover:text-slate-800'}`}>Novo Planejamento</button>
+                    <button onClick={() => setCircuitMode('history')} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'history' || circuitMode === 'view' || circuitMode === 'report_edit' ? 'text-brand-blue border-b-2 border-brand-blue' : 'text-slate-500 hover:text-slate-800'}`}>Base de Documentos</button>
                   </div>
 
                   {hasDraft && circuitMode !== 'plan' && circuitMode !== 'report_edit' && (
-                    <div className="bg-amber-50 border border-amber-200 p-4 sm:p-5 rounded-[2rem] flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm animate-fade-in gap-4 mt-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-xl shadow-inner shrink-0"><i className="fa-solid fa-life-ring animate-pulse"></i></div>
-                        <div><h4 className="font-black text-amber-900 text-base">Rascunho Encontrado</h4><p className="text-xs font-semibold text-amber-700 mt-0.5">Detectamos que você estava preenchendo um formulário e parou. Deseja continuar?</p></div>
-                      </div>
-                      <div className="flex gap-2 w-full sm:w-auto">
-                        <button onClick={clearDraft} className="flex-1 sm:flex-none px-5 py-3 bg-white text-slate-500 font-bold text-xs rounded-xl hover:bg-slate-100 transition-colors border border-slate-200">Descartar</button>
-                        <button onClick={restoreDraft} className="flex-1 sm:flex-none px-5 py-3 bg-amber-500 text-white font-black text-xs rounded-xl hover:bg-amber-600 transition-colors shadow-sm flex items-center justify-center gap-2"><i className="fa-solid fa-clock-rotate-left"></i> Continuar</button>
+                    <div className="bg-white border border-slate-300 p-4 rounded-lg flex items-center justify-between shadow-sm animate-fade-in">
+                      <div><h4 className="font-bold text-slate-800 text-sm">Dados Temporários Identificados</h4><p className="text-xs text-slate-500 mt-1">Existem formulários não finalizados armazenados localmente.</p></div>
+                      <div className="flex gap-2">
+                        <button onClick={clearDraft} className="px-3 py-1.5 bg-slate-100 text-slate-600 text-xs font-medium rounded hover:bg-slate-200">Descartar</button>
+                        <button onClick={restoreDraft} className="px-3 py-1.5 bg-slate-800 text-white text-xs font-medium rounded hover:bg-slate-900">Restaurar</button>
                       </div>
                     </div>
                   )}
 
                   {circuitMode === 'agenda' && ( 
-                    <div className="animate-fade-in bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
-                      <div className="bg-slate-50 p-6 sm:p-8 border-b border-slate-100 flex items-center gap-4">
-                        <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-slate-400 text-xl shrink-0"><i className="fa-solid fa-calendar-check"></i></div>
-                        <div><h2 className="text-xl font-black text-slate-800">Resumo Semestral 2026.2</h2><p className="text-slate-500 text-sm font-medium">Cronograma de atividades na quadra.</p></div>
+                    <div className="animate-fade-in bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                      <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h2 className="text-base font-bold text-slate-800">Cronograma Operacional 2026.2</h2>
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
-                          <thead className="bg-white text-slate-400 font-extrabold uppercase text-[10px] tracking-widest border-b border-slate-100">
-                            <tr><th className="px-6 py-5">Ativ.</th><th className="px-6 py-5">Data</th><th className="px-6 py-5">Tema & Responsáveis</th></tr>
+                          <thead className="bg-white text-slate-500 font-semibold text-xs border-b border-slate-100">
+                            <tr><th className="px-6 py-3">Referência</th><th className="px-6 py-3">Data Programada</th><th className="px-6 py-3">Pauta Temática & Equipe</th></tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-50">
+                          <tbody className="divide-y divide-slate-100">
                             {AGENDA_DATA.map((item, idx) => ( 
-                              <tr key={idx} className={`hover:bg-slate-50 transition-colors ${item === upcomingActivity ? 'bg-emerald-50/50' : ''}`}>
-                                <td className="px-6 py-5 font-black text-slate-800 text-lg w-16">{item.act}</td>
-                                <td className="px-6 py-5 font-black text-emerald-600 whitespace-nowrap w-32">{item.date}</td>
-                                <td className="px-6 py-5"><p className="font-bold text-slate-700 mb-1">{item.title}</p><p className="text-xs font-semibold text-slate-400 bg-white border border-slate-200 px-3 py-1 rounded-lg inline-block shadow-sm"><i className="fa-solid fa-users text-slate-300 mr-1"></i> {item.resp}</p></td>
+                              <tr key={idx} className={`hover:bg-slate-50 transition-colors ${item === upcomingActivity ? 'bg-slate-50' : ''}`}>
+                                <td className="px-6 py-4 text-slate-800">{item.act}</td>
+                                <td className="px-6 py-4 font-medium text-slate-800 whitespace-nowrap">{item.date}</td>
+                                <td className="px-6 py-4"><p className="text-slate-800 mb-1">{item.title}</p><p className="text-xs text-slate-500 font-medium">Equipe: {item.resp}</p></td>
                               </tr> 
                             ))}
                           </tbody>
@@ -1230,116 +1159,107 @@
 
                   {circuitMode === 'plan' && ( 
                     <div className="space-y-6 animate-fade-in pb-12">
-                      <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-10">
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-6 gap-4">
-                          <div>
-                            <h2 className="text-2xl font-black text-slate-800 flex items-center gap-3"><i className="fa-solid fa-route text-emerald-500 bg-emerald-50 w-10 h-10 rounded-xl flex items-center justify-center"></i> Ficha de Planejamento da Aula</h2>
-                            <p className="text-sm font-semibold text-slate-500 mt-2">Defina os exercícios e responsáveis antes de ir para a quadra.</p>
-                          </div>
+                      <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
+                        <div className="border-b border-slate-100 pb-4 mb-6">
+                          <h2 className="text-xl font-bold text-slate-800">Planejamento Prévio</h2>
+                          <p className="text-sm text-slate-500 mt-1">Defina a estrutura técnica da atividade e os responsáveis pelas estações.</p>
                         </div>
-                        <div className="space-y-5">
-                          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Informações da Atividade</h3>
+                        <div className="space-y-4">
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Número da Ativ.</label><input type="text" value={planDetails.activityNum} onChange={e=>setPlanDetails({...planDetails, activityNum: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm transition-all font-semibold" placeholder="Ex: 39" /></div>
-                            <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Data da Ativ.</label><input type="date" value={planDetails.date} onChange={e=>setPlanDetails({...planDetails, date: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm transition-all font-semibold text-slate-700" /></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Identificação da Atividade</label><input type="text" value={planDetails.activityNum} onChange={e=>setPlanDetails({...planDetails, activityNum: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm" placeholder="Ex: 39" /></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Data</label><input type="date" value={planDetails.date} onChange={e=>setPlanDetails({...planDetails, date: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm" /></div>
                             <div>
-                              <label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Tema Principal</label>
-                              <select value={planDetails.theme} onChange={e=>setPlanDetails({...planDetails, theme: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm transition-all font-semibold text-slate-700">
-                                <option value="">Selecione...</option><option value="EXERCÍCIOS DE DUPLA TAREFA">Dupla Tarefa</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMSS E TRONCO">Mobilidade/Fortalecimento MMSS</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMII">Mobilidade/Fortalecimento MMII</option><option value="EXERCÍCIOS AERÓBICOS E CONDICIONAMENTO CARDIORRESPIRATÓRIO">Aeróbicos e Condicionamento</option><option value="OUTRA ATIVIDADE">Outra (Gincana/Avaliação)</option>
+                              <label className="block text-xs font-semibold text-slate-600 mb-1">Eixo Temático</label>
+                              <select value={planDetails.theme} onChange={e=>setPlanDetails({...planDetails, theme: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm bg-white">
+                                <option value="">A selecionar...</option><option value="EXERCÍCIOS DE DUPLA TAREFA">Dupla Tarefa</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMSS E TRONCO">Mobilidade/Fortalecimento MMSS</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMII">Mobilidade/Fortalecimento MMII</option><option value="EXERCÍCIOS AERÓBICOS E CONDICIONAMENTO CARDIORRESPIRATÓRIO">Aeróbicos e Condicionamento</option><option value="OUTRA ATIVIDADE">Atividade Avaliativa/Integração</option>
                               </select>
                             </div>
                           </div>
-                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Discentes Responsáveis Pela Aula</label><input type="text" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails, students: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm transition-all font-semibold text-slate-700" placeholder="Ex: Francyellen, Sarah, Raissa..." /></div>
+                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Equipe Destinada à Ação</label><input type="text" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails, students: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm" /></div>
                         </div>
 
-                        <div className="space-y-6 pt-8 border-t border-slate-100">
-                          <div className="flex items-center gap-3 mb-6"><div className="w-10 h-10 bg-brand-red/10 text-brand-red rounded-xl flex items-center justify-center text-lg"><i className="fa-solid fa-map-location-dot"></i></div><div><h3 className="text-base font-black text-slate-800">Montagem do Circuito</h3><p className="text-xs font-semibold text-slate-400">Distribua os exercícios e responsáveis.</p></div></div>
-                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Descreva o Aquecimento Coletivo</label><textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm font-medium transition-all" placeholder="Ex: Dança funcional e alongamento..."></textarea></div>
+                        <div className="space-y-6 pt-6 border-t border-slate-100 mt-6">
+                          <h3 className="text-base font-bold text-slate-800">Estrutura do Circuito</h3>
+                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Procedimento de Aquecimento</label><textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className="w-full p-3 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm"></textarea></div>
                           
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
                             {circuit.map((stationExercises, index) => ( 
-                              <div key={index} className="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden flex flex-col hover-lift">
-                                <div className={`p-4 sm:p-5 flex items-center gap-4 ${index === 4 ? 'bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100' : 'bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-100'}`}>
-                                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black shadow-inner ${index === 4 ? 'bg-amber-500 text-white' : 'bg-emerald-500 text-white'}`}>{index + 1}</div>
-                                  <div><h4 className={`text-sm font-black uppercase tracking-widest ${index === 4 ? 'text-amber-800' : 'text-emerald-800'}`}>Estação {index + 1}</h4>{index === 4 && <p className="text-[10px] font-bold text-amber-600">Circuito Funcional</p>}</div>
+                              <div key={index} className="bg-slate-50 rounded-lg border border-slate-200 overflow-hidden flex flex-col">
+                                <div className="px-4 py-2 border-b border-slate-200 bg-slate-100 flex items-center justify-between">
+                                  <h4 className="text-xs font-bold text-slate-700 uppercase">Estação {index + 1}</h4>
+                                  {index === 4 && <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">Funcional</span>}
                                 </div>
-                                <div className="p-5 flex flex-col gap-4 bg-white/50">
-                                  <div><label className="block text-[10px] font-extrabold text-slate-400 uppercase mb-1.5 pl-1">Monitores Responsáveis</label><input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => { const newResp = [...planDetails.stationResponsibles]; newResp[index] = e.target.value; setPlanDetails({...planDetails, stationResponsibles: newResp}); }} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 outline-none text-sm bg-slate-50 focus:bg-white transition-colors font-semibold" placeholder="Nome dos monitores..." /></div>
+                                <div className="p-4 flex flex-col gap-3 flex-1">
+                                  <div><label className="block text-[10px] font-semibold text-slate-500 mb-1">Responsável pela Estação</label><input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => { const newResp = [...planDetails.stationResponsibles]; newResp[index] = e.target.value; setPlanDetails({...planDetails, stationResponsibles: newResp}); }} className="w-full px-3 py-1.5 rounded border border-slate-300 outline-none text-xs" /></div>
                                   <div className="space-y-2">
                                     {stationExercises.map(ex => ( 
-                                      <div key={ex.id} className="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm relative overflow-hidden group">
-                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-brand-red rounded-l-xl"></div>
-                                        <div className="pl-3 pr-2 w-full"><h3 className="font-bold text-slate-700 text-sm leading-tight truncate" title={ex.title}>{ex.title}</h3><p className="text-[10px] font-bold text-slate-400 mt-0.5"><i className="fa-solid fa-clock-rotate-left"></i> {ex.dosage}</p></div>
-                                        <button onClick={() => removeFromCircuit(index, ex.id)} className="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors shrink-0"><i className="fa-solid fa-trash text-xs"></i></button>
+                                      <div key={ex.id} className="flex justify-between items-center bg-white p-2 rounded border border-slate-200">
+                                        <div className="truncate"><p className="text-xs font-semibold text-slate-700 truncate" title={ex.title}>{ex.title}</p><p className="text-[10px] text-slate-500">{ex.dosage}</p></div>
+                                        <button onClick={() => removeFromCircuit(index, ex.id)} className="text-slate-400 hover:text-red-500 shrink-0 ml-2"><i className="fa-solid fa-xmark"></i></button>
                                       </div> 
                                     ))}
                                   </div>
-                                  <select value="" onChange={(e) => addToCircuit(index, e.target.value)} className="w-full px-4 py-3 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-slate-100 focus:border-emerald-500 outline-none text-xs font-extrabold text-slate-500 cursor-pointer transition-colors mt-auto">
-                                    <option value="">+ Vincular exercício da biblioteca...</option>
+                                  <select value="" onChange={(e) => addToCircuit(index, e.target.value)} className="w-full px-2 py-2 border border-dashed border-slate-300 bg-white outline-none text-[10px] font-semibold text-slate-500 cursor-pointer mt-auto rounded">
+                                    <option value="">+ Anexar procedimento...</option>
                                     {approvedExercises.map(ex => ( <option key={ex.id} value={ex.id}>[{ex.muscleGroup}] {ex.title}</option> ))}
                                   </select>
                                 </div>
                               </div> 
                             ))}
                           </div>
-                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2 mt-6">Descreva o Desaquecimento</label><textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-500 outline-none text-sm font-medium transition-all" placeholder="Relaxamento, roda de conversa..."></textarea></div>
+                          <div><label className="block text-xs font-semibold text-slate-600 mb-1 mt-4">Procedimento de Desaquecimento</label><textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className="w-full p-3 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm"></textarea></div>
                         </div>
-                        <div className="pt-8 border-t border-slate-100 flex justify-end"><button onClick={handleSavePlan} className="w-full sm:w-auto px-10 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-2xl shadow-[0_8px_20px_-6px_rgba(16,185,129,0.4)] transition-all hover:-translate-y-1 text-base flex items-center justify-center gap-2"><i className="fa-solid fa-check-to-slot"></i> Concluir Planejamento</button></div>
+                        <div className="pt-6 border-t border-slate-100 mt-6 flex justify-end"><button onClick={handleSavePlan} className="px-6 py-2.5 bg-slate-800 text-white font-medium rounded-lg hover:bg-slate-900 transition-colors text-sm">Registrar Planejamento</button></div>
                       </div>
                     </div> 
                   )}
 
                   {circuitMode === 'report_edit' && viewingCircuit && ( 
                     <div className="space-y-6 animate-fade-in pb-12">
-                      <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-10 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue/5 rounded-bl-full pointer-events-none"></div>
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-6 gap-4 relative z-10">
-                          <div><h2 className="text-2xl font-black text-slate-800 flex items-center gap-3"><i className="fa-solid fa-pen-to-square text-brand-blue bg-blue-50 w-10 h-10 rounded-xl flex items-center justify-center"></i> Preenchimento Pós-Aula</h2><p className="text-sm font-semibold text-slate-500 mt-2">Relatório Oficial da Atividade {planDetails.activityNum} - {planDetails.theme}</p></div>
-                          <button onClick={() => setCircuitMode('view')} className="w-10 h-10 bg-slate-100 hover:bg-rose-100 text-slate-500 hover:text-rose-500 rounded-full flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark"></i></button>
+                      <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
+                        <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+                          <div><h2 className="text-xl font-bold text-slate-800">Prontuário Pós-Ação</h2><p className="text-sm text-slate-500 mt-1">Ref.: Atividade {planDetails.activityNum}</p></div>
+                          <button onClick={() => setCircuitMode('view')} className="text-slate-400 hover:text-slate-700 text-xl"><i className="fa-solid fa-xmark"></i></button>
                         </div>
-                        <div className="bg-slate-50 p-4 rounded-xl border relative z-10">
-                          <div className="flex justify-between items-center mb-4"><h3 className="font-bold text-brand-blue uppercase text-xs tracking-widest"><i className="fa-solid fa-heart-pulse mr-2"></i>Sinais Vitais e Presença</h3><button onClick={handleAddParticipant} className="text-[10px] sm:text-xs bg-brand-blue text-white px-3 py-1.5 rounded-lg font-bold"><i className="fa-solid fa-plus mr-1"></i>Novo Idoso</button></div>
+                        
+                        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6">
+                          <div className="flex justify-between items-center mb-4"><h3 className="font-semibold text-slate-700 text-sm">Frequência e Parâmetros Clínicos</h3><button onClick={handleAddParticipant} className="text-xs bg-slate-800 text-white px-3 py-1.5 rounded font-medium">Adicionar Paciente</button></div>
                           <div className="max-h-80 overflow-y-auto space-y-2 pr-2">
                             {planDetails.attendanceList.map((p, i) => ( 
-                              <div key={p.id} className={`p-3 border rounded-xl transition-colors ${p.present ? 'bg-blue-50 border-brand-blue/30' : 'bg-white'}`}>
-                                <label className="flex items-center gap-3 font-bold cursor-pointer"><input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="w-5 h-5 accent-brand-blue"/>{p.name}</label>
-                                {p.present && <div className="mt-3 grid grid-cols-3 gap-2"><div><p className="text-[10px] font-bold text-slate-400 text-center mb-1">FC (Início / Fim)</p><input placeholder="Ex: 80/95" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="w-full text-xs p-2 border text-center rounded-lg font-bold text-slate-700 outline-none focus:border-brand-blue"/></div><div><p className="text-[10px] font-bold text-slate-400 text-center mb-1">SpO2 (Início / Fim)</p><input placeholder="Ex: 98/97" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="w-full text-xs p-2 border text-center rounded-lg font-bold text-slate-700 outline-none focus:border-brand-blue"/></div><div><p className="text-[10px] font-bold text-slate-400 text-center mb-1">PA (Início / Fim)</p><input placeholder="Ex: 12x8/13x8" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="w-full text-xs p-2 border text-center rounded-lg font-bold text-slate-700 outline-none focus:border-brand-blue"/></div></div>}
+                              <div key={p.id} className={`p-3 border rounded transition-colors ${p.present ? 'bg-white border-slate-300' : 'bg-transparent border-slate-200'}`}>
+                                <label className="flex items-center gap-2 font-semibold text-sm text-slate-800 cursor-pointer"><input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="w-4 h-4"/>{p.name}</label>
+                                {p.present && <div className="mt-3 grid grid-cols-3 gap-2"><div><p className="text-[10px] font-semibold text-slate-500 mb-1">FC (Inic/Fin)</p><input placeholder="ex: 80/90" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="w-full text-xs p-1.5 border rounded outline-none"/></div><div><p className="text-[10px] font-semibold text-slate-500 mb-1">SpO2 (Inic/Fin)</p><input placeholder="ex: 98/97" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="w-full text-xs p-1.5 border rounded outline-none"/></div><div><p className="text-[10px] font-semibold text-slate-500 mb-1">PA (Inic/Fin)</p><input placeholder="ex: 12x8/13x8" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="w-full text-xs p-1.5 border rounded outline-none"/></div></div>}
                               </div> 
                             ))}
                           </div>
                         </div>
 
-                        <div className="space-y-5 relative z-10">
-                          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Objetivos e Recursos</h3>
-                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Objetivos da Atividade</label><textarea rows="3" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm font-medium transition-all"></textarea></div>
-                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Atividades Propostas (Itens)</label><textarea rows="2" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm font-medium transition-all"></textarea></div>
-                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Materiais Utilizados na Quadra</label><textarea rows="2" value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails, materials: e.target.value})} className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm font-medium transition-all"></textarea></div>
-                        </div>
-
-                        <div className="space-y-5 relative z-10">
-                          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Organização Operacional</h3>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50/50 p-6 rounded-[2rem] border border-slate-100">
-                            <div><label className="block text-xs font-extrabold text-slate-500 mb-2 pl-2">Responsáveis pelos Sinais Vitais</label><input type="text" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails, vitalSigns: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-semibold" /></div>
-                            <div><label className="block text-xs font-extrabold text-slate-500 mb-2 pl-2">Responsáveis pelo Som e Fotos</label><input type="text" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails, soundAndPhotos: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-semibold" /></div>
-                            <div className="md:col-span-2"><label className="block text-xs font-extrabold text-slate-500 mb-2 pl-2">Participantes com cuidados especiais nas estações</label><input type="text" value={planDetails.specialCare} onChange={e=>setPlanDetails({...planDetails, specialCare: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-white border border-slate-200 focus:border-brand-blue outline-none text-sm transition-all font-semibold" placeholder="Detalhes..." /></div>
+                        <div className="space-y-4 mb-6">
+                          <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Objetivos e Operação</h3>
+                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Objetivos da Ação</label><textarea rows="2" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-2.5 rounded border border-slate-300 outline-none text-sm"></textarea></div>
+                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Síntese de Atividades</label><textarea rows="2" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-2.5 rounded border border-slate-300 outline-none text-sm"></textarea></div>
+                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Materiais Acionados</label><textarea rows="2" value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails, materials: e.target.value})} className="w-full p-2.5 rounded border border-slate-300 outline-none text-sm"></textarea></div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Aferição de Parâmetros</label><input type="text" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails, vitalSigns: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm" /></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Registro Audiovisual</label><input type="text" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails, soundAndPhotos: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm" /></div>
                           </div>
                         </div>
 
-                        <div className="space-y-5 relative z-10">
-                          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest pl-2">Relato da Atividade</h3>
-                          <div><label className="block text-xs font-black text-brand-blue mb-2 pl-2">Texto Narrativo do Desenvolvimento</label><textarea rows="6" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-5 rounded-2xl bg-blue-50/30 border border-brand-blue/20 focus:bg-white focus:border-brand-blue outline-none text-sm leading-relaxed transition-all font-medium text-slate-700 shadow-inner"></textarea></div>
+                        <div className="space-y-4 mb-6">
+                          <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Documentação Narrativa</h3>
+                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Relato Comportamental/Desenvolvimento</label><textarea rows="4" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-2.5 rounded border border-slate-300 outline-none text-sm"></textarea></div>
                           
                           <div>
-                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 pl-2 pr-2 gap-2">
-                               <label className="block text-xs font-black text-amber-600"><i className="fa-solid fa-file-medical mr-1"></i> Evolução Clínica / Intercorrências</label>
-                               <button type="button" onClick={handleGenerateAutoEvolution} className="text-[10px] bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg font-black transition-colors shadow-sm flex items-center justify-center gap-1 w-full sm:w-auto"><i className="fa-solid fa-wand-magic-sparkles"></i> Gerar Automático</button>
+                            <div className="flex justify-between items-center mb-1">
+                               <label className="block text-xs font-semibold text-slate-600">Evolução Sistêmica Diária</label>
+                               <button type="button" onClick={handleGenerateAutoEvolution} className="text-[10px] text-brand-blue hover:underline font-medium">Sintetizar via Tabela</button>
                             </div>
-                            <textarea rows="8" placeholder="Aperte o botão mágico acima para o sistema escrever a evolução com base na tabela de Sinais Vitais..." value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails, dailyEvolution: e.target.value})} className="w-full p-5 rounded-2xl bg-amber-50 border border-amber-200 focus:bg-white focus:border-amber-400 outline-none text-sm leading-relaxed text-amber-900 transition-all font-medium"></textarea>
+                            <textarea rows="5" value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails, dailyEvolution: e.target.value})} className="w-full p-2.5 rounded border border-slate-300 outline-none text-sm"></textarea>
                           </div>
-                          <div><label className="block text-xs font-extrabold text-slate-600 mb-2 pl-2">Quantitativo Final de Idosos Presentes</label><input type="text" value={planDetails.attendanceCount} onChange={e=>setPlanDetails({...planDetails, attendanceCount: e.target.value})} className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-brand-blue outline-none text-sm transition-all font-semibold text-slate-700" placeholder="Ex: 32 pessoas idosas" /></div>
+                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Adesão Total Verificada</label><input type="text" value={planDetails.attendanceCount} onChange={e=>setPlanDetails({...planDetails, attendanceCount: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm" placeholder="Ex: 32" /></div>
                         </div>
 
-                        <div className="pt-8 border-t border-slate-100 flex justify-end relative z-10"><button onClick={handleUpdateReport} className="w-full sm:w-auto px-10 py-4 bg-brand-blue hover:bg-brand-dark text-white font-black rounded-2xl shadow-[0_8px_20px_-6px_rgba(32,43,92,0.4)] transition-all hover:-translate-y-1 text-base flex items-center justify-center gap-2"><i className="fa-solid fa-file-pdf"></i> Salvar e Gerar Relatório</button></div>
+                        <div className="pt-6 border-t border-slate-100 flex justify-end"><button onClick={handleUpdateReport} className="px-6 py-2.5 bg-slate-800 text-white font-medium rounded-lg hover:bg-slate-900 transition-colors text-sm">Firmar Documento</button></div>
                       </div>
                     </div> 
                   )}
@@ -1347,21 +1267,20 @@
                   {circuitMode === 'history' && ( 
                     <div className="animate-fade-in">
                       {savedCircuits.length === 0 ? ( 
-                        <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-[3rem] border border-slate-100 shadow-sm px-6"><div className="w-32 h-32 rounded-full bg-blue-50 flex items-center justify-center mb-6 relative"><div className="absolute inset-0 bg-brand-blue/10 animate-ping rounded-full"></div><i className="fa-solid fa-folder-open text-5xl text-brand-blue relative z-10"></i></div><h3 className="text-2xl font-black text-slate-800 mb-2 tracking-tight">O histórico está limpo</h3><p className="text-slate-500 font-medium max-w-sm mx-auto">Vá na aba "Planejar Aula" para criar o primeiro registro e começar a preencher a biblioteca de aulas!</p></div> 
+                        <div className="bg-white py-16 text-center border border-slate-200 rounded-xl shadow-sm"><p className="text-slate-500 text-sm">Nenhum relatório encontrado. Inicie um novo planejamento para registrar atividades.</p></div> 
                       ) : ( 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                           {savedCircuits.map(circ => { 
                             const isComplete = circ.details?.resultObtained; 
                             return ( 
-                              <div key={circ.id} className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm hover-lift cursor-pointer flex flex-col group relative overflow-hidden" onClick={() => {setViewingCircuit(circ); setCircuitMode('view');}}>
-                                <div className={`absolute top-0 left-0 w-full h-1.5 ${isComplete ? 'bg-brand-blue' : 'bg-emerald-400'}`}></div>
-                                <div className="flex justify-between items-start mb-5">
-                                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-inner ${isComplete ? 'bg-blue-50 text-brand-blue' : 'bg-emerald-50 text-emerald-500'}`}><i className={`fa-solid ${isComplete ? 'fa-file-signature' : 'fa-calendar-day'}`}></i></div>
-                                  <span className="text-[10px] font-black text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full tracking-widest">{circ.activity_date.split('-').reverse().join('/')}</span>
+                              <div key={circ.id} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:border-slate-300 transition-colors flex flex-col" onClick={() => {setViewingCircuit(circ); setCircuitMode('view');}}>
+                                <div className="flex justify-between items-start mb-3">
+                                  <span className={`text-[10px] font-semibold px-2 py-1 rounded ${isComplete ? 'bg-slate-100 text-slate-600' : 'bg-emerald-50 text-emerald-700'}`}>{isComplete ? 'Homologado' : 'Documentação Pendente'}</span>
+                                  <span className="text-[10px] font-medium text-slate-400">{circ.activity_date.split('-').reverse().join('/')}</span>
                                 </div>
-                                <h3 className="text-lg font-black text-slate-800 mb-1 leading-tight group-hover:text-brand-blue transition-colors">Atividade {circ.details?.activityNum || '-'}</h3>
-                                <p className="text-xs font-bold text-slate-400 mb-6 line-clamp-2 leading-relaxed">{circ.details?.theme || 'Tema não informado'}</p>
-                                <button className={`mt-auto pt-5 border-t border-slate-50 text-xs uppercase tracking-widest font-black flex items-center gap-2 ${isComplete ? 'text-brand-blue' : 'text-emerald-500'}`}>{isComplete ? 'Ver Relatório PDF' : 'Preencher Pós-Aula'} <i className="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i></button>
+                                <h3 className="text-base font-bold text-slate-800 mb-1">Referência {circ.details?.activityNum || '-'}</h3>
+                                <p className="text-xs text-slate-500 mb-4 line-clamp-2">{circ.details?.theme || 'Sem especificação temática'}</p>
+                                <div className="mt-auto pt-3 border-t border-slate-100 text-xs text-brand-blue font-medium text-right">Analisar Processo &rarr;</div>
                               </div> 
                             ) 
                           })}
@@ -1372,65 +1291,57 @@
 
                   {circuitMode === 'view' && viewingCircuit && ( 
                     <div className="space-y-6 animate-fade-in pb-12">
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-100 gap-4">
-                        <button onClick={() => setCircuitMode('history')} className="w-full sm:w-auto px-6 py-3 bg-slate-50 hover:bg-slate-100 text-slate-600 font-extrabold rounded-2xl transition-colors text-sm flex items-center justify-center"><i className="fa-solid fa-arrow-left mr-2"></i> Voltar</button>
-                        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                          {isAdmin && ( <button onClick={() => handleDeleteCircuit(viewingCircuit.id)} className="w-full sm:w-auto px-6 py-3 bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 font-extrabold rounded-2xl transition-colors text-sm flex items-center justify-center"><i className="fa-solid fa-trash mr-2"></i> Apagar</button> )}
-                          <button onClick={startEditingReport} className="w-full sm:w-auto px-6 py-3 bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100 font-extrabold rounded-2xl transition-colors text-sm flex items-center justify-center"><i className="fa-solid fa-pen-to-square mr-2"></i> Preencher / Editar</button>
-                          <button onClick={() => handleGenerateReportPDF(viewingCircuit)} className="w-full sm:w-auto px-6 py-3 bg-brand-blue hover:bg-brand-dark text-white font-extrabold rounded-2xl transition-all shadow-[0_4px_15px_-4px_rgba(32,43,92,0.4)] text-sm flex items-center justify-center"><i className="fa-solid fa-download mr-2"></i> Baixar PDF</button>
-                          <button onClick={() => handleGenerateEvolutionPDF(viewingCircuit)} className="w-full sm:w-auto px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-extrabold rounded-2xl transition-all shadow-md text-sm flex items-center justify-center"><i className="fa-solid fa-file-medical mr-2"></i> PDF Evolução</button>
-                        </div>
+                      <div className="flex flex-wrap gap-3 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                        <button onClick={() => setCircuitMode('history')} className="px-4 py-2 bg-slate-100 text-slate-600 text-sm font-medium rounded hover:bg-slate-200 transition-colors">Voltar</button>
+                        {isAdmin && ( <button onClick={() => handleDeleteCircuit(viewingCircuit.id)} className="px-4 py-2 bg-white border border-red-200 text-red-600 text-sm font-medium rounded hover:bg-red-50 transition-colors ml-auto">Excluir</button> )}
+                        <button onClick={startEditingReport} className={`px-4 py-2 text-sm font-medium rounded transition-colors ${!isAdmin && "ml-auto"} border border-slate-300 text-slate-700 hover:bg-slate-50`}>Atualizar Prontuário</button>
+                        <button onClick={() => handleGenerateReportPDF(viewingCircuit)} className="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded hover:bg-slate-900 transition-colors">Emissão PDF Atividade</button>
+                        <button onClick={() => handleGenerateEvolutionPDF(viewingCircuit)} className="px-4 py-2 border border-slate-800 text-slate-800 text-sm font-medium rounded hover:bg-slate-50 transition-colors">Emissão PDF Clínico</button>
                       </div>
 
-                      <div className="bg-white p-6 sm:p-12 rounded-[2.5rem] shadow-sm border border-slate-100 text-sm text-slate-800 leading-relaxed font-serif overflow-x-hidden relative">
-                        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-brand-blue to-brand-red"></div>
-                        <div className="text-center mb-10 pt-4 border-b border-slate-100 pb-8">
-                          <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-16 mx-auto mb-6 object-contain drop-shadow-md" onError={(e) => e.target.style.display='none'} />
-                          <h2 className="font-black uppercase text-lg sm:text-xl tracking-wide">ATIVIDADE {viewingCircuit.details?.activityNum || 'X'} – {viewingCircuit.details?.theme}</h2>
+                      <div className="bg-white p-8 sm:p-12 rounded-xl shadow-sm border border-slate-200 text-sm text-slate-800">
+                        <div className="text-center mb-8 border-b border-slate-200 pb-6">
+                          <h2 className="font-bold uppercase text-lg text-slate-800">FICHA TÉCNICA - REFERÊNCIA {viewingCircuit.details?.activityNum || 'X'}</h2>
+                          <p className="text-sm text-slate-500 mt-1">{viewingCircuit.details?.theme}</p>
                         </div>
                         
-                        <div className="max-w-3xl mx-auto space-y-8">
-                          <div className="flex justify-between border-b border-dashed border-slate-200 pb-4"><p><strong>DATA:</strong> {viewingCircuit.activity_date.split('-').reverse().join('/')}</p><p className="text-right"><strong>DISCENTES:</strong> {viewingCircuit.details?.students}</p></div>
-                          <div><p className="font-bold text-brand-blue mb-2 text-xs uppercase tracking-widest">ATIVIDADE(S) PROPOSTA(S)</p><p className="whitespace-pre-line text-slate-600 bg-slate-50 p-4 rounded-xl">{viewingCircuit.details?.proposedActivities || 'Não informado.'}</p></div>
-                          <div><p className="font-bold text-brand-blue mb-2 text-xs uppercase tracking-widest">OBJETIVO(S) DA(S) ATIVIDADE(S)</p><p className="text-justify whitespace-pre-line text-slate-600">{viewingCircuit.details?.objectives || 'Não informado.'}</p></div>
-                          <div className="bg-amber-50 p-5 rounded-2xl border border-amber-100 text-amber-900"><p className="font-bold mb-3 text-xs uppercase tracking-widest text-amber-700">OBSERVAÇÕES OPERACIONAIS</p><ul className="list-disc list-inside space-y-1"><li><strong>Sinais vitais:</strong> {viewingCircuit.details?.vitalSigns || '-'}</li><li><strong>Som, tempo e fotos:</strong> {viewingCircuit.details?.soundAndPhotos || '-'}</li><li><strong>Cuidados especiais:</strong> {viewingCircuit.details?.specialCare || '-'}</li></ul></div>
-                          <div><p className="font-bold text-brand-blue mb-2 text-xs uppercase tracking-widest">MATERIAIS UTILIZADOS</p><p className="whitespace-pre-line text-slate-600">{viewingCircuit.details?.materials || 'Não informado.'}</p></div>
+                        <div className="max-w-3xl mx-auto space-y-6">
+                          <div className="grid grid-cols-2 border-b border-slate-100 pb-4 text-xs"><p><span className="font-semibold text-slate-500 uppercase">Data Referência:</span><br/> {viewingCircuit.activity_date.split('-').reverse().join('/')}</p><p><span className="font-semibold text-slate-500 uppercase">Corpo Discente:</span><br/> {viewingCircuit.details?.students}</p></div>
+                          <div><p className="font-semibold text-slate-500 uppercase text-xs mb-1">Ação Proposta</p><p className="whitespace-pre-line bg-slate-50 p-3 rounded">{viewingCircuit.details?.proposedActivities || 'Não inserido.'}</p></div>
+                          <div><p className="font-semibold text-slate-500 uppercase text-xs mb-1">Finalidade Estipulada</p><p className="whitespace-pre-line">{viewingCircuit.details?.objectives || 'Não inserido.'}</p></div>
+                          <div><p className="font-semibold text-slate-500 uppercase text-xs mb-1">Aparato Material</p><p className="whitespace-pre-line">{viewingCircuit.details?.materials || 'Não inserido.'}</p></div>
                           
-                          <div className="border-l-4 border-emerald-400 pl-6 space-y-6">
-                            <p className="font-black text-emerald-600 text-sm uppercase tracking-widest">DESENVOLVIMENTO (Prática)</p>
-                            <p><strong className="text-slate-800">Aquecimento:</strong> <span className="text-slate-600">{viewingCircuit.details?.warmUp || 'Não informado.'}</span></p>
-                            <div className="space-y-4">
+                          <div className="border border-slate-200 rounded p-4">
+                            <p className="font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">Procedimentos Diretos</p>
+                            <p className="mb-2"><strong className="text-slate-600">Preparação:</strong> {viewingCircuit.details?.warmUp || '-'}</p>
+                            <div className="space-y-2 mb-2 pl-4 border-l-2 border-slate-200">
                               {viewingCircuit.stations && viewingCircuit.stations.map((station, idx) => ( 
-                                <div key={idx} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                                  <p className="font-black text-slate-800">Estação {idx + 1} {idx === 4 && <span className="text-brand-red font-bold text-xs ml-2">FUNCIONAL</span>}</p>
-                                  <p className="text-[10px] uppercase font-bold text-slate-400 mb-2 mt-1 border-b border-slate-100 pb-2">Resp: {viewingCircuit.details?.stationResponsibles?.[idx]}</p>
-                                  <ul className="list-inside space-y-1 mt-2">{station.length === 0 ? <li className="text-xs text-slate-400 italic">Nenhum exercício vinculado.</li> : station.map(ex => <li key={ex.id} className="text-sm font-semibold text-slate-700"><i className="fa-solid fa-check text-emerald-400 mr-2"></i> {ex.title} <span className="text-xs font-normal text-slate-400">({ex.dosage})</span></li>)}</ul>
+                                <div key={idx}>
+                                  <p className="text-xs font-semibold text-slate-700">Estação {idx + 1} <span className="text-slate-400 font-normal">({viewingCircuit.details?.stationResponsibles?.[idx]})</span></p>
+                                  <p className="text-xs text-slate-600">{station.length === 0 ? 'Sem prescrição' : station.map(ex => ex.title).join(' / ')}</p>
                                 </div> 
                               ))}
                             </div>
-                            <p><strong className="text-slate-800">Desaquecimento:</strong> <span className="text-slate-600">{viewingCircuit.details?.coolDown || 'Não informado.'}</span></p>
+                            <p><strong className="text-slate-600">Transição:</strong> {viewingCircuit.details?.coolDown || '-'}</p>
                           </div>
 
                           {viewingCircuit.details?.attendanceList && viewingCircuit.details.attendanceList.some(p => p.present) && ( 
-                            <div className="mt-8 border border-slate-200 rounded-2xl overflow-hidden">
-                              <div className="bg-slate-100 p-4 border-b border-slate-200"><p className="font-black text-slate-700 text-xs uppercase tracking-widest text-center"><i className="fa-solid fa-clipboard-user mr-1 text-brand-red"></i> Quadro Clínico e Frequência</p></div>
-                              <div className="overflow-x-auto">
-                                <table className="w-full text-xs text-center whitespace-nowrap">
-                                  <thead className="bg-slate-50 text-slate-500 border-b border-slate-200"><tr><th className="p-3 text-left pl-6">Nome do Idoso</th><th className="p-3">FC (I/F)</th><th className="p-3">SpO2 (I/F)</th><th className="p-3">PA (I/F)</th></tr></thead>
-                                  <tbody className="divide-y divide-slate-100">
-                                    {viewingCircuit.details.attendanceList.filter(p => p.present).map(p => ( 
-                                      <tr key={p.id} className="hover:bg-slate-50 font-medium text-slate-700"><td className="p-3 text-left pl-6 truncate max-w-[200px] font-bold">{p.name}</td><td className="p-3">{p.fc_in || '-'} / {p.fc_out || '-'}</td><td className="p-3">{p.spo2_in || '-'} / {p.spo2_out || '-'}</td><td className="p-3">{p.pa_in || '-'} / {p.pa_out || '-'}</td></tr> 
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
+                            <div className="border border-slate-200 rounded overflow-hidden mt-6">
+                              <div className="bg-slate-100 p-2"><p className="font-semibold text-slate-600 text-xs text-center">Registro Operacional em Campo</p></div>
+                              <table className="w-full text-xs text-center">
+                                <thead className="bg-slate-50 text-slate-500 border-b border-slate-200"><tr><th className="p-2 text-left pl-4">Indivíduo</th><th className="p-2">FC In/Fin</th><th className="p-2">SpO2 In/Fin</th><th className="p-2">PA In/Fin</th></tr></thead>
+                                <tbody className="divide-y divide-slate-100">
+                                  {viewingCircuit.details.attendanceList.filter(p => p.present).map(p => ( 
+                                    <tr key={p.id}><td className="p-2 text-left pl-4 font-medium text-slate-700">{p.name}</td><td className="p-2 text-slate-600">{p.fc_in || '-'} / {p.fc_out || '-'}</td><td className="p-2 text-slate-600">{p.spo2_in || '-'} / {p.spo2_out || '-'}</td><td className="p-2 text-slate-600">{p.pa_in || '-'} / {p.pa_out || '-'}</td></tr> 
+                                  ))}
+                                </tbody>
+                              </table>
                             </div> 
                           )}
 
-                          <div><p className="font-bold text-brand-blue mb-2 text-xs uppercase tracking-widest mt-8">RELATO NARRATIVO PÓS-AULA</p><p className="text-justify whitespace-pre-line text-slate-600 bg-blue-50/50 p-6 rounded-2xl border border-blue-100">{viewingCircuit.details?.developmentNarrative || 'Relatório ainda não preenchido.'}</p></div>
-                          <div><p className="font-bold text-amber-600 mb-2 text-xs uppercase tracking-widest mt-8">EVOLUÇÃO E INTERCORRÊNCIAS</p><p className="whitespace-pre-line text-amber-900 bg-amber-50 p-6 rounded-2xl border border-amber-200">{viewingCircuit.details?.dailyEvolution || 'Sem anotações clínicas.'}</p></div>
-                          <div><p className="font-bold text-brand-blue mb-2 text-xs uppercase tracking-widest">RESULTADO OBTIDO</p><p className="text-justify whitespace-pre-line text-slate-600">{viewingCircuit.details?.resultObtained || '-'}</p></div>
-                          <div className="text-center pt-8 border-t border-dashed border-slate-200"><p className="text-xl font-black text-slate-800 bg-slate-100 inline-block px-6 py-3 rounded-2xl shadow-inner"><strong>Público Atendido:</strong> <span className="text-brand-red">{viewingCircuit.details?.attendanceCount || 'Não informado.'}</span></p></div>
+                          <div><p className="font-semibold text-slate-500 uppercase text-xs mb-1 mt-6">Anotações Desenvolvimentais</p><p className="whitespace-pre-line text-slate-700">{viewingCircuit.details?.developmentNarrative || '-'}</p></div>
+                          <div><p className="font-semibold text-slate-500 uppercase text-xs mb-1">Conclusões Clínicas Sistêmicas</p><p className="whitespace-pre-line text-slate-700">{viewingCircuit.details?.dailyEvolution || '-'}</p></div>
+                          <div className="text-right pt-4 border-t border-slate-100"><p className="text-sm font-semibold text-slate-800">Contabilização Verificada: <span className="font-bold">{viewingCircuit.details?.attendanceCount || '-'}</span></p></div>
                         </div>
                       </div>
                     </div> 
@@ -1441,46 +1352,42 @@
               {/* === TELA: BIBLIOTECA === */}
               {currentView === 'library' && (
                 <div className="max-w-6xl mx-auto space-y-6">
-                  <div className="bg-white p-4 sm:p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col gap-4">
+                  <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-4">
                     <div className="relative w-full">
-                      <i className="fa-solid fa-magnifying-glass absolute left-5 top-4 text-slate-400 text-lg"></i>
-                      <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Encontre exercícios por nome, foco..." className="w-full pl-14 pr-4 py-4 rounded-2xl bg-slate-50 hover:bg-slate-100 focus:bg-white border border-transparent focus:border-brand-blue focus:ring-4 focus:ring-brand-blue/10 outline-none text-sm font-semibold transition-all shadow-inner text-slate-700" />
+                      <i className="fa-solid fa-magnifying-glass absolute left-4 top-3 text-slate-400"></i>
+                      <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Consultar repositório..." className="w-full pl-10 pr-4 py-2.5 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" />
                     </div>
-                    <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 pt-1 px-1 no-scrollbar">
-                      <button onClick={() => {setFilterCat('all'); setFilterSub('Todos');}} className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all shadow-sm ${filterCat === 'all' ? 'bg-slate-800 text-white' : 'bg-white border border-slate-200 text-slate-500 hover:border-slate-300'}`}>Tudo</button>
-                      {Object.keys(CATEGORIES).map(key => ( <button key={key} onClick={() => {setFilterCat(key); setFilterSub('Todos');}} className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all shadow-sm flex items-center gap-2 ${filterCat === key ? `${CATEGORIES[key].bg} ${CATEGORIES[key].color} ring-2 ring-offset-1 ring-${CATEGORIES[key].color.split('-')[1]}-300` : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50'}`}><i className={`fa-solid ${CATEGORIES[key].icon}`}></i> {CATEGORIES[key].shortTitle}</button> ))}
+                    <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+                      <button onClick={() => {setFilterCat('all'); setFilterSub('Todos');}} className={`px-4 py-1.5 rounded text-xs font-semibold whitespace-nowrap border ${filterCat === 'all' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'}`}>Exibir Tudo</button>
+                      {Object.keys(CATEGORIES).map(key => ( <button key={key} onClick={() => {setFilterCat(key); setFilterSub('Todos');}} className={`px-4 py-1.5 rounded text-xs font-semibold whitespace-nowrap border flex items-center gap-2 ${filterCat === key ? 'bg-brand-blue text-white border-brand-blue' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'}`}><i className={`fa-solid ${CATEGORIES[key].icon}`}></i> {CATEGORIES[key].shortTitle}</button> ))}
                     </div>
                     {filterCat !== 'all' && ( 
-                      <div className="flex gap-2 mt-2 overflow-x-auto pb-2 px-1 no-scrollbar items-center bg-slate-50 p-2 rounded-2xl border border-slate-100">
-                        <span className="text-[10px] font-black uppercase text-slate-400 ml-2 mr-2 shrink-0 tracking-widest">Foco:</span>
-                        {CATEGORIES[filterCat].subgroups.map(sub => ( <button key={sub} onClick={() => setFilterSub(sub)} className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors ${filterSub === sub ? `bg-white ${CATEGORIES[filterCat].color} shadow-sm border ${CATEGORIES[filterCat].border}` : 'bg-transparent text-slate-500 hover:bg-white hover:shadow-sm'}`}>{sub}</button> ))}
+                      <div className="flex gap-2 mt-1 overflow-x-auto pb-1 no-scrollbar items-center border-t border-slate-100 pt-3">
+                        <span className="text-[10px] font-bold uppercase text-slate-400 mr-2 shrink-0">Subgrupo:</span>
+                        {CATEGORIES[filterCat].subgroups.map(sub => ( <button key={sub} onClick={() => setFilterSub(sub)} className={`px-3 py-1 rounded text-xs font-medium whitespace-nowrap ${filterSub === sub ? 'bg-slate-200 text-slate-800' : 'bg-transparent text-slate-500 hover:bg-slate-100'}`}>{sub}</button> ))}
                       </div> 
                     )}
                   </div>
 
                   {filteredExercises.length === 0 ? ( 
-                    <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[3rem] border border-slate-100 shadow-sm px-6 text-center">
-                      <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-4"><i className="fa-solid fa-magnifying-glass text-3xl text-slate-300"></i></div>
-                      <h3 className="text-xl font-black text-slate-800">Nenhum exercício encontrado</h3>
-                      <p className="text-sm font-medium text-slate-500 mt-2">Tente buscar por outro termo ou cadastre um novo conteúdo.</p>
+                    <div className="bg-white py-16 border border-slate-200 rounded-xl shadow-sm text-center">
+                      <p className="text-sm font-medium text-slate-500">Nenhuma correspondência no acervo atual.</p>
                     </div> 
                   ) : ( 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                       {filteredExercises.map(ex => { 
                         const ytId = getYouTubeId(ex.videoUrl); 
                         const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null; 
                         const isImage = ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i); 
                         const isVideo = ex.mediaUrl && ex.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i); 
-                        const cat = CATEGORIES[ex.category] || CATEGORIES['mmss']; 
                         return ( 
-                          <div key={ex.id} className="bg-white rounded-[2rem] border border-slate-100 shadow-sm hover-lift flex flex-col group cursor-pointer overflow-hidden" onClick={() => { setSelectedExercise(ex); setCurrentView('detail'); }}>
-                            <div className="h-44 bg-slate-100 flex items-center justify-center relative overflow-hidden">
-                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" /> ) : isVideo ? ( <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex flex-col items-center justify-center group-hover:scale-105 transition-transform duration-700"><i className="fa-solid fa-circle-play text-4xl text-brand-red mb-2 drop-shadow-md"></i><span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Vídeo Anexado</span></div> ) : ( <i className="fa-solid fa-dumbbell text-4xl text-slate-300"></i> )}
-                              <div className="absolute inset-0 bg-brand-dark/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"><div className="bg-white/90 w-12 h-12 rounded-full flex items-center justify-center shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-300 delay-100"><i className="fa-solid fa-eye text-brand-blue text-xl"></i></div></div>
+                          <div key={ex.id} className="bg-white rounded-xl border border-slate-200 shadow-sm cursor-pointer overflow-hidden flex flex-col hover:border-slate-300 transition-colors" onClick={() => { setSelectedExercise(ex); setCurrentView('detail'); }}>
+                            <div className="h-36 bg-slate-100 flex items-center justify-center relative border-b border-slate-100">
+                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="text-slate-400"><i className="fa-solid fa-video text-2xl"></i></div> ) : ( <i className="fa-solid fa-dumbbell text-2xl text-slate-300"></i> )}
                             </div>
-                            <div className="p-5 sm:p-6 flex-1 flex flex-col bg-white">
-                              <span className={`text-[9px] font-black uppercase tracking-widest ${cat.color} ${cat.bg} px-2.5 py-1 rounded-md border ${cat.border} mb-3 self-start shadow-sm`}>{ex.muscleGroup}</span>
-                              <h3 className="font-extrabold text-slate-800 text-lg leading-tight group-hover:text-brand-blue transition-colors line-clamp-2">{ex.title}</h3>
+                            <div className="p-4 flex-1 flex flex-col">
+                              <span className="text-[10px] font-semibold text-slate-500 mb-2 truncate">{ex.muscleGroup}</span>
+                              <h3 className="font-bold text-slate-800 text-sm leading-tight line-clamp-2">{ex.title}</h3>
                             </div>
                           </div> 
                         ) 
@@ -1512,9 +1419,8 @@
 
       const handleLogout = async () => { await supabaseClient.auth.signOut(); setSession(null); };
 
-      if (loadingAuth) return <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 relative overflow-hidden"><div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl"></div><div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-rose-100/50 rounded-full blur-3xl"></div><div className="relative z-10 flex flex-col items-center animate-pulse"><img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" className="h-28 drop-shadow-sm" onError={(e) => e.target.style.display='none'} /><p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mt-4">Autenticando...</p></div><div className="flex gap-2 mt-6 relative z-10"><div className="w-3 h-3 rounded-full bg-[#e63946] animate-bounce shadow-sm"></div><div className="w-3 h-3 rounded-full bg-[#202b5c] animate-bounce shadow-sm" style={{animationDelay: '0.1s'}}></div><div className="w-3 h-3 rounded-full bg-[#10b981] animate-bounce shadow-sm" style={{animationDelay: '0.2s'}}></div></div></div>;
+      if (loadingAuth) return <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50"><div className="flex flex-col items-center"><img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-28 drop-shadow-sm" onError={(e) => e.target.style.display='none'} /><p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-6">Autenticando acesso...</p></div><div className="flex gap-2 mt-4"><div className="w-2 h-2 rounded-full bg-slate-300 animate-pulse"></div><div className="w-2 h-2 rounded-full bg-slate-400 animate-pulse" style={{animationDelay: '0.2s'}}></div><div className="w-2 h-2 rounded-full bg-slate-500 animate-pulse" style={{animationDelay: '0.4s'}}></div></div></div>;
       
-      // O app avança desta tela para o login/painel por causa desta linha que faltou:
       if (!session) return <LoginPage onLogin={setSession} />;
       return <Dashboard session={session} onLogout={handleLogout} updateSessionData={setSession} />;
     };
