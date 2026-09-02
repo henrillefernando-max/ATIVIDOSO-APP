@@ -45,9 +45,8 @@
       <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl"></div>
       <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-rose-100/50 rounded-full blur-3xl"></div>
       <div class="relative z-10 flex flex-col items-center animate-pulse">
-        <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" class="h-24 mb-4 drop-shadow-sm" onerror="this.style.display='none'" />
-        <span class="text-3xl font-black text-[#202b5c] 
-        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mt-2">Carregando plataforma...</p>
+        <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" class="h-28 drop-shadow-sm" onerror="this.style.display='none'" />
+        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mt-4">Carregando plataforma...</p>
       </div>
       <div class="flex gap-2 mt-8 relative z-10">
         <div class="w-3 h-3 rounded-full bg-[#e63946] animate-bounce shadow-sm"></div>
@@ -1513,7 +1512,7 @@
 
       const handleLogout = async () => { await supabaseClient.auth.signOut(); setSession(null); };
 
-      if (loadingAuth) return <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 relative overflow-hidden"><div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl"></div><div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-rose-100/50 rounded-full blur-3xl"></div><div className="relative z-10 flex flex-col items-center animate-pulse"><img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" className="h-24 mb-4 drop-shadow-sm" onError={(e) => e.target.style.display='none'} /><span className="text-3xl font-black text-[#202b5c] tracking-tight drop-shadow-sm">ATIV<span className="text-[#e63946]">IDOSO</span></span><p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mt-2">Autenticando...</p></div><div className="flex gap-2 mt-8 relative z-10"><div className="w-3 h-3 rounded-full bg-[#e63946] animate-bounce shadow-sm"></div><div className="w-3 h-3 rounded-full bg-[#202b5c] animate-bounce shadow-sm" style={{animationDelay: '0.1s'}}></div><div className="w-3 h-3 rounded-full bg-[#10b981] animate-bounce shadow-sm" style={{animationDelay: '0.2s'}}></div></div></div>;
+      if (loadingAuth) return <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 relative overflow-hidden"><div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl"></div><div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-rose-100/50 rounded-full blur-3xl"></div><div className="relative z-10 flex flex-col items-center animate-pulse"><img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" className="h-28 drop-shadow-sm" onError={(e) => e.target.style.display='none'} /><p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mt-4">Autenticando...</p></div><div className="flex gap-2 mt-6 relative z-10"><div className="w-3 h-3 rounded-full bg-[#e63946] animate-bounce shadow-sm"></div><div className="w-3 h-3 rounded-full bg-[#202b5c] animate-bounce shadow-sm" style={{animationDelay: '0.1s'}}></div><div className="w-3 h-3 rounded-full bg-[#10b981] animate-bounce shadow-sm" style={{animationDelay: '0.2s'}}></div></div></div>;
       
       // O app avança desta tela para o login/painel por causa desta linha que faltou:
       if (!session) return <LoginPage onLogin={setSession} />;
