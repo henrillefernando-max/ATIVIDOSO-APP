@@ -17,7 +17,16 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { theme: { extend: { colors: { brand: { blue: '#202b5c', dark: '#161e42', red: '#e63946', redDark: '#c52833' } } } } }
+    tailwind.config = { 
+      darkMode: 'class', 
+      theme: { 
+        extend: { 
+          colors: { 
+            brand: { blue: '#202b5c', dark: '#161e42', light: '#4d60b5', red: '#e63946', redDark: '#c52833' } 
+          } 
+        } 
+      } 
+    }
   </script>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,18 +44,18 @@
     .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-red selection:text-white">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased selection:bg-brand-red selection:text-white transition-colors duration-300">
   <div id="root">
-    <!-- Tela de Carregamento Nativa Limpa -->
-    <div class="min-h-screen flex flex-col items-center justify-center bg-slate-50 relative overflow-hidden">
+    <!-- Tela de Carregamento Limpa -->
+    <div class="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
       <div class="relative z-10 flex flex-col items-center">
         <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" class="h-28 drop-shadow-sm" onerror="this.style.display='none'" />
-        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-6">Carregando plataforma...</p>
+        <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-6">Carregando plataforma...</p>
       </div>
       <div class="flex gap-2 mt-4 relative z-10">
-        <div class="w-2 h-2 rounded-full bg-slate-300 animate-pulse"></div>
-        <div class="w-2 h-2 rounded-full bg-slate-400 animate-pulse" style="animation-delay: 0.2s"></div>
-        <div class="w-2 h-2 rounded-full bg-slate-500 animate-pulse" style="animation-delay: 0.4s"></div>
+        <div class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600 animate-pulse"></div>
+        <div class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-pulse" style="animation-delay: 0.2s"></div>
+        <div class="w-2 h-2 rounded-full bg-slate-500 dark:bg-slate-400 animate-pulse" style="animation-delay: 0.4s"></div>
       </div>
     </div>
   </div>
@@ -78,11 +87,11 @@
     ];
 
     const CATEGORIES = {
-      mmss: { title: "Membros Superiores", shortTitle: "MMSS", icon: "fa-hand-fist", color: "text-blue-700", bg: "bg-blue-50", border: "border-blue-200", subgroups: ["Todos", "Costas", "Tríceps", "Biceps", "Ombro", "Punho", "Mãos / Destreza"] },
-      mmii: { title: "Membros Inferiores", shortTitle: "MMII", icon: "fa-shoe-prints", color: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-200", subgroups: ["Todos", "Isquiostibiais", "Quadriceps", "Panturrilha", "Tornozelo / Pé"] },
-      core: { title: "Core e Tronco", shortTitle: "Core", icon: "fa-child-reaching", color: "text-amber-700", bg: "bg-amber-50", border: "border-amber-200", subgroups: ["Todos", "Abdômen", "Lombar", "Postura"] },
-      aerobic: { title: "Aeróbico e Marcha", shortTitle: "Aeróbico", icon: "fa-heart-pulse", color: "text-rose-700", bg: "bg-rose-50", border: "border-rose-200", subgroups: ["Todos", "Marcha", "Resistência", "Agilidade"] },
-      dual: { title: "Dupla Tarefa", shortTitle: "Dupla Tarefa", icon: "fa-brain", color: "text-purple-700", bg: "bg-purple-50", border: "border-purple-200", subgroups: ["Todos", "Cognitiva + Motora", "Equilíbrio + Fala"] }
+      mmss: { title: "Membros Superiores", shortTitle: "MMSS", icon: "fa-hand-fist", color: "text-blue-700 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-900/30", border: "border-blue-200 dark:border-blue-800", subgroups: ["Todos", "Costas", "Tríceps", "Biceps", "Ombro", "Punho", "Mãos / Destreza"] },
+      mmii: { title: "Membros Inferiores", shortTitle: "MMII", icon: "fa-shoe-prints", color: "text-emerald-700 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-900/30", border: "border-emerald-200 dark:border-emerald-800", subgroups: ["Todos", "Isquiostibiais", "Quadriceps", "Panturrilha", "Tornozelo / Pé"] },
+      core: { title: "Core e Tronco", shortTitle: "Core", icon: "fa-child-reaching", color: "text-amber-700 dark:text-amber-400", bg: "bg-amber-50 dark:bg-amber-900/30", border: "border-amber-200 dark:border-amber-800", subgroups: ["Todos", "Abdômen", "Lombar", "Postura"] },
+      aerobic: { title: "Aeróbico e Marcha", shortTitle: "Aeróbico", icon: "fa-heart-pulse", color: "text-rose-700 dark:text-rose-400", bg: "bg-rose-50 dark:bg-rose-900/30", border: "border-rose-200 dark:border-rose-800", subgroups: ["Todos", "Marcha", "Resistência", "Agilidade"] },
+      dual: { title: "Dupla Tarefa", shortTitle: "Dupla Tarefa", icon: "fa-brain", color: "text-purple-700 dark:text-purple-400", bg: "bg-purple-50 dark:bg-purple-900/30", border: "border-purple-200 dark:border-purple-800", subgroups: ["Todos", "Cognitiva + Motora", "Equilíbrio + Fala"] }
     };
 
     const DEFAULT_PARTICIPANTS = [
@@ -128,23 +137,23 @@
       };
 
       return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-100 p-6">
-          <div className="bg-white w-full max-w-md p-8 rounded-xl shadow-lg border border-slate-200 animate-fade-in text-slate-800">
+        <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-slate-950 p-6 transition-colors duration-300">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-md p-8 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 animate-fade-in text-slate-800 dark:text-slate-100 transition-colors duration-300">
             <div className="text-center mb-8">
               <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-20 mx-auto mb-4 object-contain" onError={(e) => e.target.style.display='none'} />
-              <h2 className="text-2xl font-bold text-slate-800">Acesso Restrito</h2>
-              <p className="text-xs text-slate-500 uppercase tracking-wider mt-1">Plataforma Clínica Atividoso</p>
+              <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Acesso Restrito</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Plataforma Clínica Atividoso</p>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
                 <>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Nome Completo</label>
-                    <input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors" placeholder="Nome completo" />
+                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Nome Completo</label>
+                    <input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100" placeholder="Nome completo" />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Grupo de Extensão</label>
-                    <select value={teamGroup} onChange={e=>setTeamGroup(e.target.value)} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors bg-white">
+                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Grupo de Extensão</label>
+                    <select value={teamGroup} onChange={e=>setTeamGroup(e.target.value)} className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100">
                       <option value="E1">Grupo E1</option>
                       <option value="E2">Grupo E2</option>
                       <option value="E3">Grupo E3</option>
@@ -154,24 +163,24 @@
                 </>
               )}
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">E-mail Institucional ou Pessoal</label>
-                <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors" placeholder="usuario@email.com" />
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">E-mail Institucional ou Pessoal</label>
+                <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100" placeholder="usuario@email.com" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Senha</label>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Senha</label>
                 <div className="relative">
-                  <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-4 pr-10 py-2.5 rounded-lg border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors" placeholder="••••••••" />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 transition-colors"><i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i></button>
+                  <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-4 pr-10 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100" placeholder="••••••••" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-2.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"><i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i></button>
                 </div>
               </div>
                 
-              {error && <div className="bg-rose-50 text-rose-600 p-3 rounded-lg text-xs font-semibold border border-rose-200">{error}</div>}
-              <button type="submit" disabled={loading} className="w-full bg-brand-blue hover:bg-brand-dark text-white font-semibold py-3 rounded-lg transition-colors mt-2 text-sm">
+              {error && <div className="bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 p-3 rounded-lg text-xs font-semibold border border-rose-200 dark:border-rose-800">{error}</div>}
+              <button type="submit" disabled={loading} className="w-full bg-brand-blue hover:bg-brand-dark dark:hover:bg-brand-light text-white font-semibold py-3 rounded-lg transition-colors mt-2 text-sm">
                 {loading ? <i className="fa-solid fa-spinner fa-spin"></i> : (isLogin ? 'Entrar no Sistema' : 'Registrar Usuário')}
               </button>
             </form>
-            <div className="mt-6 text-center pt-4 border-t border-slate-100">
-              <button onClick={() => {setIsLogin(!isLogin); setError('');}} className="text-xs font-medium text-brand-blue hover:underline">
+            <div className="mt-6 text-center pt-4 border-t border-slate-100 dark:border-slate-800">
+              <button onClick={() => {setIsLogin(!isLogin); setError('');}} className="text-xs font-medium text-brand-blue dark:text-brand-light hover:underline">
                 {isLogin ? "Novo membro? Criar cadastro." : "Já possui cadastro? Acessar."}
               </button>
             </div>
@@ -180,7 +189,7 @@
       );
     };
 
-    const Dashboard = ({ session, onLogout, updateSessionData }) => {
+    const Dashboard = ({ session, onLogout, updateSessionData, darkMode, setDarkMode }) => {
       const isAdmin = session.role === 'admin' || session.role === 'Coordenador / Admin';
 
       const [currentView, setCurrentView] = useState('home');
@@ -643,7 +652,7 @@
       const handleGenerateEvolutionPDF = (circuitData) => {
         const d = circuitData.details;
         const element = document.createElement('div');
-        element.innerHTML = `<div style="font-family:Arial; font-size:14px; color:#333; line-height:1.5; padding:30px;"><div style="text-align:center; margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px; margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0; font-size:16px; color:#161E42; text-transform:uppercase; font-weight:bold;">DOCUMENTO DE EVOLUÇÃO CLÍNICA</h2><p style="margin:0; font-size:13px; color:#64748b;">ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</p></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students||'-'}</p><br><div style="padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;"><h3 style="color: #334155; margin-top: 0; font-size: 13px; text-transform: uppercase;">Evolução Clínica, Sinais Vitais e Intercorrências</h3><p style="white-space: pre-wrap; font-size: 13px;">${d.dailyEvolution?d.dailyEvolution.replace(/\n/g, '<br/>'):'Sem anotações clínicas.'}</p></div><br><br><br><div style="text-align:center; margin-top: 50px;"><p>___________________________________________________</p><p style="font-size: 12px; color: #666;">Assinatura do Responsável Técnico</p></div></div>`;
+        element.innerHTML = `<div style="font-family:Arial; font-size:14px; color:#333; line-height:1.5; padding:30px;"><div style="text-align:center; margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px; margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0; font-size:16px; color:#e63946; text-transform:uppercase; font-weight:bold;">DOCUMENTO DE EVOLUÇÃO CLÍNICA</h2><p style="margin:0; font-size:13px; color:#64748b;">ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</p></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students||'-'}</p><br><div style="padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;"><h3 style="color: #334155; margin-top: 0; font-size: 13px; text-transform: uppercase;">Evolução Clínica, Sinais Vitais e Intercorrências</h3><p style="white-space: pre-wrap; font-size: 13px;">${d.dailyEvolution?d.dailyEvolution.replace(/\n/g, '<br/>'):'Sem anotações clínicas.'}</p></div><br><br><br><div style="text-align:center; margin-top: 50px;"><p>___________________________________________________</p><p style="font-size: 12px; color: #666;">Assinatura do Responsável Técnico</p></div></div>`;
         html2pdf().set({ margin: 0.4, filename: `Evolucao_Clinica_Ativ_${d.activityNum||'00'}.pdf`, html2canvas: { scale: 2, useCORS: true } }).from(element).save();
       };
 
@@ -654,81 +663,86 @@
       };
 
       const NavBtn = ({v, icon, text}) => ( 
-        <button onClick={() => handleNavClick(v)} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === v ? 'bg-slate-100 text-brand-blue font-semibold border-l-4 border-brand-blue' : 'text-slate-600 hover:bg-slate-50 border-l-4 border-transparent'}`}>
+        <button onClick={() => handleNavClick(v)} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === v ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue dark:text-brand-light font-semibold border-l-4 border-brand-blue dark:border-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-l-4 border-transparent'}`}>
           <i className={`fa-solid ${icon} w-5 text-center`}></i> {text}
         </button> 
       );
 
       return (
-        <div className="min-h-screen flex bg-slate-50 relative" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
+        <div className="min-h-screen flex bg-slate-50 dark:bg-slate-950 relative transition-colors duration-300" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
           
           {isMobileMenuOpen && (
-            <div className="fixed inset-0 bg-slate-900/50 z-40 md:hidden transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>
+            <div className="fixed inset-0 bg-slate-900/50 dark:bg-slate-900/80 z-40 md:hidden transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>
           )}
           
-          <aside className={`w-64 bg-white flex flex-col h-screen fixed md:relative z-50 transition-transform duration-200 ease-in-out border-r border-slate-200 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-            <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden absolute top-4 right-4 text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark"></i></button>
+          <aside className={`w-64 bg-white dark:bg-slate-900 flex flex-col h-screen fixed md:relative z-50 transition-all duration-200 ease-in-out border-r border-slate-200 dark:border-slate-800 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+            <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden absolute top-4 right-4 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 w-8 h-8 flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark"></i></button>
 
             <div className="p-6 flex flex-col items-center justify-center gap-2 mt-2">
               <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-12 object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
             </div>
             
-            <div className="px-5 pb-5 mb-2 border-b border-slate-200 flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition p-2 rounded-lg mx-2" onClick={() => handleNavClick('perfil')}>
+            <div className="px-5 pb-5 mb-2 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors p-2 rounded-lg mx-2" onClick={() => handleNavClick('perfil')}>
               {session.avatar_url ? ( 
-                <img src={session.avatar_url} className="w-10 h-10 rounded-full object-cover border border-slate-200 shrink-0"/> 
+                <img src={session.avatar_url} className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 shrink-0"/> 
               ) : ( 
-                <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold shadow-inner shrink-0">{session.full_name.charAt(0)}</div> 
+                <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold shadow-inner shrink-0">{session.full_name.charAt(0)}</div> 
               )}
               <div className="overflow-hidden">
-                <p className="text-sm font-semibold text-slate-800 leading-tight truncate">{session.full_name}</p>
+                <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-tight truncate">{session.full_name}</p>
                 <div className="flex gap-1 mt-1">
-                  <span className="text-[10px] text-brand-blue font-medium bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 inline-block">{session.role}</span>
+                  <span className="text-[10px] text-brand-blue dark:text-brand-light font-medium bg-blue-50 dark:bg-blue-900/30 px-1.5 py-0.5 rounded border border-blue-100 dark:border-blue-800 inline-block">{session.role}</span>
                 </div>
               </div>
             </div>
 
             <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto">
-              <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-2 pl-3">Módulos</p>
+              <p className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2 pl-3">Módulos</p>
               <NavBtn v="home" icon="fa-desktop" text="Painel do Monitor" />
               <NavBtn v="perfil" icon="fa-user" text="Configurações de Conta" />
               
-              <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-2 mt-6 pl-3">Clínico</p>
+              <p className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2 mt-6 pl-3">Clínico</p>
               <NavBtn v="library" icon="fa-book-medical" text="Acervo de Exercícios" />
               <NavBtn v="circuito" icon="fa-clipboard-check" text="Aulas e Diário Clínico" />
               
-              <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-2 mt-6 pl-3">Ações</p>
-              <button onClick={() => { handleNavClick('cadastro'); setFormStatus({loading: false, success: false}); }} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'cadastro' ? 'bg-slate-100 text-brand-blue border-l-4 border-brand-blue' : 'text-slate-600 hover:bg-slate-50 border-l-4 border-transparent'}`}><i className="fa-solid fa-plus w-5 text-center"></i> Cadastrar Exercício</button>
+              <p className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2 mt-6 pl-3">Ações</p>
+              <button onClick={() => { handleNavClick('cadastro'); setFormStatus({loading: false, success: false}); }} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'cadastro' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue dark:text-brand-light border-l-4 border-brand-blue dark:border-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-l-4 border-transparent'}`}><i className="fa-solid fa-plus w-5 text-center"></i> Cadastrar Exercício</button>
               
               {isAdmin && (
                 <>
-                  <button onClick={() => handleNavClick('aprovacoes')} className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'aprovacoes' ? 'bg-slate-100 text-brand-blue border-l-4 border-brand-blue' : 'text-slate-600 hover:bg-slate-50 border-l-4 border-transparent'}`}>
+                  <button onClick={() => handleNavClick('aprovacoes')} className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'aprovacoes' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue dark:text-brand-light border-l-4 border-brand-blue dark:border-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-l-4 border-transparent'}`}>
                     <div className="flex items-center gap-3"><i className="fa-solid fa-list-check w-5 text-center"></i> Análise Pendente</div>
-                    {pendingCount > 0 && <span className="text-[10px] px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold">{pendingCount}</span>}
+                    {pendingCount > 0 && <span className="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold">{pendingCount}</span>}
                   </button>
-                  <button onClick={() => handleNavClick('equipe')} className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'equipe' ? 'bg-slate-100 text-brand-blue border-l-4 border-brand-blue' : 'text-slate-600 hover:bg-slate-50 border-l-4 border-transparent'}`}>
+                  <button onClick={() => handleNavClick('equipe')} className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'equipe' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue dark:text-brand-light border-l-4 border-brand-blue dark:border-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-l-4 border-transparent'}`}>
                     <div className="flex items-center gap-3"><i className="fa-solid fa-users w-5 text-center"></i> Gestão de Equipe</div>
                   </button>
                 </>
               )}
             </nav>
-            <div className="p-4 border-t border-slate-200">
-              <button onClick={onLogout} className="flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-800 w-full transition-colors"><i className="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i> Encerrar Sessão</button>
+            <div className="p-4 border-t border-slate-200 dark:border-slate-800">
+              <button onClick={onLogout} className="flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-100 w-full transition-colors"><i className="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i> Encerrar Sessão</button>
             </div>
           </aside>
 
-          <main className="flex-1 flex flex-col h-screen overflow-hidden w-full bg-slate-50 relative">
-            <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center shrink-0 z-10">
-              <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden w-8 h-8 text-slate-500 flex items-center justify-center mr-4"><i className="fa-solid fa-bars text-lg"></i></button>
-              <h2 className="font-semibold text-slate-800 text-lg tracking-tight">
-                {currentView === 'home' && "Painel Geral"}
-                {currentView === 'perfil' && "Configurações de Conta"}
-                {currentView === 'library' && "Acervo Clínico"}
-                {currentView === 'detail' && "Documento do Exercício"}
-                {currentView === 'cadastro' && "Cadastro de Conteúdo"}
-                {currentView === 'aprovacoes' && "Central de Análise"}
-                {currentView === 'circuito' && "Módulo de Aulas e Diário"}
-                {currentView === 'equipe' && "Controle de Permissões"}
-              </h2>
+          <main className="flex-1 flex flex-col h-screen overflow-hidden w-full bg-slate-50 dark:bg-slate-950 relative transition-colors duration-300">
+            <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 z-10 transition-colors duration-300">
+              <div className="flex items-center">
+                <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden w-8 h-8 text-slate-500 dark:text-slate-400 flex items-center justify-center mr-4"><i className="fa-solid fa-bars text-lg"></i></button>
+                <h2 className="font-semibold text-slate-800 dark:text-slate-100 text-lg tracking-tight">
+                  {currentView === 'home' && "Painel Geral"}
+                  {currentView === 'perfil' && "Configurações de Conta"}
+                  {currentView === 'library' && "Acervo Clínico"}
+                  {currentView === 'detail' && "Documento do Exercício"}
+                  {currentView === 'cadastro' && "Cadastro de Conteúdo"}
+                  {currentView === 'aprovacoes' && "Central de Análise"}
+                  {currentView === 'circuito' && "Módulo de Aulas e Diário"}
+                  {currentView === 'equipe' && "Controle de Permissões"}
+                </h2>
+              </div>
+              <button onClick={() => setDarkMode(!darkMode)} className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center hover:text-brand-blue dark:hover:text-brand-light transition-colors">
+                <i className={`fa-solid ${darkMode ? 'fa-sun' : 'fa-moon'}`}></i>
+              </button>
             </header>
             
             <div className="flex-1 overflow-y-auto p-4 sm:p-8">
@@ -736,24 +750,24 @@
               {/* === TELA: PERFIL === */}
               {currentView === 'perfil' && (
                 <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
-                  <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
-                    <h3 className="text-lg font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">Dados Pessoais</h3>
-                    {profileStatus && <div className="mb-6 p-3 bg-slate-50 text-slate-700 border border-slate-200 rounded-lg text-sm font-medium">{profileStatus}</div>}
+                  <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 border-b border-slate-100 dark:border-slate-800 pb-3">Dados Pessoais</h3>
+                    {profileStatus && <div className="mb-6 p-3 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium">{profileStatus}</div>}
                     <form onSubmit={handleSaveProfile} className="space-y-6">
                       <div className="flex flex-col sm:flex-row items-center gap-6 mb-6">
                         <div className="relative">
-                          {session.avatar_url ? ( <img src={session.avatar_url} className="w-20 h-20 rounded-full object-cover border border-slate-200" /> ) : ( <div className="w-20 h-20 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-3xl font-bold">{session.full_name.charAt(0)}</div> )}
+                          {session.avatar_url ? ( <img src={session.avatar_url} className="w-20 h-20 rounded-full object-cover border border-slate-200 dark:border-slate-700" /> ) : ( <div className="w-20 h-20 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center text-3xl font-bold">{session.full_name.charAt(0)}</div> )}
                         </div>
                         <div className="flex-1 w-full">
-                          <label className="block text-xs font-semibold text-slate-600 mb-2">Substituir Imagem</label>
-                          <input type="file" accept="image/*" onChange={e => setProfileAvatarFile(e.target.files[0])} className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-600 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-slate-700 cursor-pointer" />
+                          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">Substituir Imagem</label>
+                          <input type="file" accept="image/*" onChange={e => setProfileAvatarFile(e.target.files[0])} className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-400 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-slate-100 dark:file:bg-slate-800 file:text-slate-700 dark:file:text-slate-300 cursor-pointer" />
                         </div>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div><label className="block text-xs font-semibold text-slate-600 mb-2">Identificação de Exibição</label><input type="text" value={profileForm.full_name} onChange={e=>setProfileForm({...profileForm, full_name: e.target.value})} className="w-full px-4 py-2.5 rounded-lg bg-white border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors" required /></div>
+                        <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">Identificação de Exibição</label><input type="text" value={profileForm.full_name} onChange={e=>setProfileForm({...profileForm, full_name: e.target.value})} className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100" required /></div>
                         <div>
-                          <label className="block text-xs font-semibold text-slate-600 mb-2">Vínculo com Grupo de Extensão</label>
-                          <select value={profileForm.team_group} onChange={e=>setProfileForm({...profileForm, team_group: e.target.value})} className="w-full px-4 py-2.5 rounded-lg bg-white border border-slate-300 focus:border-brand-blue outline-none text-sm transition-colors">
+                          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">Vínculo com Grupo de Extensão</label>
+                          <select value={profileForm.team_group} onChange={e=>setProfileForm({...profileForm, team_group: e.target.value})} className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100">
                             <option value="">Selecione...</option>
                             <option value="Nenhum">Não aplicável</option>
                             <option value="E1">Grupo E1</option>
@@ -764,7 +778,7 @@
                         </div>
                       </div>
                       <div className="pt-6 flex justify-end">
-                        <button type="submit" className="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-medium rounded-lg transition-colors text-sm">Atualizar Registros</button>
+                        <button type="submit" className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium rounded-lg transition-colors text-sm">Atualizar Registros</button>
                       </div>
                     </form>
                   </div>
@@ -774,19 +788,19 @@
               {/* === TELA: DASHBOARD / HOME === */}
               {currentView === 'home' && (
                 <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
-                  <div className="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm">
-                    <h1 className="text-xl sm:text-2xl font-bold text-slate-800">Painel do Monitor. Bem-vindo(a), {session.full_name.split(' ')[0]}.</h1>
-                    <p className="text-slate-500 mt-1 text-sm">Sistema de gerenciamento das atividades de extensão.</p>
+                  <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+                    <h1 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">Painel do Monitor. Bem-vindo(a), {session.full_name.split(' ')[0]}.</h1>
+                    <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">Sistema de gerenciamento das atividades de extensão.</p>
                   </div>
                   
                   {upcomingActivity && (
-                    <div className="bg-white border-l-4 border-emerald-500 p-6 rounded-xl shadow-sm flex flex-col md:flex-row items-center md:items-start gap-4">
+                    <div className="bg-white dark:bg-slate-900 border-l-4 border-emerald-500 p-6 rounded-xl shadow-sm flex flex-col md:flex-row items-center md:items-start gap-4 transition-colors">
                       <div className="text-center md:text-left flex-1">
-                        <h3 className="text-base font-bold text-slate-800">Atividade Pendente: {session.team_group}</h3>
-                        <p className="text-slate-600 text-sm mt-1">O {session.team_group} está responsável pela documentação da próxima atividade na quadra.</p>
-                        <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 mt-3 inline-block">
-                          <p className="text-xs text-slate-500 uppercase tracking-wider mb-0.5 font-semibold">Cronograma Base</p>
-                          <p className="text-sm font-medium text-slate-800">{upcomingActivity.date} — {upcomingActivity.title}</p>
+                        <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Atividade Pendente: {session.team_group}</h3>
+                        <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">O {session.team_group} está responsável pela documentação da próxima atividade na quadra.</p>
+                        <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg border border-slate-100 dark:border-slate-700 mt-3 inline-block">
+                          <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-0.5 font-semibold">Cronograma Base</p>
+                          <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{upcomingActivity.date} — {upcomingActivity.title}</p>
                         </div>
                       </div>
                       <button onClick={() => handleNavClick('circuito', 'plan')} className="w-full md:w-auto px-5 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors mt-2 md:mt-0 text-sm">Prosseguir ao Planejamento</button>
@@ -795,38 +809,38 @@
 
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
-                      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                        <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
-                          <i className="fa-solid fa-bullhorn text-slate-400"></i>
-                          <h3 className="font-bold text-slate-800">Mural de Avisos</h3>
+                      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
+                        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
+                          <i className="fa-solid fa-bullhorn text-slate-400 dark:text-slate-500"></i>
+                          <h3 className="font-bold text-slate-800 dark:text-slate-100">Mural de Avisos</h3>
                         </div>
                         <div className="p-6 space-y-6">
                           {isAdmin && (
-                            <div className="bg-slate-50 p-5 rounded-lg border border-slate-200 mb-6">
-                              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Inserir Novo Registro</p>
+                            <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-lg border border-slate-200 dark:border-slate-700 mb-6">
+                              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Inserir Novo Registro</p>
                               <form onSubmit={handlePostAnnouncement} className="space-y-3">
-                                <input type="text" placeholder="Título do comunicado" value={newAnnouncement.title} onChange={e=>setNewAnnouncement({...newAnnouncement, title: e.target.value})} required className="w-full px-4 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" />
-                                <textarea placeholder="Conteúdo da mensagem..." value={newAnnouncement.content} onChange={e=>setNewAnnouncement({...newAnnouncement, content: e.target.value})} required className="w-full px-4 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" rows="2"></textarea>
+                                <input type="text" placeholder="Título do comunicado" value={newAnnouncement.title} onChange={e=>setNewAnnouncement({...newAnnouncement, title: e.target.value})} required className="w-full px-4 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" />
+                                <textarea placeholder="Conteúdo da mensagem..." value={newAnnouncement.content} onChange={e=>setNewAnnouncement({...newAnnouncement, content: e.target.value})} required className="w-full px-4 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" rows="2"></textarea>
                                 <div className="flex flex-col sm:flex-row gap-3">
-                                  <input type="url" placeholder="URL Referência (Opcional)" value={newAnnouncement.link_url} onChange={e=>setNewAnnouncement({...newAnnouncement, link_url: e.target.value})} className="flex-1 px-4 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" />
-                                  <button type="submit" className="px-5 py-2 bg-slate-800 text-white font-medium rounded hover:bg-slate-900 transition-colors text-sm">Registrar</button>
+                                  <input type="url" placeholder="URL Referência (Opcional)" value={newAnnouncement.link_url} onChange={e=>setNewAnnouncement({...newAnnouncement, link_url: e.target.value})} className="flex-1 px-4 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" />
+                                  <button type="submit" className="px-5 py-2 bg-slate-800 dark:bg-slate-700 text-white font-medium rounded hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors text-sm">Registrar</button>
                                 </div>
                               </form>
                             </div>
                           )}
                           <div className="space-y-4">
                             {announcements.length === 0 ? ( 
-                              <div className="text-center py-8 text-slate-400 text-sm">Nenhum aviso emitido pela coordenação.</div> 
+                              <div className="text-center py-8 text-slate-400 dark:text-slate-500 text-sm">Nenhum aviso emitido pela coordenação.</div> 
                             ) : ( 
                               announcements.map(aviso => { 
                                 const date = new Date(aviso.created_at).toLocaleDateString('pt-BR', {day:'2-digit', month:'short'}); 
                                 return ( 
-                                  <div key={aviso.id} className="border-l-2 border-slate-300 pl-4 py-1 relative group">
-                                    {isAdmin && <button onClick={() => handleDeleteAnnouncement(aviso.id)} className="absolute top-0 right-0 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"><i className="fa-solid fa-trash text-xs"></i></button>}
-                                    <p className="text-[10px] font-semibold text-slate-400 uppercase mb-1">{date} - {aviso.author}</p>
-                                    <h4 className="text-sm font-bold text-slate-800 mb-1">{aviso.title}</h4>
-                                    <p className="text-sm text-slate-600 whitespace-pre-line mb-2">{aviso.content}</p>
-                                    {aviso.link_url && <a href={aviso.link_url} target="_blank" className="text-xs font-medium text-brand-blue hover:underline">Acessar link externo</a>}
+                                  <div key={aviso.id} className="border-l-2 border-slate-300 dark:border-slate-600 pl-4 py-1 relative group">
+                                    {isAdmin && <button onClick={() => handleDeleteAnnouncement(aviso.id)} className="absolute top-0 right-0 text-slate-300 dark:text-slate-600 hover:text-red-500 dark:hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"><i className="fa-solid fa-trash text-xs"></i></button>}
+                                    <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase mb-1">{date} - {aviso.author}</p>
+                                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">{aviso.title}</h4>
+                                    <p className="text-sm text-slate-600 dark:text-slate-300 whitespace-pre-line mb-2">{aviso.content}</p>
+                                    {aviso.link_url && <a href={aviso.link_url} target="_blank" className="text-xs font-medium text-brand-blue dark:text-brand-light hover:underline">Acessar link externo</a>}
                                   </div> 
                                 ) 
                               }) 
@@ -838,36 +852,36 @@
 
                     <div className="space-y-6">
                       <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-                          <div><p className="text-2xl font-bold text-slate-800">{approvedExercises.length}</p><p className="text-xs font-medium text-slate-500 uppercase">Exercícios</p></div>
-                          <div className="text-slate-300 text-2xl"><i className="fa-solid fa-dumbbell"></i></div>
+                        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between transition-colors">
+                          <div><p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{approvedExercises.length}</p><p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Exercícios</p></div>
+                          <div className="text-slate-300 dark:text-slate-600 text-2xl"><i className="fa-solid fa-dumbbell"></i></div>
                         </div>
-                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-                          <div><p className="text-2xl font-bold text-slate-800">{savedCircuits.length}</p><p className="text-xs font-medium text-slate-500 uppercase">Relatórios</p></div>
-                          <div className="text-slate-300 text-2xl"><i className="fa-regular fa-folder-open"></i></div>
+                        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between transition-colors">
+                          <div><p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{savedCircuits.length}</p><p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Relatórios</p></div>
+                          <div className="text-slate-300 dark:text-slate-600 text-2xl"><i className="fa-regular fa-folder-open"></i></div>
                         </div>
                       </div>
 
                       {isAdmin && (
                         <>
-                          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:bg-slate-50 transition-colors" onClick={() => handleNavClick('aprovacoes')}>
+                          <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" onClick={() => handleNavClick('aprovacoes')}>
                             <div className="flex items-center justify-between">
-                              <div><p className="text-2xl font-bold text-slate-800">{pendingCount}</p><p className="text-xs font-medium text-slate-500 uppercase">Análises Pendentes</p></div>
-                              <div className={pendingCount > 0 ? "text-amber-500 text-2xl" : "text-slate-300 text-2xl"}><i className="fa-solid fa-clock-rotate-left"></i></div>
+                              <div><p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{pendingCount}</p><p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Análises Pendentes</p></div>
+                              <div className={pendingCount > 0 ? "text-amber-500 text-2xl" : "text-slate-300 dark:text-slate-600 text-2xl"}><i className="fa-solid fa-clock-rotate-left"></i></div>
                             </div>
                           </div>
 
-                          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                             <h4 className="font-bold text-slate-800 mb-1 text-sm">Disparo de Comunicado</h4>
-                             <p className="text-xs text-slate-500 mb-4">Envio de notificação SMTP via EmailJS.</p>
+                          <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+                             <h4 className="font-bold text-slate-800 dark:text-slate-100 mb-1 text-sm">Disparo de Comunicado</h4>
+                             <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Envio de notificação SMTP via EmailJS.</p>
                              <form onSubmit={handleSendCustomEmail} className="space-y-3">
-                                <input type="email" placeholder="Destinatário" value={customEmailDest} onChange={e => setCustomEmailDest(e.target.value.replace(/\s/g, ''))} required className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-xs focus:border-brand-blue" />
-                                <textarea placeholder="Corpo do texto..." value={customEmailMessage} onChange={e => setCustomEmailMessage(e.target.value)} rows="2" className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-xs focus:border-brand-blue" ></textarea>
-                                <button type="submit" className="w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-2 rounded transition text-xs">Transmitir Mensagem</button>
-                                {emailStatus && <p className="text-[10px] font-medium text-slate-600 mt-2">{emailStatus}</p>}
+                                <input type="email" placeholder="Destinatário" value={customEmailDest} onChange={e => setCustomEmailDest(e.target.value.replace(/\s/g, ''))} required className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-xs focus:border-brand-blue text-slate-800 dark:text-slate-100" />
+                                <textarea placeholder="Corpo do texto..." value={customEmailMessage} onChange={e => setCustomEmailMessage(e.target.value)} rows="2" className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-xs focus:border-brand-blue text-slate-800 dark:text-slate-100" ></textarea>
+                                <button type="submit" className="w-full bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium py-2 rounded transition text-xs">Transmitir Mensagem</button>
+                                {emailStatus && <p className="text-[10px] font-medium text-slate-600 dark:text-slate-400 mt-2">{emailStatus}</p>}
                              </form>
-                             <div className="mt-4 pt-4 border-t border-slate-100">
-                               <button onClick={handleSendEmail} className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 rounded transition text-xs">Notificar Equipe de Monitores</button>
+                             <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                               <button onClick={handleSendEmail} className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium py-2 rounded transition text-xs">Notificar Equipe de Monitores</button>
                              </div>
                           </div>
                         </>
@@ -880,20 +894,20 @@
               {/* === TELA: APROVAÇÕES === */}
               {currentView === 'aprovacoes' && isAdmin && (
                 <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
-                  <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between mb-6">
+                  <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between mb-6 transition-colors">
                     <div>
-                      <h2 className="text-xl font-bold text-slate-800">Central de Análise</h2>
-                      <p className="text-sm text-slate-500 mt-1">Revisão e homologação de conteúdos técnicos.</p>
+                      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Central de Análise</h2>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Revisão e homologação de conteúdos técnicos.</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-slate-800">{pendingCount}</p>
-                      <p className="text-xs font-semibold text-slate-500 uppercase">Documentos</p>
+                      <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{pendingCount}</p>
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Documentos</p>
                     </div>
                   </div>
                   
                   {pendingCount === 0 ? ( 
-                    <div className="bg-white py-16 text-center border border-slate-200 rounded-xl shadow-sm">
-                      <p className="text-slate-500 text-sm">Não há exercícios pendentes para análise no momento.</p>
+                    <div className="bg-white dark:bg-slate-900 py-16 text-center border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm transition-colors">
+                      <p className="text-slate-500 dark:text-slate-400 text-sm">Não há exercícios pendentes para análise no momento.</p>
                     </div> 
                   ) : ( 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -903,21 +917,21 @@
                         const isImage = ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i); 
                         const isVideo = ex.mediaUrl && ex.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i); 
                         return ( 
-                          <div key={ex.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-                            <div className="h-40 bg-slate-100 relative">
-                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="w-full h-full bg-slate-200 flex items-center justify-center"><i className="fa-solid fa-video text-3xl text-slate-400"></i></div> ) : ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-image text-3xl text-slate-300"></i></div> )}
+                          <div key={ex.id} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col transition-colors">
+                            <div className="h-40 bg-slate-100 dark:bg-slate-800 relative">
+                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-video text-3xl text-slate-400 dark:text-slate-600"></i></div> ) : ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-image text-3xl text-slate-300 dark:text-slate-600"></i></div> )}
                               <div className="absolute top-2 right-2 bg-slate-800/80 text-white text-[10px] font-medium px-2 py-1 rounded">Aguardando Avaliação</div>
                             </div>
                             <div className="p-5 flex-1 flex flex-col">
-                              <p className="text-[10px] font-semibold text-slate-400 uppercase mb-1">Autor: {ex.author || 'Monitor'}</p>
-                              <h3 className="font-bold text-slate-800 text-base leading-tight mb-2">{ex.title}</h3>
+                              <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase mb-1">Autor: {ex.author || 'Monitor'}</p>
+                              <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base leading-tight mb-2">{ex.title}</h3>
                               <div className="flex gap-2 mb-4">
-                                <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-1 rounded">{ex.category.toUpperCase()}</span>
-                                <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-1 rounded">{ex.muscleGroup}</span>
+                                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-1 rounded">{ex.category.toUpperCase()}</span>
+                                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-1 rounded">{ex.muscleGroup}</span>
                               </div>
                               <div className="mt-auto grid grid-cols-2 gap-2">
-                                <button onClick={() => handleApprove(ex.id)} className="bg-slate-800 hover:bg-slate-900 text-white font-medium py-2 rounded text-xs transition-colors">Homologar</button>
-                                <button onClick={() => handleReject(ex.id)} className="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-2 rounded text-xs transition-colors">Recusar</button>
+                                <button onClick={() => handleApprove(ex.id)} className="bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium py-2 rounded text-xs transition-colors">Homologar</button>
+                                <button onClick={() => handleReject(ex.id)} className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium py-2 rounded text-xs transition-colors">Recusar</button>
                               </div>
                             </div>
                           </div> 
@@ -931,30 +945,30 @@
               {/* === TELA: GESTÃO DE EQUIPE === */}
               {currentView === 'equipe' && isAdmin && (
                 <div className="max-w-5xl mx-auto space-y-6 animate-fade-in pb-12">
-                  <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
-                    <div className="mb-6 border-b border-slate-100 pb-4">
-                      <h2 className="text-xl font-bold text-slate-800">Controle de Permissões e Equipe</h2>
-                      <p className="text-sm text-slate-500 mt-1">Gerenciamento de acesso e vinculação de grupos ({teamMembers.length} registros ativos).</p>
+                  <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                    <div className="mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
+                      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Controle de Permissões e Equipe</h2>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gerenciamento de acesso e vinculação de grupos ({teamMembers.length} registros ativos).</p>
                     </div>
 
-                    <div className="overflow-x-auto border border-slate-200 rounded-lg">
+                    <div className="overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-lg">
                       <table className="w-full text-sm text-left">
-                        <thead className="bg-slate-50 text-slate-600 font-semibold text-xs border-b border-slate-200">
+                        <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs border-b border-slate-200 dark:border-slate-700">
                           <tr><th className="px-4 py-3">Identificação</th><th className="px-4 py-3">Agrupamento</th><th className="px-4 py-3">Nível de Acesso</th><th className="px-4 py-3 text-center">Ações</th></tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                           {teamMembers.map(member => ( 
-                            <tr key={member.id} className="hover:bg-slate-50 transition-colors">
+                            <tr key={member.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                               <td className="px-4 py-3">
                                 <div className="flex items-center gap-3">
-                                  {member.avatar_url ? ( <img src={member.avatar_url} className="w-8 h-8 rounded-full object-cover border border-slate-200" /> ) : ( <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">{member.full_name.charAt(0)}</div> )}
-                                  <p className="font-medium text-slate-800">{member.full_name}</p>
+                                  {member.avatar_url ? ( <img src={member.avatar_url} className="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-slate-700" /> ) : ( <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold text-xs">{member.full_name.charAt(0)}</div> )}
+                                  <p className="font-medium text-slate-800 dark:text-slate-200">{member.full_name}</p>
                                 </div>
                               </td>
-                              <td className="px-4 py-3 text-slate-600">{member.team_group || 'Não designado'}</td>
-                              <td className="px-4 py-3"><span className="text-[10px] font-medium bg-slate-100 text-slate-700 px-2 py-1 rounded">{member.role}</span></td>
+                              <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{member.team_group || 'Não designado'}</td>
+                              <td className="px-4 py-3"><span className="text-[10px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-1 rounded">{member.role}</span></td>
                               <td className="px-4 py-3 text-center">
-                                <button onClick={() => setEditingMember(member)} className="text-brand-blue hover:underline text-xs font-medium">Modificar</button>
+                                <button onClick={() => setEditingMember(member)} className="text-brand-blue dark:text-brand-light hover:underline text-xs font-medium">Modificar</button>
                               </td>
                             </tr> 
                           ))}
@@ -964,20 +978,20 @@
                   </div>
 
                   {editingMember && (
-                    <div className="fixed inset-0 bg-slate-900/60 z-[60] flex items-center justify-center p-4 transition-opacity animate-fade-in">
-                      <div className="bg-white w-full max-w-md rounded-xl shadow-lg overflow-hidden">
-                        <div className="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-                          <h3 className="text-base font-bold text-slate-800">Alterar Registro do Usuário</h3>
-                          <button onClick={() => setEditingMember(null)} className="text-slate-400 hover:text-slate-700"><i className="fa-solid fa-xmark"></i></button>
+                    <div className="fixed inset-0 bg-slate-900/60 dark:bg-slate-900/80 z-[60] flex items-center justify-center p-4 transition-opacity animate-fade-in">
+                      <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-800">
+                        <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+                          <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Alterar Registro do Usuário</h3>
+                          <button onClick={() => setEditingMember(null)} className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"><i className="fa-solid fa-xmark"></i></button>
                         </div>
                         <form onSubmit={handleUpdateMember} className="p-6 space-y-4">
                           <div>
-                            <label className="block text-xs font-semibold text-slate-600 mb-1">Nome Completo</label>
-                            <input type="text" value={editingMember.full_name} onChange={e=>setEditingMember({...editingMember, full_name: e.target.value})} required className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" />
+                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Nome Completo</label>
+                            <input type="text" value={editingMember.full_name} onChange={e=>setEditingMember({...editingMember, full_name: e.target.value})} required className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" />
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-slate-600 mb-1">Agrupamento</label>
-                            <select value={editingMember.team_group} onChange={e=>setEditingMember({...editingMember, team_group: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue bg-white">
+                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Agrupamento</label>
+                            <select value={editingMember.team_group} onChange={e=>setEditingMember({...editingMember, team_group: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100">
                               <option value="Nenhum">Não designado</option>
                               <option value="E1">Grupo E1</option>
                               <option value="E2">Grupo E2</option>
@@ -986,15 +1000,15 @@
                             </select>
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-slate-600 mb-1">Nível de Acesso</label>
-                            <select value={editingMember.role} onChange={e=>setEditingMember({...editingMember, role: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue bg-white">
+                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Nível de Acesso</label>
+                            <select value={editingMember.role} onChange={e=>setEditingMember({...editingMember, role: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100">
                               <option value="Monitor">Monitor</option>
                               <option value="Coordenador / Admin">Administrador</option>
                             </select>
                           </div>
                           <div className="pt-4 flex justify-end gap-2">
-                            <button type="button" onClick={() => setEditingMember(null)} className="px-4 py-2 border border-slate-300 text-slate-600 font-medium rounded hover:bg-slate-50 text-sm">Cancelar</button>
-                            <button type="submit" className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-medium rounded text-sm">Salvar Dados</button>
+                            <button type="button" onClick={() => setEditingMember(null)} className="px-4 py-2 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium rounded hover:bg-slate-50 dark:hover:bg-slate-800 text-sm">Cancelar</button>
+                            <button type="submit" className="px-4 py-2 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium rounded text-sm">Salvar Dados</button>
                           </div>
                         </form>
                       </div>
@@ -1006,56 +1020,56 @@
               {/* === TELA: CADASTRO === */}
               {currentView === 'cadastro' && (
                 <div className="max-w-3xl mx-auto space-y-6 animate-fade-in pb-12">
-                  <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
-                    <div className="border-b border-slate-100 pb-4 mb-6">
-                      <h2 className="text-xl font-bold text-slate-800">Cadastro de Conteúdo</h2>
-                      <p className="text-slate-500 text-sm mt-1">Preencha os dados clínicos para submissão do exercício ao acervo.</p>
+                  <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                    <div className="border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
+                      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Cadastro de Conteúdo</h2>
+                      <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Preencha os dados clínicos para submissão do exercício ao acervo.</p>
                     </div>
-                    {formStatus.success && <div className="bg-slate-50 p-4 rounded border border-slate-200 text-slate-800 text-sm font-medium mb-6">Registro submetido com êxito no sistema.</div>}
+                    {formStatus.success && <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-sm font-medium mb-6">Registro submetido com êxito no sistema.</div>}
                     <form onSubmit={handleFormSubmit} className="space-y-6">
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-xs font-semibold text-slate-600 mb-1">Nomenclatura do Exercício *</label>
-                          <input type="text" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} required className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" />
+                          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Nomenclatura do Exercício *</label>
+                          <input type="text" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} required className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-xs font-semibold text-slate-600 mb-1">Categoria *</label>
-                            <select value={formCat} onChange={e=>{setFormCat(e.target.value); setFormMuscleSelect('');}} required className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm bg-white focus:border-brand-blue">
+                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Categoria *</label>
+                            <select value={formCat} onChange={e=>{setFormCat(e.target.value); setFormMuscleSelect('');}} required className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100">
                               <option value="">A selecionar...</option>
                               {Object.keys(CATEGORIES).map(k => <option key={k} value={k}>{CATEGORIES[k].title}</option>)}
                             </select>
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-slate-600 mb-1">Foco Específico *</label>
-                            <select value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} required disabled={!formCat} className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm bg-white focus:border-brand-blue disabled:bg-slate-50">
+                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Foco Específico *</label>
+                            <select value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} required disabled={!formCat} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 disabled:bg-slate-50 dark:disabled:bg-slate-900 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100">
                               <option value="">A selecionar...</option>
                               {formCat && CATEGORIES[formCat].subgroups.map(sub => <option key={sub} value={sub}>{sub}</option>)}
                               <option value="Outro">Inserção manual</option>
                             </select>
                           </div>
                         </div>
-                        {formMuscleSelect === 'Outro' && <div><label className="block text-xs font-semibold text-slate-600 mb-1">Descrever Foco</label><input type="text" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" /></div>}
+                        {formMuscleSelect === 'Outro' && <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Descrever Foco</label><input type="text" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" /></div>}
                       </div>
-                      <div className="space-y-4 pt-4 border-t border-slate-100">
+                      <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Intensidade Base</label><select value={formData.difficulty} onChange={e=>setFormData({...formData, difficulty: e.target.value})} className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm bg-white"><option>Iniciante / Leve</option><option>Intermediário / Moderado</option><option>Avançado / Intenso</option></select></div>
-                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Material Exigido</label><input type="text" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})} className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm" /></div>
-                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Prescrição Típica</label><input type="text" value={formData.dosage} onChange={e=>setFormData({...formData, dosage: e.target.value})} className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm" placeholder="Ex: 3x10" /></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Intensidade Base</label><select value={formData.difficulty} onChange={e=>setFormData({...formData, difficulty: e.target.value})} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"><option>Iniciante / Leve</option><option>Intermediário / Moderado</option><option>Avançado / Intenso</option></select></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Material Exigido</label><input type="text" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Prescrição Típica</label><input type="text" value={formData.dosage} onChange={e=>setFormData({...formData, dosage: e.target.value})} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100" placeholder="Ex: 3x10" /></div>
                          </div>
                       </div>
-                      <div className="space-y-4 pt-4 border-t border-slate-100">
-                        <div><label className="block text-xs font-semibold text-slate-600 mb-1">Diretrizes de Execução *</label><textarea required rows="3" value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue"></textarea></div>
-                        <div><label className="block text-xs font-semibold text-slate-600 mb-1">Contraindicações Clínicas</label><textarea rows="2" value={formData.precautions} onChange={e=>setFormData({...formData, precautions: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue"></textarea></div>
+                      <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Diretrizes de Execução *</label><textarea required rows="3" value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100"></textarea></div>
+                        <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Contraindicações Clínicas</label><textarea rows="2" value={formData.precautions} onChange={e=>setFormData({...formData, precautions: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100"></textarea></div>
                       </div>
-                      <div className="space-y-4 pt-4 border-t border-slate-100">
+                      <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                           <div><label className="block text-xs font-semibold text-slate-600 mb-1">Referência em Vídeo (URL)</label><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className="w-full px-3 py-2.5 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" placeholder="https://" /></div>
-                           <div><label className="block text-xs font-semibold text-slate-600 mb-1">Anexo Local (Mídia)</label><input type="file" accept="image/*,video/mp4" onChange={e=>setMediaFile(e.target.files[0])} className="w-full px-2 py-2 rounded border border-slate-300 text-xs text-slate-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-medium file:bg-slate-100 file:text-slate-700 cursor-pointer" /></div>
+                           <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Referência em Vídeo (URL)</label><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" placeholder="https://" /></div>
+                           <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Anexo Local (Mídia)</label><input type="file" accept="image/*,video/mp4" onChange={e=>setMediaFile(e.target.files[0])} className="w-full px-2 py-2 rounded border border-slate-300 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-medium file:bg-slate-100 dark:file:bg-slate-800 file:text-slate-700 dark:file:text-slate-300 cursor-pointer" /></div>
                         </div>
                       </div>
-                      <div className="pt-6 border-t border-slate-100 flex justify-end">
-                        <button type="submit" disabled={formStatus.loading} className="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-medium rounded-lg transition-colors text-sm disabled:opacity-50">
+                      <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+                        <button type="submit" disabled={formStatus.loading} className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium rounded-lg transition-colors text-sm disabled:opacity-50">
                           {formStatus.loading ? "Processando..." : "Submeter Documento"}
                         </button>
                       </div>
@@ -1068,11 +1082,11 @@
               {currentView === 'detail' && selectedExercise && (
                 <div className="max-w-3xl mx-auto space-y-6 animate-fade-in pb-12">
                   <div className="flex items-center justify-between mb-4">
-                    <button onClick={() => setCurrentView('library')} className="text-slate-500 hover:text-slate-800 text-sm font-medium"><i className="fa-solid fa-arrow-left mr-2"></i> Retornar ao Acervo</button>
+                    <button onClick={() => setCurrentView('library')} className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-sm font-medium"><i className="fa-solid fa-arrow-left mr-2"></i> Retornar ao Acervo</button>
                     {isAdmin && <button onClick={() => handleDeleteExercise(selectedExercise.id)} className="text-red-500 hover:underline text-sm font-medium">Excluir Registro</button>}
                   </div>
-                  <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div className="h-64 bg-slate-100 border-b border-slate-200 relative">
+                  <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden transition-colors">
+                    <div className="h-64 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 relative">
                       {getYouTubeId(selectedExercise.videoUrl) ? ( 
                         <iframe className="w-full h-full absolute inset-0" src={`https://www.youtube.com/embed/${getYouTubeId(selectedExercise.videoUrl)}`} title="YouTube" frameBorder="0" allowFullScreen></iframe> 
                       ) : selectedExercise.mediaUrl ? ( 
@@ -1080,33 +1094,33 @@
                           <video src={selectedExercise.mediaUrl} controls className="w-full h-full object-contain bg-black"></video> : 
                           <img src={selectedExercise.mediaUrl} className="w-full h-full object-cover" /> 
                       ) : ( 
-                        <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">Sem mídia de referência cadastrada.</div> 
+                        <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-600 text-sm">Sem mídia de referência cadastrada.</div> 
                       )}
                     </div>
                     <div className="p-6 sm:p-8">
                       <div className="flex gap-2 mb-4">
-                        <span className="text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-1 rounded">{CATEGORIES[selectedExercise.category]?.title || selectedExercise.category}</span>
-                        <span className="text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-1 rounded">{selectedExercise.muscleGroup}</span>
+                        <span className="text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-1 rounded">{CATEGORIES[selectedExercise.category]?.title || selectedExercise.category}</span>
+                        <span className="text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-1 rounded">{selectedExercise.muscleGroup}</span>
                       </div>
-                      <h1 className="text-2xl font-bold text-slate-800 mb-6">{selectedExercise.title}</h1>
+                      <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">{selectedExercise.title}</h1>
                       <div className="grid grid-cols-3 gap-4 mb-8">
-                        <div className="bg-slate-50 p-3 rounded border border-slate-200"><p className="text-[10px] font-semibold text-slate-500 uppercase mb-1">Intensidade</p><p className="font-medium text-sm text-slate-800">{selectedExercise.difficulty}</p></div>
-                        <div className="bg-slate-50 p-3 rounded border border-slate-200"><p className="text-[10px] font-semibold text-slate-500 uppercase mb-1">Materiais</p><p className="font-medium text-sm text-slate-800">{selectedExercise.equipment}</p></div>
-                        <div className="bg-slate-50 p-3 rounded border border-slate-200"><p className="text-[10px] font-semibold text-slate-500 uppercase mb-1">Prescrição</p><p className="font-medium text-sm text-slate-800">{selectedExercise.dosage}</p></div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded border border-slate-200 dark:border-slate-700"><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1">Intensidade</p><p className="font-medium text-sm text-slate-800 dark:text-slate-200">{selectedExercise.difficulty}</p></div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded border border-slate-200 dark:border-slate-700"><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1">Materiais</p><p className="font-medium text-sm text-slate-800 dark:text-slate-200">{selectedExercise.equipment}</p></div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded border border-slate-200 dark:border-slate-700"><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1">Prescrição</p><p className="font-medium text-sm text-slate-800 dark:text-slate-200">{selectedExercise.dosage}</p></div>
                       </div>
                       <div className="space-y-6 text-sm">
                         <div>
-                          <h3 className="font-bold text-slate-800 mb-2">Instruções Práticas</h3>
-                          <div className="text-slate-600 whitespace-pre-line leading-relaxed">{selectedExercise.instructions}</div>
+                          <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-2">Instruções Práticas</h3>
+                          <div className="text-slate-600 dark:text-slate-300 whitespace-pre-line leading-relaxed">{selectedExercise.instructions}</div>
                         </div>
                         {selectedExercise.precautions && ( 
                           <div>
-                            <h3 className="font-bold text-slate-800 mb-2">Contraindicações e Cuidados</h3>
-                            <div className="text-slate-600 whitespace-pre-line leading-relaxed">{selectedExercise.precautions}</div>
+                            <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-2">Contraindicações e Cuidados</h3>
+                            <div className="text-slate-600 dark:text-slate-300 whitespace-pre-line leading-relaxed">{selectedExercise.precautions}</div>
                           </div> 
                         )}
                       </div>
-                      <div className="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-500">
+                      <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
                         Registro inserido por {selectedExercise.author || 'Membro da Equipe'}
                       </div>
                     </div>
@@ -1117,38 +1131,38 @@
               {/* === TELA: AULAS E RELATÓRIOS === */}
               {currentView === 'circuito' && (
                 <div className="max-w-5xl mx-auto space-y-6">
-                  <div className="flex gap-2 border-b border-slate-200 pb-3 mb-6 overflow-x-auto no-scrollbar">
-                    <button onClick={() => setCircuitMode('agenda')} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'agenda' ? 'text-brand-blue border-b-2 border-brand-blue' : 'text-slate-500 hover:text-slate-800'}`}>Agenda Base</button>
-                    <button onClick={startPlanning} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'plan' ? 'text-brand-blue border-b-2 border-brand-blue' : 'text-slate-500 hover:text-slate-800'}`}>Novo Planejamento</button>
-                    <button onClick={() => setCircuitMode('history')} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'history' || circuitMode === 'view' || circuitMode === 'report_edit' ? 'text-brand-blue border-b-2 border-brand-blue' : 'text-slate-500 hover:text-slate-800'}`}>Base de Documentos</button>
+                  <div className="flex gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 mb-6 overflow-x-auto no-scrollbar">
+                    <button onClick={() => setCircuitMode('agenda')} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'agenda' ? 'text-brand-blue dark:text-brand-light border-b-2 border-brand-blue dark:border-brand-light' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}>Agenda Base</button>
+                    <button onClick={startPlanning} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'plan' ? 'text-brand-blue dark:text-brand-light border-b-2 border-brand-blue dark:border-brand-light' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}>Novo Planejamento</button>
+                    <button onClick={() => setCircuitMode('history')} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'history' || circuitMode === 'view' || circuitMode === 'report_edit' ? 'text-brand-blue dark:text-brand-light border-b-2 border-brand-blue dark:border-brand-light' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}>Base de Documentos</button>
                   </div>
 
                   {hasDraft && circuitMode !== 'plan' && circuitMode !== 'report_edit' && (
-                    <div className="bg-white border border-slate-300 p-4 rounded-lg flex items-center justify-between shadow-sm animate-fade-in">
-                      <div><h4 className="font-bold text-slate-800 text-sm">Dados Temporários Identificados</h4><p className="text-xs text-slate-500 mt-1">Existem formulários não finalizados armazenados localmente.</p></div>
+                    <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 p-4 rounded-lg flex items-center justify-between shadow-sm animate-fade-in transition-colors">
+                      <div><h4 className="font-bold text-slate-800 dark:text-slate-100 text-sm">Dados Temporários Identificados</h4><p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Existem formulários não finalizados armazenados localmente.</p></div>
                       <div className="flex gap-2">
-                        <button onClick={clearDraft} className="px-3 py-1.5 bg-slate-100 text-slate-600 text-xs font-medium rounded hover:bg-slate-200">Descartar</button>
-                        <button onClick={restoreDraft} className="px-3 py-1.5 bg-slate-800 text-white text-xs font-medium rounded hover:bg-slate-900">Restaurar</button>
+                        <button onClick={clearDraft} className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium rounded hover:bg-slate-200 dark:hover:bg-slate-700">Descartar</button>
+                        <button onClick={restoreDraft} className="px-3 py-1.5 bg-slate-800 dark:bg-slate-700 text-white text-xs font-medium rounded hover:bg-slate-900 dark:hover:bg-slate-600">Restaurar</button>
                       </div>
                     </div>
                   )}
 
                   {circuitMode === 'agenda' && ( 
-                    <div className="animate-fade-in bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                      <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
-                        <h2 className="text-base font-bold text-slate-800">Cronograma Operacional 2026.2</h2>
+                    <div className="animate-fade-in bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden transition-colors">
+                      <div className="bg-slate-50 dark:bg-slate-800/50 px-6 py-4 border-b border-slate-200 dark:border-slate-800">
+                        <h2 className="text-base font-bold text-slate-800 dark:text-slate-100">Cronograma Operacional 2026.2</h2>
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
-                          <thead className="bg-white text-slate-500 font-semibold text-xs border-b border-slate-100">
+                          <thead className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-semibold text-xs border-b border-slate-100 dark:border-slate-800">
                             <tr><th className="px-6 py-3">Referência</th><th className="px-6 py-3">Data Programada</th><th className="px-6 py-3">Pauta Temática & Equipe</th></tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100">
+                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                             {AGENDA_DATA.map((item, idx) => ( 
-                              <tr key={idx} className={`hover:bg-slate-50 transition-colors ${item === upcomingActivity ? 'bg-slate-50' : ''}`}>
-                                <td className="px-6 py-4 text-slate-800">{item.act}</td>
-                                <td className="px-6 py-4 font-medium text-slate-800 whitespace-nowrap">{item.date}</td>
-                                <td className="px-6 py-4"><p className="text-slate-800 mb-1">{item.title}</p><p className="text-xs text-slate-500 font-medium">Equipe: {item.resp}</p></td>
+                              <tr key={idx} className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${item === upcomingActivity ? 'bg-slate-50 dark:bg-slate-800/50' : ''}`}>
+                                <td className="px-6 py-4 text-slate-800 dark:text-slate-200">{item.act}</td>
+                                <td className="px-6 py-4 font-medium text-slate-800 dark:text-slate-200 whitespace-nowrap">{item.date}</td>
+                                <td className="px-6 py-4"><p className="text-slate-800 dark:text-slate-200 mb-1">{item.title}</p><p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Equipe: {item.resp}</p></td>
                               </tr> 
                             ))}
                           </tbody>
@@ -1159,47 +1173,47 @@
 
                   {circuitMode === 'plan' && ( 
                     <div className="space-y-6 animate-fade-in pb-12">
-                      <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
-                        <div className="border-b border-slate-100 pb-4 mb-6">
-                          <h2 className="text-xl font-bold text-slate-800">Planejamento Prévio</h2>
-                          <p className="text-sm text-slate-500 mt-1">Defina a estrutura técnica da atividade e os responsáveis pelas estações.</p>
+                      <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                        <div className="border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
+                          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Planejamento Prévio</h2>
+                          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Defina a estrutura técnica da atividade e os responsáveis pelas estações.</p>
                         </div>
                         <div className="space-y-4">
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Identificação da Atividade</label><input type="text" value={planDetails.activityNum} onChange={e=>setPlanDetails({...planDetails, activityNum: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm" placeholder="Ex: 39" /></div>
-                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Data</label><input type="date" value={planDetails.date} onChange={e=>setPlanDetails({...planDetails, date: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm" /></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Identificação da Atividade</label><input type="text" value={planDetails.activityNum} onChange={e=>setPlanDetails({...planDetails, activityNum: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100" placeholder="Ex: 39" /></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Data</label><input type="date" value={planDetails.date} onChange={e=>setPlanDetails({...planDetails, date: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
                             <div>
-                              <label className="block text-xs font-semibold text-slate-600 mb-1">Eixo Temático</label>
-                              <select value={planDetails.theme} onChange={e=>setPlanDetails({...planDetails, theme: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm bg-white">
+                              <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Eixo Temático</label>
+                              <select value={planDetails.theme} onChange={e=>setPlanDetails({...planDetails, theme: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100">
                                 <option value="">A selecionar...</option><option value="EXERCÍCIOS DE DUPLA TAREFA">Dupla Tarefa</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMSS E TRONCO">Mobilidade/Fortalecimento MMSS</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMII">Mobilidade/Fortalecimento MMII</option><option value="EXERCÍCIOS AERÓBICOS E CONDICIONAMENTO CARDIORRESPIRATÓRIO">Aeróbicos e Condicionamento</option><option value="OUTRA ATIVIDADE">Atividade Avaliativa/Integração</option>
                               </select>
                             </div>
                           </div>
-                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Equipe Destinada à Ação</label><input type="text" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails, students: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm" /></div>
+                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Equipe Destinada à Ação</label><input type="text" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails, students: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
                         </div>
 
-                        <div className="space-y-6 pt-6 border-t border-slate-100 mt-6">
-                          <h3 className="text-base font-bold text-slate-800">Estrutura do Circuito</h3>
-                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Procedimento de Aquecimento</label><textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className="w-full p-3 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm"></textarea></div>
+                        <div className="space-y-6 pt-6 border-t border-slate-100 dark:border-slate-800 mt-6">
+                          <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Estrutura do Circuito</h3>
+                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Procedimento de Aquecimento</label><textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className="w-full p-3 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
                           
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
                             {circuit.map((stationExercises, index) => ( 
-                              <div key={index} className="bg-slate-50 rounded-lg border border-slate-200 overflow-hidden flex flex-col">
-                                <div className="px-4 py-2 border-b border-slate-200 bg-slate-100 flex items-center justify-between">
-                                  <h4 className="text-xs font-bold text-slate-700 uppercase">Estação {index + 1}</h4>
-                                  {index === 4 && <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">Funcional</span>}
+                              <div key={index} className="bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col">
+                                <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 flex items-center justify-between">
+                                  <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">Estação {index + 1}</h4>
+                                  {index === 4 && <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">Funcional</span>}
                                 </div>
                                 <div className="p-4 flex flex-col gap-3 flex-1">
-                                  <div><label className="block text-[10px] font-semibold text-slate-500 mb-1">Responsável pela Estação</label><input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => { const newResp = [...planDetails.stationResponsibles]; newResp[index] = e.target.value; setPlanDetails({...planDetails, stationResponsibles: newResp}); }} className="w-full px-3 py-1.5 rounded border border-slate-300 outline-none text-xs" /></div>
+                                  <div><label className="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Responsável pela Estação</label><input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => { const newResp = [...planDetails.stationResponsibles]; newResp[index] = e.target.value; setPlanDetails({...planDetails, stationResponsibles: newResp}); }} className="w-full px-3 py-1.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-xs text-slate-800 dark:text-slate-100" /></div>
                                   <div className="space-y-2">
                                     {stationExercises.map(ex => ( 
-                                      <div key={ex.id} className="flex justify-between items-center bg-white p-2 rounded border border-slate-200">
-                                        <div className="truncate"><p className="text-xs font-semibold text-slate-700 truncate" title={ex.title}>{ex.title}</p><p className="text-[10px] text-slate-500">{ex.dosage}</p></div>
+                                      <div key={ex.id} className="flex justify-between items-center bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-700">
+                                        <div className="truncate"><p className="text-xs font-semibold text-slate-700 dark:text-slate-200 truncate" title={ex.title}>{ex.title}</p><p className="text-[10px] text-slate-500 dark:text-slate-400">{ex.dosage}</p></div>
                                         <button onClick={() => removeFromCircuit(index, ex.id)} className="text-slate-400 hover:text-red-500 shrink-0 ml-2"><i className="fa-solid fa-xmark"></i></button>
                                       </div> 
                                     ))}
                                   </div>
-                                  <select value="" onChange={(e) => addToCircuit(index, e.target.value)} className="w-full px-2 py-2 border border-dashed border-slate-300 bg-white outline-none text-[10px] font-semibold text-slate-500 cursor-pointer mt-auto rounded">
+                                  <select value="" onChange={(e) => addToCircuit(index, e.target.value)} className="w-full px-2 py-2 border border-dashed border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 outline-none text-[10px] font-semibold text-slate-500 dark:text-slate-400 cursor-pointer mt-auto rounded">
                                     <option value="">+ Anexar procedimento...</option>
                                     {approvedExercises.map(ex => ( <option key={ex.id} value={ex.id}>[{ex.muscleGroup}] {ex.title}</option> ))}
                                   </select>
@@ -1207,59 +1221,59 @@
                               </div> 
                             ))}
                           </div>
-                          <div><label className="block text-xs font-semibold text-slate-600 mb-1 mt-4">Procedimento de Desaquecimento</label><textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className="w-full p-3 rounded border border-slate-300 focus:border-brand-blue outline-none text-sm"></textarea></div>
+                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 mt-4">Procedimento de Desaquecimento</label><textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className="w-full p-3 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
                         </div>
-                        <div className="pt-6 border-t border-slate-100 mt-6 flex justify-end"><button onClick={handleSavePlan} className="px-6 py-2.5 bg-slate-800 text-white font-medium rounded-lg hover:bg-slate-900 transition-colors text-sm">Registrar Planejamento</button></div>
+                        <div className="pt-6 border-t border-slate-100 dark:border-slate-800 mt-6 flex justify-end"><button onClick={handleSavePlan} className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 text-white font-medium rounded-lg hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors text-sm">Registrar Planejamento</button></div>
                       </div>
                     </div> 
                   )}
 
                   {circuitMode === 'report_edit' && viewingCircuit && ( 
                     <div className="space-y-6 animate-fade-in pb-12">
-                      <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200">
-                        <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
-                          <div><h2 className="text-xl font-bold text-slate-800">Prontuário Pós-Ação</h2><p className="text-sm text-slate-500 mt-1">Ref.: Atividade {planDetails.activityNum}</p></div>
-                          <button onClick={() => setCircuitMode('view')} className="text-slate-400 hover:text-slate-700 text-xl"><i className="fa-solid fa-xmark"></i></button>
+                      <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                        <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
+                          <div><h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Prontuário Pós-Ação</h2><p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Ref.: Atividade {planDetails.activityNum}</p></div>
+                          <button onClick={() => setCircuitMode('view')} className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 text-xl"><i className="fa-solid fa-xmark"></i></button>
                         </div>
                         
-                        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6">
-                          <div className="flex justify-between items-center mb-4"><h3 className="font-semibold text-slate-700 text-sm">Frequência e Parâmetros Clínicos</h3><button onClick={handleAddParticipant} className="text-xs bg-slate-800 text-white px-3 py-1.5 rounded font-medium">Adicionar Paciente</button></div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg p-4 mb-6">
+                          <div className="flex justify-between items-center mb-4"><h3 className="font-semibold text-slate-700 dark:text-slate-200 text-sm">Frequência e Parâmetros Clínicos</h3><button onClick={handleAddParticipant} className="text-xs bg-slate-800 dark:bg-slate-700 text-white px-3 py-1.5 rounded font-medium">Adicionar Paciente</button></div>
                           <div className="max-h-80 overflow-y-auto space-y-2 pr-2">
                             {planDetails.attendanceList.map((p, i) => ( 
-                              <div key={p.id} className={`p-3 border rounded transition-colors ${p.present ? 'bg-white border-slate-300' : 'bg-transparent border-slate-200'}`}>
-                                <label className="flex items-center gap-2 font-semibold text-sm text-slate-800 cursor-pointer"><input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="w-4 h-4"/>{p.name}</label>
-                                {p.present && <div className="mt-3 grid grid-cols-3 gap-2"><div><p className="text-[10px] font-semibold text-slate-500 mb-1">FC (Inic/Fin)</p><input placeholder="ex: 80/90" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="w-full text-xs p-1.5 border rounded outline-none"/></div><div><p className="text-[10px] font-semibold text-slate-500 mb-1">SpO2 (Inic/Fin)</p><input placeholder="ex: 98/97" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="w-full text-xs p-1.5 border rounded outline-none"/></div><div><p className="text-[10px] font-semibold text-slate-500 mb-1">PA (Inic/Fin)</p><input placeholder="ex: 12x8/13x8" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="w-full text-xs p-1.5 border rounded outline-none"/></div></div>}
+                              <div key={p.id} className={`p-3 border rounded transition-colors ${p.present ? 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600' : 'bg-transparent border-slate-200 dark:border-slate-700'}`}>
+                                <label className="flex items-center gap-2 font-semibold text-sm text-slate-800 dark:text-slate-200 cursor-pointer"><input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="w-4 h-4"/>{p.name}</label>
+                                {p.present && <div className="mt-3 grid grid-cols-3 gap-2"><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">FC (Inic/Fin)</p><input placeholder="ex: 80/90" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">SpO2 (Inic/Fin)</p><input placeholder="ex: 98/97" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">PA (Inic/Fin)</p><input placeholder="ex: 12x8/13x8" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div></div>}
                               </div> 
                             ))}
                           </div>
                         </div>
 
                         <div className="space-y-4 mb-6">
-                          <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Objetivos e Operação</h3>
-                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Objetivos da Ação</label><textarea rows="2" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-2.5 rounded border border-slate-300 outline-none text-sm"></textarea></div>
-                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Síntese de Atividades</label><textarea rows="2" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-2.5 rounded border border-slate-300 outline-none text-sm"></textarea></div>
-                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Materiais Acionados</label><textarea rows="2" value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails, materials: e.target.value})} className="w-full p-2.5 rounded border border-slate-300 outline-none text-sm"></textarea></div>
+                          <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2">Objetivos e Operação</h3>
+                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Objetivos da Ação</label><textarea rows="2" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
+                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Síntese de Atividades</label><textarea rows="2" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
+                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Materiais Acionados</label><textarea rows="2" value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails, materials: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Aferição de Parâmetros</label><input type="text" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails, vitalSigns: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm" /></div>
-                            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Registro Audiovisual</label><input type="text" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails, soundAndPhotos: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm" /></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Aferição de Parâmetros</label><input type="text" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails, vitalSigns: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
+                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Registro Audiovisual</label><input type="text" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails, soundAndPhotos: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
                           </div>
                         </div>
 
                         <div className="space-y-4 mb-6">
-                          <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Documentação Narrativa</h3>
-                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Relato Comportamental/Desenvolvimento</label><textarea rows="4" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-2.5 rounded border border-slate-300 outline-none text-sm"></textarea></div>
+                          <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2">Documentação Narrativa</h3>
+                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Relato Comportamental/Desenvolvimento</label><textarea rows="4" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
                           
                           <div>
                             <div className="flex justify-between items-center mb-1">
-                               <label className="block text-xs font-semibold text-slate-600">Evolução Sistêmica Diária</label>
-                               <button type="button" onClick={handleGenerateAutoEvolution} className="text-[10px] text-brand-blue hover:underline font-medium">Sintetizar via Tabela</button>
+                               <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Evolução Sistêmica Diária</label>
+                               <button type="button" onClick={handleGenerateAutoEvolution} className="text-[10px] text-brand-blue dark:text-brand-light hover:underline font-medium">Sintetizar via Tabela</button>
                             </div>
-                            <textarea rows="5" value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails, dailyEvolution: e.target.value})} className="w-full p-2.5 rounded border border-slate-300 outline-none text-sm"></textarea>
+                            <textarea rows="5" value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails, dailyEvolution: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
                           </div>
-                          <div><label className="block text-xs font-semibold text-slate-600 mb-1">Adesão Total Verificada</label><input type="text" value={planDetails.attendanceCount} onChange={e=>setPlanDetails({...planDetails, attendanceCount: e.target.value})} className="w-full px-3 py-2 rounded border border-slate-300 outline-none text-sm" placeholder="Ex: 32" /></div>
+                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Adesão Total Verificada</label><input type="text" value={planDetails.attendanceCount} onChange={e=>setPlanDetails({...planDetails, attendanceCount: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100" placeholder="Ex: 32" /></div>
                         </div>
 
-                        <div className="pt-6 border-t border-slate-100 flex justify-end"><button onClick={handleUpdateReport} className="px-6 py-2.5 bg-slate-800 text-white font-medium rounded-lg hover:bg-slate-900 transition-colors text-sm">Firmar Documento</button></div>
+                        <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-end"><button onClick={handleUpdateReport} className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 text-white font-medium rounded-lg hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors text-sm">Firmar Documento</button></div>
                       </div>
                     </div> 
                   )}
@@ -1267,20 +1281,20 @@
                   {circuitMode === 'history' && ( 
                     <div className="animate-fade-in">
                       {savedCircuits.length === 0 ? ( 
-                        <div className="bg-white py-16 text-center border border-slate-200 rounded-xl shadow-sm"><p className="text-slate-500 text-sm">Nenhum relatório encontrado. Inicie um novo planejamento para registrar atividades.</p></div> 
+                        <div className="bg-white dark:bg-slate-900 py-16 text-center border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm transition-colors"><p className="text-slate-500 dark:text-slate-400 text-sm">Nenhum relatório encontrado. Inicie um novo planejamento para registrar atividades.</p></div> 
                       ) : ( 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                           {savedCircuits.map(circ => { 
                             const isComplete = circ.details?.resultObtained; 
                             return ( 
-                              <div key={circ.id} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:border-slate-300 transition-colors flex flex-col" onClick={() => {setViewingCircuit(circ); setCircuitMode('view');}}>
+                              <div key={circ.id} className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 transition-colors flex flex-col" onClick={() => {setViewingCircuit(circ); setCircuitMode('view');}}>
                                 <div className="flex justify-between items-start mb-3">
-                                  <span className={`text-[10px] font-semibold px-2 py-1 rounded ${isComplete ? 'bg-slate-100 text-slate-600' : 'bg-emerald-50 text-emerald-700'}`}>{isComplete ? 'Homologado' : 'Documentação Pendente'}</span>
-                                  <span className="text-[10px] font-medium text-slate-400">{circ.activity_date.split('-').reverse().join('/')}</span>
+                                  <span className={`text-[10px] font-semibold px-2 py-1 rounded ${isComplete ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300' : 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'}`}>{isComplete ? 'Homologado' : 'Documentação Pendente'}</span>
+                                  <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">{circ.activity_date.split('-').reverse().join('/')}</span>
                                 </div>
-                                <h3 className="text-base font-bold text-slate-800 mb-1">Referência {circ.details?.activityNum || '-'}</h3>
-                                <p className="text-xs text-slate-500 mb-4 line-clamp-2">{circ.details?.theme || 'Sem especificação temática'}</p>
-                                <div className="mt-auto pt-3 border-t border-slate-100 text-xs text-brand-blue font-medium text-right">Analisar Processo &rarr;</div>
+                                <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 mb-1">Referência {circ.details?.activityNum || '-'}</h3>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">{circ.details?.theme || 'Sem especificação temática'}</p>
+                                <div className="mt-auto pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-brand-blue dark:text-brand-light font-medium text-right">Analisar Processo &rarr;</div>
                               </div> 
                             ) 
                           })}
@@ -1291,57 +1305,57 @@
 
                   {circuitMode === 'view' && viewingCircuit && ( 
                     <div className="space-y-6 animate-fade-in pb-12">
-                      <div className="flex flex-wrap gap-3 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                        <button onClick={() => setCircuitMode('history')} className="px-4 py-2 bg-slate-100 text-slate-600 text-sm font-medium rounded hover:bg-slate-200 transition-colors">Voltar</button>
-                        {isAdmin && ( <button onClick={() => handleDeleteCircuit(viewingCircuit.id)} className="px-4 py-2 bg-white border border-red-200 text-red-600 text-sm font-medium rounded hover:bg-red-50 transition-colors ml-auto">Excluir</button> )}
-                        <button onClick={startEditingReport} className={`px-4 py-2 text-sm font-medium rounded transition-colors ${!isAdmin && "ml-auto"} border border-slate-300 text-slate-700 hover:bg-slate-50`}>Atualizar Prontuário</button>
-                        <button onClick={() => handleGenerateReportPDF(viewingCircuit)} className="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded hover:bg-slate-900 transition-colors">Emissão PDF Atividade</button>
-                        <button onClick={() => handleGenerateEvolutionPDF(viewingCircuit)} className="px-4 py-2 border border-slate-800 text-slate-800 text-sm font-medium rounded hover:bg-slate-50 transition-colors">Emissão PDF Clínico</button>
+                      <div className="flex flex-wrap gap-3 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                        <button onClick={() => setCircuitMode('history')} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Voltar</button>
+                        {isAdmin && ( <button onClick={() => handleDeleteCircuit(viewingCircuit.id)} className="px-4 py-2 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-medium rounded hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors ml-auto">Excluir</button> )}
+                        <button onClick={startEditingReport} className={`px-4 py-2 text-sm font-medium rounded transition-colors ${!isAdmin && "ml-auto"} border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800`}>Atualizar Prontuário</button>
+                        <button onClick={() => handleGenerateReportPDF(viewingCircuit)} className="px-4 py-2 bg-slate-800 dark:bg-slate-700 text-white text-sm font-medium rounded hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors">Emissão PDF Atividade</button>
+                        <button onClick={() => handleGenerateEvolutionPDF(viewingCircuit)} className="px-4 py-2 border border-slate-800 dark:border-slate-500 text-slate-800 dark:text-slate-300 text-sm font-medium rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Emissão PDF Clínico</button>
                       </div>
 
-                      <div className="bg-white p-8 sm:p-12 rounded-xl shadow-sm border border-slate-200 text-sm text-slate-800">
-                        <div className="text-center mb-8 border-b border-slate-200 pb-6">
-                          <h2 className="font-bold uppercase text-lg text-slate-800">FICHA TÉCNICA - REFERÊNCIA {viewingCircuit.details?.activityNum || 'X'}</h2>
-                          <p className="text-sm text-slate-500 mt-1">{viewingCircuit.details?.theme}</p>
+                      <div className="bg-white dark:bg-slate-900 p-8 sm:p-12 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 text-sm text-slate-800 dark:text-slate-200 transition-colors">
+                        <div className="text-center mb-8 border-b border-slate-200 dark:border-slate-800 pb-6">
+                          <h2 className="font-bold uppercase text-lg text-slate-800 dark:text-slate-100">FICHA TÉCNICA - REFERÊNCIA {viewingCircuit.details?.activityNum || 'X'}</h2>
+                          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{viewingCircuit.details?.theme}</p>
                         </div>
                         
                         <div className="max-w-3xl mx-auto space-y-6">
-                          <div className="grid grid-cols-2 border-b border-slate-100 pb-4 text-xs"><p><span className="font-semibold text-slate-500 uppercase">Data Referência:</span><br/> {viewingCircuit.activity_date.split('-').reverse().join('/')}</p><p><span className="font-semibold text-slate-500 uppercase">Corpo Discente:</span><br/> {viewingCircuit.details?.students}</p></div>
-                          <div><p className="font-semibold text-slate-500 uppercase text-xs mb-1">Ação Proposta</p><p className="whitespace-pre-line bg-slate-50 p-3 rounded">{viewingCircuit.details?.proposedActivities || 'Não inserido.'}</p></div>
-                          <div><p className="font-semibold text-slate-500 uppercase text-xs mb-1">Finalidade Estipulada</p><p className="whitespace-pre-line">{viewingCircuit.details?.objectives || 'Não inserido.'}</p></div>
-                          <div><p className="font-semibold text-slate-500 uppercase text-xs mb-1">Aparato Material</p><p className="whitespace-pre-line">{viewingCircuit.details?.materials || 'Não inserido.'}</p></div>
+                          <div className="grid grid-cols-2 border-b border-slate-100 dark:border-slate-800 pb-4 text-xs"><p><span className="font-semibold text-slate-500 dark:text-slate-400 uppercase">Data Referência:</span><br/> <span className="text-slate-800 dark:text-slate-200">{viewingCircuit.activity_date.split('-').reverse().join('/')}</span></p><p><span className="font-semibold text-slate-500 dark:text-slate-400 uppercase">Corpo Discente:</span><br/> <span className="text-slate-800 dark:text-slate-200">{viewingCircuit.details?.students}</span></p></div>
+                          <div><p className="font-semibold text-slate-500 dark:text-slate-400 uppercase text-xs mb-1">Ação Proposta</p><p className="whitespace-pre-line bg-slate-50 dark:bg-slate-800/50 p-3 rounded">{viewingCircuit.details?.proposedActivities || 'Não inserido.'}</p></div>
+                          <div><p className="font-semibold text-slate-500 dark:text-slate-400 uppercase text-xs mb-1">Finalidade Estipulada</p><p className="whitespace-pre-line">{viewingCircuit.details?.objectives || 'Não inserido.'}</p></div>
+                          <div><p className="font-semibold text-slate-500 dark:text-slate-400 uppercase text-xs mb-1">Aparato Material</p><p className="whitespace-pre-line">{viewingCircuit.details?.materials || 'Não inserido.'}</p></div>
                           
-                          <div className="border border-slate-200 rounded p-4">
-                            <p className="font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">Procedimentos Diretos</p>
-                            <p className="mb-2"><strong className="text-slate-600">Preparação:</strong> {viewingCircuit.details?.warmUp || '-'}</p>
-                            <div className="space-y-2 mb-2 pl-4 border-l-2 border-slate-200">
+                          <div className="border border-slate-200 dark:border-slate-700 rounded p-4">
+                            <p className="font-bold text-slate-800 dark:text-slate-100 mb-3 border-b border-slate-100 dark:border-slate-800 pb-2">Procedimentos Diretos</p>
+                            <p className="mb-2"><strong className="text-slate-600 dark:text-slate-400">Preparação:</strong> {viewingCircuit.details?.warmUp || '-'}</p>
+                            <div className="space-y-2 mb-2 pl-4 border-l-2 border-slate-200 dark:border-slate-700">
                               {viewingCircuit.stations && viewingCircuit.stations.map((station, idx) => ( 
                                 <div key={idx}>
-                                  <p className="text-xs font-semibold text-slate-700">Estação {idx + 1} <span className="text-slate-400 font-normal">({viewingCircuit.details?.stationResponsibles?.[idx]})</span></p>
-                                  <p className="text-xs text-slate-600">{station.length === 0 ? 'Sem prescrição' : station.map(ex => ex.title).join(' / ')}</p>
+                                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">Estação {idx + 1} <span className="text-slate-400 dark:text-slate-500 font-normal">({viewingCircuit.details?.stationResponsibles?.[idx]})</span></p>
+                                  <p className="text-xs text-slate-600 dark:text-slate-400">{station.length === 0 ? 'Sem prescrição' : station.map(ex => ex.title).join(' / ')}</p>
                                 </div> 
                               ))}
                             </div>
-                            <p><strong className="text-slate-600">Transição:</strong> {viewingCircuit.details?.coolDown || '-'}</p>
+                            <p><strong className="text-slate-600 dark:text-slate-400">Transição:</strong> {viewingCircuit.details?.coolDown || '-'}</p>
                           </div>
 
                           {viewingCircuit.details?.attendanceList && viewingCircuit.details.attendanceList.some(p => p.present) && ( 
-                            <div className="border border-slate-200 rounded overflow-hidden mt-6">
-                              <div className="bg-slate-100 p-2"><p className="font-semibold text-slate-600 text-xs text-center">Registro Operacional em Campo</p></div>
+                            <div className="border border-slate-200 dark:border-slate-700 rounded overflow-hidden mt-6">
+                              <div className="bg-slate-100 dark:bg-slate-800 p-2"><p className="font-semibold text-slate-600 dark:text-slate-300 text-xs text-center">Registro Operacional em Campo</p></div>
                               <table className="w-full text-xs text-center">
-                                <thead className="bg-slate-50 text-slate-500 border-b border-slate-200"><tr><th className="p-2 text-left pl-4">Indivíduo</th><th className="p-2">FC In/Fin</th><th className="p-2">SpO2 In/Fin</th><th className="p-2">PA In/Fin</th></tr></thead>
-                                <tbody className="divide-y divide-slate-100">
+                                <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700"><tr><th className="p-2 text-left pl-4">Indivíduo</th><th className="p-2">FC In/Fin</th><th className="p-2">SpO2 In/Fin</th><th className="p-2">PA In/Fin</th></tr></thead>
+                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                                   {viewingCircuit.details.attendanceList.filter(p => p.present).map(p => ( 
-                                    <tr key={p.id}><td className="p-2 text-left pl-4 font-medium text-slate-700">{p.name}</td><td className="p-2 text-slate-600">{p.fc_in || '-'} / {p.fc_out || '-'}</td><td className="p-2 text-slate-600">{p.spo2_in || '-'} / {p.spo2_out || '-'}</td><td className="p-2 text-slate-600">{p.pa_in || '-'} / {p.pa_out || '-'}</td></tr> 
+                                    <tr key={p.id}><td className="p-2 text-left pl-4 font-medium text-slate-700 dark:text-slate-300">{p.name}</td><td className="p-2 text-slate-600 dark:text-slate-400">{p.fc_in || '-'} / {p.fc_out || '-'}</td><td className="p-2 text-slate-600 dark:text-slate-400">{p.spo2_in || '-'} / {p.spo2_out || '-'}</td><td className="p-2 text-slate-600 dark:text-slate-400">{p.pa_in || '-'} / {p.pa_out || '-'}</td></tr> 
                                   ))}
                                 </tbody>
                               </table>
                             </div> 
                           )}
 
-                          <div><p className="font-semibold text-slate-500 uppercase text-xs mb-1 mt-6">Anotações Desenvolvimentais</p><p className="whitespace-pre-line text-slate-700">{viewingCircuit.details?.developmentNarrative || '-'}</p></div>
-                          <div><p className="font-semibold text-slate-500 uppercase text-xs mb-1">Conclusões Clínicas Sistêmicas</p><p className="whitespace-pre-line text-slate-700">{viewingCircuit.details?.dailyEvolution || '-'}</p></div>
-                          <div className="text-right pt-4 border-t border-slate-100"><p className="text-sm font-semibold text-slate-800">Contabilização Verificada: <span className="font-bold">{viewingCircuit.details?.attendanceCount || '-'}</span></p></div>
+                          <div><p className="font-semibold text-slate-500 dark:text-slate-400 uppercase text-xs mb-1 mt-6">Anotações Desenvolvimentais</p><p className="whitespace-pre-line text-slate-700 dark:text-slate-300">{viewingCircuit.details?.developmentNarrative || '-'}</p></div>
+                          <div><p className="font-semibold text-slate-500 dark:text-slate-400 uppercase text-xs mb-1">Conclusões Clínicas Sistêmicas</p><p className="whitespace-pre-line text-slate-700 dark:text-slate-300">{viewingCircuit.details?.dailyEvolution || '-'}</p></div>
+                          <div className="text-right pt-4 border-t border-slate-100 dark:border-slate-800"><p className="text-sm font-semibold text-slate-800 dark:text-slate-200">Contabilização Verificada: <span className="font-bold">{viewingCircuit.details?.attendanceCount || '-'}</span></p></div>
                         </div>
                       </div>
                     </div> 
@@ -1352,26 +1366,26 @@
               {/* === TELA: BIBLIOTECA === */}
               {currentView === 'library' && (
                 <div className="max-w-6xl mx-auto space-y-6">
-                  <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-4">
+                  <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-4 transition-colors">
                     <div className="relative w-full">
-                      <i className="fa-solid fa-magnifying-glass absolute left-4 top-3 text-slate-400"></i>
-                      <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Consultar repositório..." className="w-full pl-10 pr-4 py-2.5 rounded border border-slate-300 outline-none text-sm focus:border-brand-blue" />
+                      <i className="fa-solid fa-magnifying-glass absolute left-4 top-3 text-slate-400 dark:text-slate-500"></i>
+                      <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Consultar repositório..." className="w-full pl-10 pr-4 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100 transition-colors" />
                     </div>
                     <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-                      <button onClick={() => {setFilterCat('all'); setFilterSub('Todos');}} className={`px-4 py-1.5 rounded text-xs font-semibold whitespace-nowrap border ${filterCat === 'all' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'}`}>Exibir Tudo</button>
-                      {Object.keys(CATEGORIES).map(key => ( <button key={key} onClick={() => {setFilterCat(key); setFilterSub('Todos');}} className={`px-4 py-1.5 rounded text-xs font-semibold whitespace-nowrap border flex items-center gap-2 ${filterCat === key ? 'bg-brand-blue text-white border-brand-blue' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'}`}><i className={`fa-solid ${CATEGORIES[key].icon}`}></i> {CATEGORIES[key].shortTitle}</button> ))}
+                      <button onClick={() => {setFilterCat('all'); setFilterSub('Todos');}} className={`px-4 py-1.5 rounded text-xs font-semibold whitespace-nowrap border transition-colors ${filterCat === 'all' ? 'bg-slate-800 text-white border-slate-800 dark:bg-slate-700 dark:border-slate-700' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>Exibir Tudo</button>
+                      {Object.keys(CATEGORIES).map(key => ( <button key={key} onClick={() => {setFilterCat(key); setFilterSub('Todos');}} className={`px-4 py-1.5 rounded text-xs font-semibold whitespace-nowrap border flex items-center gap-2 transition-colors ${filterCat === key ? 'bg-brand-blue text-white border-brand-blue' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'}`}><i className={`fa-solid ${CATEGORIES[key].icon}`}></i> {CATEGORIES[key].shortTitle}</button> ))}
                     </div>
                     {filterCat !== 'all' && ( 
-                      <div className="flex gap-2 mt-1 overflow-x-auto pb-1 no-scrollbar items-center border-t border-slate-100 pt-3">
-                        <span className="text-[10px] font-bold uppercase text-slate-400 mr-2 shrink-0">Subgrupo:</span>
-                        {CATEGORIES[filterCat].subgroups.map(sub => ( <button key={sub} onClick={() => setFilterSub(sub)} className={`px-3 py-1 rounded text-xs font-medium whitespace-nowrap ${filterSub === sub ? 'bg-slate-200 text-slate-800' : 'bg-transparent text-slate-500 hover:bg-slate-100'}`}>{sub}</button> ))}
+                      <div className="flex gap-2 mt-1 overflow-x-auto pb-1 no-scrollbar items-center border-t border-slate-100 dark:border-slate-800 pt-3">
+                        <span className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 mr-2 shrink-0">Subgrupo:</span>
+                        {CATEGORIES[filterCat].subgroups.map(sub => ( <button key={sub} onClick={() => setFilterSub(sub)} className={`px-3 py-1 rounded text-xs font-medium whitespace-nowrap transition-colors ${filterSub === sub ? 'bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200' : 'bg-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>{sub}</button> ))}
                       </div> 
                     )}
                   </div>
 
                   {filteredExercises.length === 0 ? ( 
-                    <div className="bg-white py-16 border border-slate-200 rounded-xl shadow-sm text-center">
-                      <p className="text-sm font-medium text-slate-500">Nenhuma correspondência no acervo atual.</p>
+                    <div className="bg-white dark:bg-slate-900 py-16 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm text-center transition-colors">
+                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Nenhuma correspondência no acervo atual.</p>
                     </div> 
                   ) : ( 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -1381,13 +1395,13 @@
                         const isImage = ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i); 
                         const isVideo = ex.mediaUrl && ex.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i); 
                         return ( 
-                          <div key={ex.id} className="bg-white rounded-xl border border-slate-200 shadow-sm cursor-pointer overflow-hidden flex flex-col hover:border-slate-300 transition-colors" onClick={() => { setSelectedExercise(ex); setCurrentView('detail'); }}>
-                            <div className="h-36 bg-slate-100 flex items-center justify-center relative border-b border-slate-100">
-                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="text-slate-400"><i className="fa-solid fa-video text-2xl"></i></div> ) : ( <i className="fa-solid fa-dumbbell text-2xl text-slate-300"></i> )}
+                          <div key={ex.id} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer overflow-hidden flex flex-col hover:border-slate-300 dark:hover:border-slate-600 transition-colors" onClick={() => { setSelectedExercise(ex); setCurrentView('detail'); }}>
+                            <div className="h-36 bg-slate-100 dark:bg-slate-800 flex items-center justify-center relative border-b border-slate-100 dark:border-slate-800">
+                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="text-slate-400 dark:text-slate-500"><i className="fa-solid fa-video text-2xl"></i></div> ) : ( <i className="fa-solid fa-dumbbell text-2xl text-slate-300 dark:text-slate-600"></i> )}
                             </div>
                             <div className="p-4 flex-1 flex flex-col">
-                              <span className="text-[10px] font-semibold text-slate-500 mb-2 truncate">{ex.muscleGroup}</span>
-                              <h3 className="font-bold text-slate-800 text-sm leading-tight line-clamp-2">{ex.title}</h3>
+                              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-2 truncate">{ex.muscleGroup}</span>
+                              <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm leading-tight line-clamp-2">{ex.title}</h3>
                             </div>
                           </div> 
                         ) 
@@ -1405,6 +1419,17 @@
     const App = () => {
       const [session, setSession] = useState(null);
       const [loadingAuth, setLoadingAuth] = useState(true);
+      const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
+
+      useEffect(() => {
+        if (darkMode) {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+        }
+      }, [darkMode]);
 
       useEffect(() => {
         if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then((registrations) => { for (let reg of registrations) { reg.unregister(); } });
@@ -1419,10 +1444,10 @@
 
       const handleLogout = async () => { await supabaseClient.auth.signOut(); setSession(null); };
 
-      if (loadingAuth) return <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50"><div className="flex flex-col items-center"><img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-28 drop-shadow-sm" onError={(e) => e.target.style.display='none'} /><p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-6">Autenticando acesso...</p></div><div className="flex gap-2 mt-4"><div className="w-2 h-2 rounded-full bg-slate-300 animate-pulse"></div><div className="w-2 h-2 rounded-full bg-slate-400 animate-pulse" style={{animationDelay: '0.2s'}}></div><div className="w-2 h-2 rounded-full bg-slate-500 animate-pulse" style={{animationDelay: '0.4s'}}></div></div></div>;
+      if (loadingAuth) return <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-300"><div className="flex flex-col items-center"><img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-28 drop-shadow-sm" onError={(e) => e.target.style.display='none'} /><p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-6">Autenticando acesso...</p></div><div className="flex gap-2 mt-4"><div className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600 animate-pulse"></div><div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-pulse" style={{animationDelay: '0.2s'}}></div><div className="w-2 h-2 rounded-full bg-slate-500 dark:bg-slate-400 animate-pulse" style={{animationDelay: '0.4s'}}></div></div></div>;
       
       if (!session) return <LoginPage onLogin={setSession} />;
-      return <Dashboard session={session} onLogout={handleLogout} updateSessionData={setSession} />;
+      return <Dashboard session={session} onLogout={handleLogout} updateSessionData={setSession} darkMode={darkMode} setDarkMode={setDarkMode} />;
     };
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
