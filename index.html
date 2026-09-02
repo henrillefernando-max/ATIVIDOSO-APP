@@ -423,7 +423,7 @@
 
       const handleSendEmail = () => {
          const subject = "ATIVIDOSO - Lembrete de Planejamento da Aula";
-         const body = `Olá Monitor(a),\n\nLembramos que o seu grupo está responsável por realizar a próxima atividade na quadra.\n\nPor favor, acesse a plataforma ATIVIDOSO para realizar o planejamento prévio e enviar a aula na aba 'Aulas e Relatórios'.\n\nAtenciosamente,\nCoordenação ATIVIDOSO`;
+         const body = `Olá Monitor(a),\n\nLembramos que o seu grupo está responsável por realizar a próxima atividade no atividoso.\n\nPor favor, acesse a plataforma ATIVIDOSO para realizar o planejamento prévio e enviar a atividade na aba 'Aulas e Relatórios'.\n\nAtenciosamente,\nCoordenação ATIVIDOSO`;
          const emailLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
          window.open(emailLink, '_blank');
       }; 
@@ -773,8 +773,8 @@
                       <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blob-shape rotate-45 mix-blend-overlay"></div>
                       <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shrink-0 border border-white/30 text-3xl"><i className="fa-solid fa-bell animate-bounce"></i></div>
                       <div className="text-center md:text-left relative z-10 flex-1">
-                        <h2 className="text-xl sm:text-2xl font-black mb-1">Atenção, {session.team_group}! É a vez de vocês! ✅</h2>
-                        <p className="text-emerald-50 font-semibold mb-3">A agenda indica que o seu grupo está responsável pela próxima aula na quadra.</p>
+                        <h2 className="text-xl sm:text-2xl font-black mb-1">Atenção, {session.team_group}! É a vez de vocês!</h2>
+                        <p className="text-emerald-50 font-semibold mb-3">A agenda indica que o seu grupo está responsável pela próxima atividade no ATIVIDOSO.</p>
                         <div className="bg-white/10 p-4 rounded-xl border border-white/20 inline-block text-left w-full sm:w-auto">
                           <p className="text-sm"><strong className="uppercase tracking-widest text-[10px] text-emerald-200 block mb-1">Data e Tema</strong></p>
                           <p className="font-bold">{upcomingActivity.date} — {upcomingActivity.title}</p>
@@ -1148,7 +1148,7 @@
                     <div className="animate-fade-in bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
                       <div className="bg-slate-50 p-6 sm:p-8 border-b border-slate-100 flex items-center gap-4">
                         <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-slate-400 text-xl shrink-0"><i className="fa-solid fa-calendar-check"></i></div>
-                        <div><h2 className="text-xl font-black text-slate-800">Resumo Semestral 2026.2</h2><p className="text-slate-500 text-sm font-medium">Cronograma de atividades na quadra.</p></div>
+                        <div><h2 className="text-xl font-black text-slate-800">Resumo Semestral 2026.2</h2><p className="text-slate-500 text-sm font-medium">Cronograma de atividades no atividoso.</p></div>
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
@@ -1175,7 +1175,7 @@
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-6 gap-4">
                           <div>
                             <h2 className="text-2xl font-black text-slate-800 flex items-center gap-3"><i className="fa-solid fa-route text-emerald-500 bg-emerald-50 w-10 h-10 rounded-xl flex items-center justify-center"></i> Ficha de Planejamento da Aula</h2>
-                            <p className="text-sm font-semibold text-slate-500 mt-2">Defina os exercícios e responsáveis antes de ir para a quadra.</p>
+                            <p className="text-sm font-semibold text-slate-500 mt-2">Defina os exercícios e responsáveis antes de ir para a atividade.</p>
                           </div>
                         </div>
                         <div className="space-y-5">
@@ -1288,7 +1288,7 @@
                   {circuitMode === 'history' && ( 
                     <div className="animate-fade-in">
                       {savedCircuits.length === 0 ? ( 
-                        <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-[3rem] border border-slate-100 shadow-sm px-6"><div className="w-32 h-32 rounded-full bg-blue-50 flex items-center justify-center mb-6 relative"><div className="absolute inset-0 bg-brand-blue/10 animate-ping rounded-full"></div><i className="fa-solid fa-folder-open text-5xl text-brand-blue relative z-10"></i></div><h3 className="text-2xl font-black text-slate-800 mb-2 tracking-tight">O histórico está limpo</h3><p className="text-slate-500 font-medium max-w-sm mx-auto">Vá na aba "Planejar Aula" para criar o primeiro registro e começar a preencher a biblioteca de aulas!</p></div> 
+                        <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-[3rem] border border-slate-100 shadow-sm px-6"><div className="w-32 h-32 rounded-full bg-blue-50 flex items-center justify-center mb-6 relative"><div className="absolute inset-0 bg-brand-blue/10 animate-ping rounded-full"></div><i className="fa-solid fa-folder-open text-5xl text-brand-blue relative z-10"></i></div><h3 className="text-2xl font-black text-slate-800 mb-2 tracking-tight">O histórico está limpo</h3><p className="text-slate-500 font-medium max-w-sm mx-auto">Vá na aba "Planejar Aula" para criar o primeiro registro e começar a preencher a biblioteca de atividades!</p></div> 
                       ) : ( 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                           {savedCircuits.map(circ => { 
