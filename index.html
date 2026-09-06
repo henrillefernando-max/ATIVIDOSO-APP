@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta name="google" content="notranslate">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ATIVIDOSO</title>
+  <title>ATIVIDOSO - Extensão Universitária</title>
   
-  <link rel="manifest" href="manifest.json">
   <meta name="application-name" content="ATIVIDOSO">
-  
-  <link rel="icon" href="Logo_ATV_2024_Colorido_v2.png?v=3" type="image/png">
-  <link rel="apple-touch-icon" href="icone-app.png?v=3">
-  <meta name="apple-mobile-web-app-title" content="ATIVIDOSO">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <link rel="icon" href="Logo_ATV_2024_Colorido_v2.png" type="image/png">
+  <link rel="apple-touch-icon" href="Logo_ATV_2024_Colorido_v2.png">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -22,7 +19,7 @@
       theme: { 
         extend: { 
           colors: { 
-            brand: { blue: '#202b5c', dark: '#161e42', light: '#4d60b5', red: '#e63946', redDark: '#c52833' } 
+            brand: { blue: '#1e3a8a', dark: '#0f172a', light: '#3b82f6', red: '#e11d48', redDark: '#be123c' } 
           } 
         } 
       } 
@@ -44,17 +41,19 @@
     .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
   </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased selection:bg-brand-red selection:text-white transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 antialiased selection:bg-brand-red selection:text-white transition-colors duration-300">
   <div id="root">
-    <div class="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
+    <div class="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 relative overflow-hidden transition-colors duration-300">
       <div class="relative z-10 flex flex-col items-center">
-        <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" class="h-28 drop-shadow-sm" onerror="this.style.display='none'" />
-        <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-6">Carregando plataforma...</p>
-      </div>
-      <div class="flex gap-2 mt-4 relative z-10">
-        <div class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600 animate-pulse"></div>
-        <div class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-pulse" style="animation-delay: 0.2s"></div>
-        <div class="w-2 h-2 rounded-full bg-slate-500 dark:bg-slate-400 animate-pulse" style="animation-delay: 0.4s"></div>
+        <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg border border-slate-100 p-4 mb-6">
+          <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" class="w-full h-full object-contain" onerror="this.style.display='none'" />
+        </div>
+        <h1 class="text-xl font-black text-slate-800 dark:text-white tracking-tight">ATIVIDOSO <span class="font-light text-slate-400">Plataforma</span></h1>
+        <div class="flex gap-2 mt-6">
+          <div class="w-2 h-2 rounded-full bg-brand-blue animate-pulse"></div>
+          <div class="w-2 h-2 rounded-full bg-brand-light animate-pulse" style="animation-delay: 0.2s"></div>
+          <div class="w-2 h-2 rounded-full bg-brand-dark animate-pulse" style="animation-delay: 0.4s"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -66,7 +65,7 @@
     const SUPABASE_ANON_KEY = "sb_publishable_WtX-V75sKhWRnm7G_x6W1Q_fzuagXGH"; 
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // BILIOTECA DO ATIVIDOSO COM VÍDEOS DO YOUTUBE
+    // --- BILIOTECA DO ATIVIDOSO (FOCO EM IDOSOS) COM YOUTUBE ---
     const PRELOADED_EXERCISES = [
       { id: 'pre_1', title: 'Fortalecimento de Pernas na Cadeira', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '3 séries de 10', instructions: '1. Sente-se com a postura reta em uma cadeira firme.\n2. Estique uma perna de cada vez, contraindo a coxa.\n3. Segure por 2 segundos e retorne lentamente.', precautions: 'Não estenda o joelho além do ponto de conforto para evitar dor nas articulações.', videoUrl: 'https://www.youtube.com/watch?v=8CE4CGCXyAA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
       { id: 'pre_2', title: 'Mobilidade Articular de Ombros', category: 'mmss', muscleGroup: 'Ombro', difficulty: 'Iniciante / Leve', equipment: 'Cabo de Vassoura ou Bastão', dosage: '2 séries de 12', instructions: '1. Em pé ou sentado, segure o bastão com as duas mãos, mais largas que a largura dos ombros.\n2. Eleve o bastão até a altura do rosto ou acima da cabeça.\n3. Desça controladamente.', precautions: 'Idosos com bursite ou tendinite devem elevar apenas até a linha do ombro (90 graus).', videoUrl: 'https://www.youtube.com/watch?v=A2wqkcjzIvk', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
@@ -146,23 +145,25 @@
       };
 
       return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-slate-950 p-6 transition-colors duration-300">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-md p-8 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 animate-fade-in text-slate-800 dark:text-slate-100 transition-colors duration-300">
+        <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-slate-900 p-6 transition-colors duration-300">
+          <div className="bg-white dark:bg-slate-800 w-full max-w-md p-8 rounded-2xl shadow-xl border-t-8 border-brand-blue animate-fade-in text-slate-800 dark:text-slate-100 transition-colors duration-300">
             <div className="text-center mb-8">
-              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-20 mx-auto mb-4 object-contain" onError={(e) => e.target.style.display='none'} />
-              <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Acesso Restrito</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Plataforma Clínica Atividoso</p>
+              <div className="w-20 h-20 mx-auto bg-white rounded-full flex items-center justify-center p-2 shadow-sm border border-slate-100 mb-4">
+                 <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="w-full h-full object-contain" onError={(e) => e.target.style.display='none'} />
+              </div>
+              <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Acesso Restrito</h2>
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-1">Plataforma Clínica Atividoso</p>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
                 <>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Nome Completo</label>
-                    <input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100" placeholder="Nome completo" />
+                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide">Nome Completo</label>
+                    <input type="text" value={fullName} onChange={e=>setFullName(e.target.value)} required className="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100" placeholder="Nome completo" />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Grupo de Extensão</label>
-                    <select value={teamGroup} onChange={e=>setTeamGroup(e.target.value)} className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100">
+                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide">Grupo de Extensão</label>
+                    <select value={teamGroup} onChange={e=>setTeamGroup(e.target.value)} className="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100">
                       <option value="E1">Grupo E1</option>
                       <option value="E2">Grupo E2</option>
                       <option value="E3">Grupo E3</option>
@@ -172,24 +173,24 @@
                 </>
               )}
               <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">E-mail Institucional ou Pessoal</label>
-                <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100" placeholder="usuario@email.com" />
+                <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide">E-mail Institucional ou Pessoal</label>
+                <input type="email" value={email} onChange={e=>setEmail(e.target.value)} required className="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100" placeholder="usuario@email.com" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Senha</label>
+                <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1 uppercase tracking-wide">Senha</label>
                 <div className="relative">
-                  <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-4 pr-10 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100" placeholder="••••••••" />
+                  <input type={showPassword ? "text" : "password"} value={password} onChange={e=>setPassword(e.target.value)} required minLength="6" className="w-full pl-4 pr-10 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100" placeholder="••••••••" />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-2.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"><i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i></button>
                 </div>
               </div>
                 
-              {error && <div className="bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 p-3 rounded-lg text-xs font-semibold border border-rose-200 dark:border-rose-800">{error}</div>}
-              <button type="submit" disabled={loading} className="w-full bg-brand-blue hover:bg-brand-dark dark:hover:bg-brand-light text-white font-semibold py-3 rounded-lg transition-colors mt-2 text-sm">
+              {error && <div className="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-lg text-xs font-bold border border-red-200 dark:border-red-800/50 text-center">{error}</div>}
+              <button type="submit" disabled={loading} className="w-full bg-brand-blue hover:bg-brand-dark dark:hover:bg-brand-light text-white font-bold py-3 rounded-lg transition-colors mt-2 text-sm shadow-md">
                 {loading ? <i className="fa-solid fa-spinner fa-spin"></i> : (isLogin ? 'Entrar no Sistema' : 'Registrar Usuário')}
               </button>
             </form>
-            <div className="mt-6 text-center pt-4 border-t border-slate-100 dark:border-slate-800">
-              <button onClick={() => {setIsLogin(!isLogin); setError('');}} className="text-xs font-medium text-brand-blue dark:text-brand-light hover:underline">
+            <div className="mt-6 text-center pt-5 border-t border-slate-100 dark:border-slate-700">
+              <button onClick={() => {setIsLogin(!isLogin); setError('');}} className="text-xs font-bold text-brand-blue dark:text-brand-light hover:underline">
                 {isLogin ? "Novo membro? Criar cadastro." : "Já possui cadastro? Acessar."}
               </button>
             </div>
@@ -674,8 +675,8 @@
       };
 
       const NavBtn = ({v, icon, text}) => ( 
-        <button onClick={() => handleNavClick(v)} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === v ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue dark:text-brand-light font-semibold border-l-4 border-brand-blue dark:border-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-l-4 border-transparent'}`}>
-          <i className={`fa-solid ${icon} w-5 text-center`}></i> {text}
+        <button onClick={() => handleNavClick(v)} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-black uppercase tracking-widest w-full transition-all ${currentView === v ? 'bg-brand-blue text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+          <i className={`fa-solid ${icon} w-5 text-center text-lg`}></i> {text}
         </button> 
       );
 
@@ -686,73 +687,77 @@
             <div className="fixed inset-0 bg-slate-900/50 dark:bg-slate-900/80 z-40 md:hidden transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>
           )}
           
-          <aside className={`w-64 bg-white dark:bg-slate-900 flex flex-col h-screen fixed md:relative z-50 transition-all duration-200 ease-in-out border-r border-slate-200 dark:border-slate-800 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-            <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden absolute top-4 right-4 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 w-8 h-8 flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark"></i></button>
+          <aside className={`w-72 bg-white dark:bg-slate-900 flex flex-col h-screen fixed md:relative z-50 transition-all duration-200 ease-in-out border-r border-slate-200 dark:border-slate-800 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+            <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden absolute top-4 right-4 text-slate-400 dark:text-slate-500 hover:text-brand-red w-8 h-8 flex items-center justify-center transition-colors"><i className="fa-solid fa-xmark text-xl"></i></button>
 
-            <div className="p-6 flex flex-col items-center justify-center gap-2 mt-2">
-              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-12 object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
+            <div className="p-6 flex flex-col items-center justify-center gap-2 mt-4 border-b border-slate-100 dark:border-slate-800">
+              <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-16 object-contain drop-shadow-sm" onError={(e) => { e.target.style.display = 'none'; }} />
+              <h2 className="font-black text-brand-dark dark:text-white mt-2 tracking-tight">ATIV<span className="text-brand-red">IDOSO</span></h2>
             </div>
             
-            <div className="px-5 pb-5 mb-2 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors p-2 rounded-lg mx-2" onClick={() => handleNavClick('perfil')}>
+            <div className="p-6 pb-2 mb-2 flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleNavClick('perfil')}>
               {session.avatar_url ? ( 
-                <img src={session.avatar_url} className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 shrink-0"/> 
+                <img src={session.avatar_url} className="w-12 h-12 rounded-full object-cover border-2 border-brand-blue shrink-0 shadow-sm"/> 
               ) : ( 
-                <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold shadow-inner shrink-0">{session.full_name.charAt(0)}</div> 
+                <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-blue to-brand-light flex items-center justify-center text-white font-black text-xl shadow-inner shrink-0">{session.full_name.charAt(0)}</div> 
               )}
               <div className="overflow-hidden">
-                <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-tight truncate">{session.full_name}</p>
+                <p className="text-sm font-black text-slate-800 dark:text-slate-100 leading-tight truncate">{session.full_name}</p>
                 <div className="flex gap-1 mt-1">
-                  <span className="text-[10px] text-brand-blue dark:text-brand-light font-medium bg-blue-50 dark:bg-blue-900/30 px-1.5 py-0.5 rounded border border-blue-100 dark:border-blue-800 inline-block">{session.role}</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-brand-blue dark:text-brand-light bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded border border-blue-100 dark:border-blue-800 inline-block">{session.role}</span>
                 </div>
               </div>
             </div>
 
-            <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto">
-              <p className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2 pl-3">Módulos</p>
-              <NavBtn v="home" icon="fa-desktop" text="Painel do Monitor" />
-              <NavBtn v="perfil" icon="fa-user" text="Configurações de Conta" />
+            <nav className="flex-1 px-4 py-4 flex flex-col gap-1.5 overflow-y-auto">
+              <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest mb-2 pl-3">Módulos</p>
+              <NavBtn v="home" icon="fa-house-chimney-medical" text="Painel do Monitor" />
+              <NavBtn v="perfil" icon="fa-user-astronaut" text="Conta e Perfil" />
               
-              <p className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2 mt-6 pl-3">Clínico</p>
-              <NavBtn v="library" icon="fa-book-medical" text="Acervo de Exercícios" />
-              <NavBtn v="circuito" icon="fa-clipboard-check" text="Aulas e Diário Clínico" />
+              <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest mb-2 mt-6 pl-3">Planejamento e Prática</p>
+              <NavBtn v="library" icon="fa-dumbbell" text="Acervo Geriátrico" />
+              <NavBtn v="circuito" icon="fa-clipboard-list" text="Aulas e Diários" />
               
-              <p className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2 mt-6 pl-3">Ações</p>
-              <button onClick={() => { handleNavClick('cadastro'); setFormStatus({loading: false, success: false}); }} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'cadastro' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue dark:text-brand-light border-l-4 border-brand-blue dark:border-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-l-4 border-transparent'}`}><i className="fa-solid fa-plus w-5 text-center"></i> Cadastrar Exercício</button>
+              <p className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest mb-2 mt-6 pl-3">Ações</p>
+              <button onClick={() => { handleNavClick('cadastro'); setFormStatus({loading: false, success: false}); }} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-black uppercase tracking-widest w-full transition-all ${currentView === 'cadastro' ? 'bg-brand-red text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}><i className="fa-solid fa-circle-plus w-5 text-center text-lg"></i> Novo Exercício</button>
               
               {isAdmin && (
                 <>
-                  <button onClick={() => handleNavClick('aprovacoes')} className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'aprovacoes' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue dark:text-brand-light border-l-4 border-brand-blue dark:border-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-l-4 border-transparent'}`}>
-                    <div className="flex items-center gap-3"><i className="fa-solid fa-list-check w-5 text-center"></i> Análise Pendente</div>
-                    {pendingCount > 0 && <span className="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold">{pendingCount}</span>}
+                  <button onClick={() => handleNavClick('aprovacoes')} className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-black uppercase tracking-widest w-full transition-all ${currentView === 'aprovacoes' ? 'bg-amber-500 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+                    <div className="flex items-center gap-3"><i className="fa-solid fa-check-double w-5 text-center text-lg"></i> Aprovações</div>
+                    {pendingCount > 0 && <span className="text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-amber-900 text-amber-600 dark:text-amber-100 font-black">{pendingCount}</span>}
                   </button>
-                  <button onClick={() => handleNavClick('equipe')} className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'equipe' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue dark:text-brand-light border-l-4 border-brand-blue dark:border-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-l-4 border-transparent'}`}>
-                    <div className="flex items-center gap-3"><i className="fa-solid fa-users w-5 text-center"></i> Gestão de Equipe</div>
+                  <button onClick={() => handleNavClick('equipe')} className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-black uppercase tracking-widest w-full transition-all ${currentView === 'equipe' ? 'bg-slate-800 dark:bg-slate-700 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+                    <div className="flex items-center gap-3"><i className="fa-solid fa-users-gear w-5 text-center text-lg"></i> Gestão de Equipe</div>
                   </button>
                 </>
               )}
             </nav>
-            <div className="p-4 border-t border-slate-200 dark:border-slate-800">
-              <button onClick={onLogout} className="flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-100 w-full transition-colors"><i className="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i> Encerrar Sessão</button>
+            <div className="p-6 border-t border-slate-200 dark:border-slate-800">
+              <button onClick={onLogout} className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:bg-brand-red hover:text-white w-full transition-colors"><i className="fa-solid fa-arrow-right-from-bracket text-lg"></i> Sair do App</button>
             </div>
           </aside>
 
           <main className="flex-1 flex flex-col h-screen overflow-hidden w-full bg-slate-50 dark:bg-slate-950 relative transition-colors duration-300">
-            <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 z-10 transition-colors duration-300">
-              <div className="flex items-center">
-                <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden w-8 h-8 text-slate-500 dark:text-slate-400 flex items-center justify-center mr-4"><i className="fa-solid fa-bars text-lg"></i></button>
-                <h2 className="font-semibold text-slate-800 dark:text-slate-100 text-lg tracking-tight">
-                  {currentView === 'home' && "Painel Geral"}
-                  {currentView === 'perfil' && "Configurações de Conta"}
-                  {currentView === 'library' && "Acervo Clínico"}
-                  {currentView === 'detail' && "Documento do Exercício"}
-                  {currentView === 'cadastro' && "Cadastro de Conteúdo"}
-                  {currentView === 'aprovacoes' && "Central de Análise"}
-                  {currentView === 'circuito' && "Módulo de Aulas e Diário"}
-                  {currentView === 'equipe' && "Controle de Permissões"}
-                </h2>
+            <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 sm:px-8 flex items-center justify-between shrink-0 z-10 transition-colors duration-300">
+              <div className="flex items-center gap-4">
+                <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-brand-blue dark:text-brand-light transition-colors"><i className="fa-solid fa-bars text-lg"></i></button>
+                <div>
+                  <h2 className="font-black text-slate-800 dark:text-slate-100 text-xl sm:text-2xl tracking-tight leading-none">
+                    {currentView === 'home' && "Início e Mural"}
+                    {currentView === 'perfil' && "Meu Perfil"}
+                    {currentView === 'library' && "Acervo de Exercícios"}
+                    {currentView === 'detail' && "Detalhes do Exercício"}
+                    {currentView === 'cadastro' && "Cadastrar Conteúdo"}
+                    {currentView === 'aprovacoes' && "Central de Aprovações"}
+                    {currentView === 'circuito' && "Aulas e Diários Clínicos"}
+                    {currentView === 'equipe' && "Gerenciar Equipe"}
+                  </h2>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 hidden sm:block">Painel de Gerenciamento - Projeto ATIVIDOSO</p>
+                </div>
               </div>
-              <button onClick={() => setDarkMode(!darkMode)} className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center hover:text-brand-blue dark:hover:text-brand-light transition-colors">
-                <i className={`fa-solid ${darkMode ? 'fa-sun' : 'fa-moon'}`}></i>
+              <button onClick={() => setDarkMode(!darkMode)} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center hover:text-brand-blue dark:hover:text-brand-light transition-colors shadow-inner">
+                <i className={`fa-solid ${darkMode ? 'fa-sun' : 'fa-moon'} text-lg`}></i>
               </button>
             </header>
             
@@ -761,26 +766,27 @@
               {/* === TELA: PERFIL === */}
               {currentView === 'perfil' && (
                 <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
-                  <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
-                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 border-b border-slate-100 dark:border-slate-800 pb-3">Dados Pessoais</h3>
-                    {profileStatus && <div className="mb-6 p-3 bg-slate-50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium">{profileStatus}</div>}
-                    <form onSubmit={handleSaveProfile} className="space-y-6">
-                      <div className="flex flex-col sm:flex-row items-center gap-6 mb-6">
+                  <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-[2rem] shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                    <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-8 border-b border-slate-100 dark:border-slate-800 pb-4"><i className="fa-solid fa-user-astronaut text-brand-blue mr-3"></i> Configurações do Perfil</h3>
+                    {profileStatus && <div className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 rounded-xl text-sm font-bold flex items-center gap-2"><i className="fa-solid fa-circle-check"></i> {profileStatus}</div>}
+                    <form onSubmit={handleSaveProfile} className="space-y-8">
+                      <div className="flex flex-col sm:flex-row items-center gap-6 mb-6 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700/50">
                         <div className="relative">
-                          {session.avatar_url ? ( <img src={session.avatar_url} className="w-20 h-20 rounded-full object-cover border border-slate-200 dark:border-slate-700" /> ) : ( <div className="w-20 h-20 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center text-3xl font-bold">{session.full_name.charAt(0)}</div> )}
+                          {session.avatar_url ? ( <img src={session.avatar_url} className="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md" /> ) : ( <div className="w-24 h-24 rounded-full bg-brand-blue text-white flex items-center justify-center text-4xl font-black shadow-inner">{session.full_name.charAt(0)}</div> )}
+                          <div className="absolute bottom-0 right-0 bg-white dark:bg-slate-700 p-2 rounded-full shadow-md border border-slate-200 dark:border-slate-600 text-slate-400 dark:text-slate-300"><i className="fa-solid fa-camera text-xs"></i></div>
                         </div>
                         <div className="flex-1 w-full">
-                          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">Substituir Imagem</label>
-                          <input type="file" accept="image/*" onChange={e => setProfileAvatarFile(e.target.files[0])} className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-400 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-slate-100 dark:file:bg-slate-800 file:text-slate-700 dark:file:text-slate-300 cursor-pointer" />
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Alterar Foto de Perfil</label>
+                          <input type="file" accept="image/*" onChange={e => setProfileAvatarFile(e.target.files[0])} className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[10px] file:uppercase file:tracking-widest file:font-black file:bg-brand-blue file:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" />
                         </div>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">Identificação de Exibição</label><input type="text" value={profileForm.full_name} onChange={e=>setProfileForm({...profileForm, full_name: e.target.value})} className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100" required /></div>
+                        <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Nome de Exibição</label><input type="text" value={profileForm.full_name} onChange={e=>setProfileForm({...profileForm, full_name: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm font-bold transition-colors text-slate-800 dark:text-slate-100 shadow-sm" required /></div>
                         <div>
-                          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">Vínculo com Grupo de Extensão</label>
-                          <select value={profileForm.team_group} onChange={e=>setProfileForm({...profileForm, team_group: e.target.value})} className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100">
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Seu Grupo na Quadra</label>
+                          <select value={profileForm.team_group} onChange={e=>setProfileForm({...profileForm, team_group: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm font-bold transition-colors text-slate-800 dark:text-slate-100 shadow-sm">
                             <option value="">Selecione...</option>
-                            <option value="Nenhum">Não aplicável</option>
+                            <option value="Nenhum">Não aplicável / Coordenação</option>
                             <option value="E1">Grupo E1</option>
                             <option value="E2">Grupo E2</option>
                             <option value="E3">Grupo E3</option>
@@ -788,8 +794,8 @@
                           </select>
                         </div>
                       </div>
-                      <div className="pt-6 flex justify-end">
-                        <button type="submit" className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium rounded-lg transition-colors text-sm">Atualizar Registros</button>
+                      <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+                        <button type="submit" className="w-full sm:w-auto px-10 py-4 bg-brand-blue hover:bg-brand-dark dark:hover:bg-brand-light text-white font-black uppercase tracking-widest rounded-xl transition-all shadow-lg hover:-translate-y-1 text-sm flex items-center justify-center gap-3"><i className="fa-solid fa-floppy-disk"></i> Salvar Alterações</button>
                       </div>
                     </form>
                   </div>
@@ -798,78 +804,92 @@
 
               {/* === TELA: DASHBOARD / HOME === */}
               {currentView === 'home' && (
-                <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
-                  <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
-                    <h1 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">Painel do Monitor. Bem-vindo(a), {session.full_name.split(' ')[0]}.</h1>
-                    <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">Sistema de gerenciamento das atividades de extensão.</p>
+                <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
+                  <div className="bg-gradient-to-r from-brand-blue to-brand-dark p-8 sm:p-10 rounded-[2rem] text-white shadow-[0_10px_30px_-10px_rgba(32,43,92,0.4)] relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+                    <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                       <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center text-3xl font-black border border-white/20 shadow-inner shrink-0">{session.full_name.charAt(0)}</div>
+                       <div className="text-center sm:text-left">
+                          <h1 className="text-3xl sm:text-4xl font-black mb-2 tracking-tight">Olá, {session.full_name.split(' ')[0]}!</h1>
+                          <p className="text-blue-100 font-medium text-sm sm:text-base">Bem-vindo(a) ao painel de controle do projeto de extensão ATIVIDOSO.</p>
+                       </div>
+                    </div>
                   </div>
                   
                   {upcomingActivity && (
-                    <div className={`border-l-4 p-6 rounded-xl shadow-sm flex flex-col md:flex-row items-center md:items-start gap-4 transition-colors ${isMyTurn ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-500' : 'bg-white dark:bg-slate-900 border-brand-blue dark:border-brand-light'}`}>
+                    <div className={`border-l-8 p-8 rounded-[2rem] shadow-sm flex flex-col md:flex-row items-center md:items-start gap-6 transition-colors ${isMyTurn ? 'bg-emerald-500 border-emerald-700 text-white shadow-[0_10px_30px_-10px_rgba(16,185,129,0.4)]' : 'bg-white dark:bg-slate-900 border-brand-blue dark:border-brand-light'}`}>
+                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shrink-0 ${isMyTurn ? 'bg-white/20 border border-white/30' : 'bg-blue-50 dark:bg-blue-900/30 text-brand-blue dark:text-brand-light'}`}>
+                         <i className={`fa-solid ${isMyTurn ? 'fa-bell animate-bounce' : 'fa-calendar-day'}`}></i>
+                      </div>
                       <div className="text-center md:text-left flex-1">
-                        <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">
-                          {isMyTurn ? '🚨 Atenção: É a vez do seu grupo!' : 'Próxima Atividade da Agenda'}
+                        <h3 className={`text-xl sm:text-2xl font-black mb-2 ${isMyTurn ? 'text-white' : 'text-slate-800 dark:text-slate-100'}`}>
+                          {isMyTurn ? `Atenção, ${session.team_group}! É a vez de vocês.` : 'Próxima Atividade da Agenda'}
                         </h3>
-                        <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
-                          Responsável pela documentação: <strong className="text-brand-blue dark:text-brand-light">{upcomingActivity.resp}</strong>
+                        <p className={`font-medium text-sm mb-4 ${isMyTurn ? 'text-emerald-50' : 'text-slate-600 dark:text-slate-400'}`}>
+                          Responsável pela aula: <strong>{upcomingActivity.resp}</strong>
                         </p>
-                        <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg border border-slate-100 dark:border-slate-700 mt-3 inline-block">
-                          <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-0.5 font-semibold">Data e Tema</p>
-                          <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{upcomingActivity.date} — {upcomingActivity.title}</p>
+                        <div className={`p-4 rounded-xl inline-block text-left ${isMyTurn ? 'bg-white/10 border border-white/20' : 'bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700'}`}>
+                          <p className={`text-[10px] uppercase tracking-widest font-black mb-1 ${isMyTurn ? 'text-emerald-200' : 'text-slate-400'}`}>Data e Tema</p>
+                          <p className={`text-sm font-bold ${isMyTurn ? 'text-white' : 'text-slate-800 dark:text-slate-200'}`}>{upcomingActivity.date} — {upcomingActivity.title}</p>
                         </div>
                       </div>
                       {isMyTurn && (
-                        <button onClick={() => handleNavClick('circuito', 'plan')} className="w-full md:w-auto px-5 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors mt-2 md:mt-0 text-sm">
-                          Prosseguir ao Planejamento
+                        <button onClick={() => handleNavClick('circuito', 'plan')} className="w-full md:w-auto px-8 py-4 bg-white text-emerald-600 font-black uppercase tracking-widest rounded-xl shadow-lg hover:bg-slate-50 transition-colors mt-4 md:mt-0 text-sm self-center hover:-translate-y-1">
+                          Iniciar Planejamento
                         </button>
                       )}
                     </div>
                   )}
 
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-2 space-y-6">
-                      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
-                        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
-                          <i className="fa-solid fa-bullhorn text-slate-400 dark:text-slate-500"></i>
-                          <h3 className="font-bold text-slate-800 dark:text-slate-100">Mural de Avisos</h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-2 space-y-8">
+                      <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
+                        <div className="px-8 py-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-4 bg-slate-50 dark:bg-slate-800/30">
+                          <div className="w-12 h-12 bg-brand-red/10 text-brand-red rounded-full flex items-center justify-center text-xl"><i className="fa-solid fa-bullhorn"></i></div>
+                          <h3 className="text-xl font-black text-slate-800 dark:text-slate-100">Mural da Coordenação</h3>
                         </div>
-                        <div className="p-6 space-y-6">
+                        <div className="p-8 space-y-8">
                           {isAdmin && (
-                            <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-lg border border-slate-200 dark:border-slate-700 mb-6">
-                              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Inserir Novo Registro</p>
-                              <form onSubmit={handlePostAnnouncement} className="space-y-3">
-                                <input type="text" placeholder="Título do comunicado" value={newAnnouncement.title} onChange={e=>setNewAnnouncement({...newAnnouncement, title: e.target.value})} required className="w-full px-4 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" />
-                                <textarea placeholder="Conteúdo da mensagem..." value={newAnnouncement.content} onChange={e=>setNewAnnouncement({...newAnnouncement, content: e.target.value})} required className="w-full px-4 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" rows="2"></textarea>
-                                <div className="flex flex-col sm:flex-row gap-3">
-                                  <input type="url" placeholder="URL Referência (Opcional)" value={newAnnouncement.link_url} onChange={e=>setNewAnnouncement({...newAnnouncement, link_url: e.target.value})} className="flex-1 px-4 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" />
-                                  <button type="submit" className="px-5 py-2 bg-slate-800 dark:bg-slate-700 text-white font-medium rounded hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors text-sm">Registrar</button>
+                            <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 mb-8">
+                              <p className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-4"><i className="fa-solid fa-pen-to-square mr-2"></i>Postar Novo Aviso</p>
+                              <form onSubmit={handlePostAnnouncement} className="space-y-4">
+                                <input type="text" placeholder="Título do comunicado..." value={newAnnouncement.title} onChange={e=>setNewAnnouncement({...newAnnouncement, title: e.target.value})} required className="w-full px-5 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-sm" />
+                                <textarea placeholder="Escreva a mensagem aqui..." value={newAnnouncement.content} onChange={e=>setNewAnnouncement({...newAnnouncement, content: e.target.value})} required className="w-full px-5 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none text-sm font-medium focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-sm" rows="3"></textarea>
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                  <input type="url" placeholder="Link de Referência (Opcional)" value={newAnnouncement.link_url} onChange={e=>setNewAnnouncement({...newAnnouncement, link_url: e.target.value})} className="flex-1 px-5 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none text-sm font-medium focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-sm" />
+                                  <button type="submit" className="px-8 py-3 bg-brand-blue hover:bg-brand-dark text-white font-black uppercase tracking-widest rounded-xl transition-colors text-xs shadow-md">Publicar</button>
                                 </div>
                               </form>
                             </div>
                           )}
-                          <div className="space-y-4">
+                          <div className="space-y-6">
                             {announcements.length === 0 ? ( 
-                              <div className="text-center py-8 text-slate-400 dark:text-slate-500 text-sm">Nenhum aviso emitido pela coordenação.</div> 
+                              <div className="text-center py-12 text-slate-400 dark:text-slate-500 text-sm font-medium bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800">Nenhum aviso emitido pela coordenação.</div> 
                             ) : ( 
                               announcements.map(aviso => { 
                                 const date = new Date(aviso.created_at).toLocaleDateString('pt-BR', {day:'2-digit', month:'short'}); 
                                 return ( 
-                                  <div key={aviso.id} className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 border-l-4 border-l-brand-blue dark:border-l-brand-light p-4 rounded-lg relative group transition-colors shadow-sm">
+                                  <div key={aviso.id} className="bg-white dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700 p-6 rounded-2xl relative group transition-colors shadow-sm hover:shadow-md">
                                     {isAdmin && (
-                                      <button onClick={() => handleDeleteAnnouncement(aviso.id)} className="absolute top-3 right-3 text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 transition-colors md:opacity-0 md:group-hover:opacity-100">
-                                        <i className="fa-solid fa-trash"></i>
+                                      <button onClick={() => handleDeleteAnnouncement(aviso.id)} className="absolute top-4 right-4 w-8 h-8 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100">
+                                        <i className="fa-solid fa-trash text-xs"></i>
                                       </button>
                                     )}
-                                    <div className="pr-6">
-                                      <div className="flex items-center gap-2 mb-2">
-                                        <span className="bg-brand-blue/10 dark:bg-brand-light/20 text-brand-blue dark:text-brand-light text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">{date}</span>
-                                        <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400"><i className="fa-solid fa-user-pen mr-1"></i> {aviso.author}</span>
+                                    <div className="pr-8">
+                                      <div className="flex items-center gap-3 mb-3">
+                                        <div className="bg-brand-blue/10 dark:bg-brand-light/20 text-brand-blue dark:text-brand-light w-10 h-10 rounded-xl flex flex-col items-center justify-center border border-brand-blue/20">
+                                           <span className="text-[8px] font-black uppercase leading-none">{date.split(' ')[2]}</span>
+                                           <span className="text-sm font-black leading-none">{date.split(' ')[0]}</span>
+                                        </div>
+                                        <div>
+                                           <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1.5"><i className="fa-solid fa-user-tie"></i> {aviso.author}</span>
+                                        </div>
                                       </div>
-                                      <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">{aviso.title}</h4>
-                                      <p className="text-sm text-slate-600 dark:text-slate-300 whitespace-pre-line mb-3 leading-relaxed">{aviso.content}</p>
+                                      <h4 className="text-lg font-black text-slate-800 dark:text-slate-100 mb-2">{aviso.title}</h4>
+                                      <p className="text-sm text-slate-600 dark:text-slate-300 whitespace-pre-line mb-4 leading-relaxed font-medium">{aviso.content}</p>
                                       {aviso.link_url && (
-                                        <a href={aviso.link_url} target="_blank" className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-blue dark:text-brand-light hover:underline">
-                                          <i className="fa-solid fa-arrow-up-right-from-square"></i> Acessar anexo externo
+                                        <a href={aviso.link_url} target="_blank" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white bg-brand-red px-5 py-2.5 rounded-lg hover:bg-brand-redDark shadow-sm transition-colors">
+                                          <i className="fa-solid fa-arrow-up-right-from-square"></i> Acessar Link
                                         </a>
                                       )}
                                     </div>
@@ -882,38 +902,37 @@
                       </div>
                     </div>
 
-                    <div className="space-y-6">
-                      <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-                        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between transition-colors">
-                          <div><p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{approvedExercises.length}</p><p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Exercícios</p></div>
-                          <div className="text-slate-300 dark:text-slate-600 text-2xl"><i className="fa-solid fa-dumbbell"></i></div>
+                    <div className="space-y-8">
+                      <div className="grid grid-cols-2 lg:grid-cols-1 gap-6">
+                        <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-center gap-5 transition-colors text-center sm:text-left">
+                          <div className="w-16 h-16 rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-500 flex items-center justify-center text-3xl shadow-inner shrink-0"><i className="fa-solid fa-dumbbell"></i></div>
+                          <div><p className="text-4xl font-black text-slate-800 dark:text-slate-100">{approvedExercises.length}</p><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Exercícios</p></div>
                         </div>
-                        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between transition-colors">
-                          <div><p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{savedCircuits.length}</p><p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Relatórios</p></div>
-                          <div className="text-slate-300 dark:text-slate-600 text-2xl"><i className="fa-regular fa-folder-open"></i></div>
+                        <div className="bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-center gap-5 transition-colors text-center sm:text-left">
+                          <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-500 flex items-center justify-center text-3xl shadow-inner shrink-0"><i className="fa-regular fa-folder-open"></i></div>
+                          <div><p className="text-4xl font-black text-slate-800 dark:text-slate-100">{savedCircuits.length}</p><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Aulas Salvas</p></div>
                         </div>
                       </div>
 
                       {isAdmin && (
                         <>
-                          <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" onClick={() => handleNavClick('aprovacoes')}>
-                            <div className="flex items-center justify-between">
-                              <div><p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{pendingCount}</p><p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Análises Pendentes</p></div>
-                              <div className={pendingCount > 0 ? "text-amber-500 text-2xl" : "text-slate-300 dark:text-slate-600 text-2xl"}><i className="fa-solid fa-clock-rotate-left"></i></div>
-                            </div>
+                          <div className="bg-amber-50 dark:bg-amber-900/20 p-6 rounded-[2rem] border border-amber-200 dark:border-amber-800 shadow-sm cursor-pointer hover:shadow-md transition-all group flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left" onClick={() => handleNavClick('aprovacoes')}>
+                            <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-inner shrink-0 transition-colors ${pendingCount > 0 ? 'bg-amber-500 text-white' : 'bg-amber-100 dark:bg-amber-800/50 text-amber-400'}`}><i className="fa-solid fa-clock-rotate-left"></i></div>
+                            <div><p className="text-4xl font-black text-amber-900 dark:text-amber-100">{pendingCount}</p><p className="text-[10px] font-black text-amber-600 dark:text-amber-500 uppercase tracking-widest mt-1 group-hover:underline">Pendentes</p></div>
                           </div>
 
-                          <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
-                             <h4 className="font-bold text-slate-800 dark:text-slate-100 mb-1 text-sm">Disparo de Comunicado</h4>
-                             <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Envio de notificação SMTP via EmailJS.</p>
-                             <form onSubmit={handleSendCustomEmail} className="space-y-3">
-                                <input type="email" placeholder="Destinatário" value={customEmailDest} onChange={e => setCustomEmailDest(e.target.value.replace(/\s/g, ''))} required className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-xs focus:border-brand-blue text-slate-800 dark:text-slate-100" />
-                                <textarea placeholder="Corpo do texto..." value={customEmailMessage} onChange={e => setCustomEmailMessage(e.target.value)} rows="2" className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-xs focus:border-brand-blue text-slate-800 dark:text-slate-100" ></textarea>
-                                <button type="submit" className="w-full bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium py-2 rounded transition text-xs">Transmitir Mensagem</button>
-                                {emailStatus && <p className="text-[10px] font-medium text-slate-600 dark:text-slate-400 mt-2">{emailStatus}</p>}
+                          <div className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm transition-colors relative overflow-hidden">
+                             <div className="absolute -right-6 -bottom-6 text-brand-blue opacity-5"><i className="fa-solid fa-paper-plane text-9xl"></i></div>
+                             <h4 className="font-black text-slate-800 dark:text-slate-100 mb-2 text-lg relative z-10"><i className="fa-solid fa-envelope-open-text text-brand-blue mr-2"></i> Comunicação SMTP</h4>
+                             <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-6 relative z-10 leading-relaxed">Envie notificações oficiais direto para o e-mail dos monitores via integração EmailJS.</p>
+                             <form onSubmit={handleSendCustomEmail} className="space-y-4 relative z-10">
+                                <input type="email" placeholder="E-mail do destinatário" value={customEmailDest} onChange={e => setCustomEmailDest(e.target.value.replace(/\s/g, ''))} required className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-none text-xs font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-inner" />
+                                <textarea placeholder="Escreva a mensagem..." value={customEmailMessage} onChange={e => setCustomEmailMessage(e.target.value)} rows="3" className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-none text-xs font-medium focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-inner" ></textarea>
+                                <button type="submit" className="w-full bg-brand-blue hover:bg-brand-dark text-white font-black uppercase tracking-widest py-3.5 rounded-xl transition-colors text-[10px] shadow-md">Transmitir E-mail Específico</button>
+                                {emailStatus && <p className="text-[10px] font-black text-center text-emerald-600 dark:text-emerald-400 mt-2 bg-emerald-50 dark:bg-emerald-900/30 py-2 rounded-lg">{emailStatus}</p>}
                              </form>
-                             <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                               <button onClick={handleSendEmail} className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium py-2 rounded transition text-xs">Notificar Equipe de Monitores</button>
+                             <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 relative z-10">
+                               <button onClick={handleSendEmail} className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-black uppercase tracking-widest py-3.5 rounded-xl transition-colors text-[10px] border border-slate-200 dark:border-slate-600 shadow-sm"><i className="fa-solid fa-bell mr-2"></i> Lembrete para Todos</button>
                              </div>
                           </div>
                         </>
@@ -925,45 +944,50 @@
 
               {/* === TELA: APROVAÇÕES === */}
               {currentView === 'aprovacoes' && isAdmin && (
-                <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
-                  <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between mb-6 transition-colors">
-                    <div>
-                      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Central de Análise</h2>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Revisão e homologação de conteúdos técnicos.</p>
+                <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
+                  <div className="bg-amber-50 dark:bg-amber-900/20 p-8 rounded-[2rem] border border-amber-200 dark:border-amber-800 shadow-sm flex flex-col sm:flex-row items-center justify-between mb-8 transition-colors gap-6 text-center sm:text-left">
+                    <div className="flex items-center gap-5">
+                      <div className="w-20 h-20 bg-amber-500 text-white rounded-full flex items-center justify-center text-3xl shadow-inner shrink-0"><i className="fa-solid fa-clipboard-check"></i></div>
+                      <div>
+                        <h2 className="text-2xl font-black text-amber-900 dark:text-amber-100">Central de Aprovação</h2>
+                        <p className="text-sm font-bold text-amber-700 dark:text-amber-500 mt-1">Avalie os conteúdos enviados pelos monitores antes de irem para o acervo.</p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">{pendingCount}</p>
-                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Documentos</p>
+                    <div className="bg-white dark:bg-slate-900 px-8 py-4 rounded-2xl shadow-sm border border-amber-100 dark:border-slate-800">
+                      <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Pendentes</p>
+                      <p className="text-4xl font-black text-slate-800 dark:text-slate-100">{pendingCount}</p>
                     </div>
                   </div>
                   
                   {pendingCount === 0 ? ( 
-                    <div className="bg-white dark:bg-slate-900 py-16 text-center border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm transition-colors">
-                      <p className="text-slate-500 dark:text-slate-400 text-sm">Não há exercícios pendentes para análise no momento.</p>
+                    <div className="bg-white dark:bg-slate-900 py-20 text-center border border-slate-200 dark:border-slate-800 rounded-[2rem] shadow-sm transition-colors">
+                      <div className="w-24 h-24 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"><i className="fa-solid fa-check"></i></div>
+                      <h3 className="text-2xl font-black text-slate-800 dark:text-white mb-2">Tudo em dia!</h3>
+                      <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Não há exercícios aguardando análise da coordenação no momento.</p>
                     </div> 
                   ) : ( 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {exercises.filter(ex => ex.status === 'pending').map(ex => { 
                         const ytId = getYouTubeId(ex.videoUrl); 
                         const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null; 
                         const isImage = ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i); 
                         const isVideo = ex.mediaUrl && ex.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i); 
                         return ( 
-                          <div key={ex.id} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col transition-colors">
-                            <div className="h-40 bg-slate-100 dark:bg-slate-800 relative">
-                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-video text-3xl text-slate-400 dark:text-slate-600"></i></div> ) : ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-image text-3xl text-slate-300 dark:text-slate-600"></i></div> )}
-                              <div className="absolute top-2 right-2 bg-slate-800/80 text-white text-[10px] font-medium px-2 py-1 rounded">Aguardando Avaliação</div>
+                          <div key={ex.id} className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col transition-colors hover:shadow-lg">
+                            <div className="h-48 bg-slate-100 dark:bg-slate-800 relative">
+                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-video text-5xl text-slate-300 dark:text-slate-600"></i></div> ) : ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-image text-5xl text-slate-200 dark:text-slate-700"></i></div> )}
+                              <div className="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg flex items-center gap-1.5"><i className="fa-solid fa-clock text-amber-400"></i> Em Análise</div>
                             </div>
-                            <div className="p-5 flex-1 flex flex-col">
-                              <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase mb-1">Autor: {ex.author || 'Monitor'}</p>
-                              <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base leading-tight mb-2">{ex.title}</h3>
-                              <div className="flex gap-2 mb-4">
-                                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-1 rounded">{ex.category.toUpperCase()}</span>
-                                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-1 rounded">{ex.muscleGroup}</span>
+                            <div className="p-6 flex-1 flex flex-col">
+                              <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1.5"><i className="fa-solid fa-user-pen"></i> {ex.author || 'Monitor'}</p>
+                              <h3 className="font-black text-slate-800 dark:text-slate-100 text-lg leading-tight mb-4">{ex.title}</h3>
+                              <div className="flex flex-wrap gap-2 mb-6">
+                                <span className="text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">{ex.category.toUpperCase()}</span>
+                                <span className="text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">{ex.muscleGroup}</span>
                               </div>
-                              <div className="mt-auto grid grid-cols-2 gap-2">
-                                <button onClick={() => handleApprove(ex.id)} className="bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium py-2 rounded text-xs transition-colors">Homologar</button>
-                                <button onClick={() => handleReject(ex.id)} className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium py-2 rounded text-xs transition-colors">Recusar</button>
+                              <div className="mt-auto grid grid-cols-2 gap-3">
+                                <button onClick={() => handleApprove(ex.id)} className="bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-500 text-emerald-600 dark:text-emerald-400 hover:text-white font-black uppercase tracking-widest py-3.5 rounded-xl text-[10px] transition-colors shadow-sm flex items-center justify-center gap-2"><i className="fa-solid fa-check text-base"></i> Aprovar</button>
+                                <button onClick={() => handleReject(ex.id)} className="bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-900/50 text-rose-500 dark:text-rose-400 font-black uppercase tracking-widest py-3.5 rounded-xl text-[10px] transition-colors shadow-sm flex items-center justify-center gap-2"><i className="fa-solid fa-xmark text-base"></i> Recusar</button>
                               </div>
                             </div>
                           </div> 
@@ -976,31 +1000,41 @@
 
               {/* === TELA: GESTÃO DE EQUIPE === */}
               {currentView === 'equipe' && isAdmin && (
-                <div className="max-w-5xl mx-auto space-y-6 animate-fade-in pb-12">
-                  <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
-                    <div className="mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
-                      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Controle de Permissões e Equipe</h2>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gerenciamento de acesso e vinculação de grupos ({teamMembers.length} registros ativos).</p>
+                <div className="max-w-6xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-[2rem] shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 dark:border-slate-800 pb-6 mb-8 gap-6">
+                      <div>
+                        <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 flex items-center gap-4"><div className="w-12 h-12 bg-brand-blue/10 text-brand-blue rounded-xl flex items-center justify-center"><i className="fa-solid fa-users-gear"></i></div> Gestão de Equipe</h2>
+                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-2">Controle de acessos, edição de nomes e vinculação à quadra.</p>
+                      </div>
+                      <div className="bg-slate-50 dark:bg-slate-800 px-8 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-center">
+                        <p className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Total Registrado</p>
+                        <p className="text-3xl font-black text-slate-800 dark:text-white mt-1">{teamMembers.length}</p>
+                      </div>
                     </div>
 
-                    <div className="overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-lg">
+                    <div className="overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm">
                       <table className="w-full text-sm text-left">
-                        <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs border-b border-slate-200 dark:border-slate-700">
-                          <tr><th className="px-4 py-3">Identificação</th><th className="px-4 py-3">Agrupamento</th><th className="px-4 py-3">Nível de Acesso</th><th className="px-4 py-3 text-center">Ações</th></tr>
+                        <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-black text-[10px] uppercase tracking-widest border-b border-slate-200 dark:border-slate-700">
+                          <tr><th className="px-6 py-5">Monitor / Identificação</th><th className="px-6 py-5">Grupo de Quadra</th><th className="px-6 py-5">Credencial do Sistema</th><th className="px-6 py-5 text-center">Ações</th></tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                           {teamMembers.map(member => ( 
                             <tr key={member.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                              <td className="px-4 py-3">
-                                <div className="flex items-center gap-3">
-                                  {member.avatar_url ? ( <img src={member.avatar_url} className="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-slate-700" /> ) : ( <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold text-xs">{member.full_name.charAt(0)}</div> )}
-                                  <p className="font-medium text-slate-800 dark:text-slate-200">{member.full_name}</p>
+                              <td className="px-6 py-4">
+                                <div className="flex items-center gap-4">
+                                  {member.avatar_url ? ( <img src={member.avatar_url} className="w-10 h-10 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700 shadow-sm" /> ) : ( <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center font-black text-sm shadow-inner">{member.full_name.charAt(0)}</div> )}
+                                  <p className="font-bold text-slate-800 dark:text-slate-200">{member.full_name}</p>
                                 </div>
                               </td>
-                              <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{member.team_group || 'Não designado'}</td>
-                              <td className="px-4 py-3"><span className="text-[10px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-1 rounded">{member.role}</span></td>
-                              <td className="px-4 py-3 text-center">
-                                <button onClick={() => setEditingMember(member)} className="text-brand-blue dark:text-brand-light hover:underline text-xs font-medium">Modificar</button>
+                              <td className="px-6 py-4">
+                                <span className={`text-[10px] font-bold px-3 py-1.5 rounded-lg border ${member.team_group && member.team_group !== 'Nenhum' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700'}`}>{member.team_group || 'Nenhum'}</span>
+                              </td>
+                              <td className="px-6 py-4">
+                                <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg ${member.role === 'Coordenador / Admin' || member.role === 'admin' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-400' : 'bg-brand-blue/10 text-brand-blue dark:text-brand-light'}`}>{member.role}</span>
+                              </td>
+                              <td className="px-6 py-4 text-center">
+                                <button onClick={() => setEditingMember(member)} className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-brand-blue dark:hover:text-brand-light hover:border-brand-blue hover:shadow-md transition-all"><i className="fa-solid fa-pen"></i></button>
                               </td>
                             </tr> 
                           ))}
@@ -1010,37 +1044,39 @@
                   </div>
 
                   {editingMember && (
-                    <div className="fixed inset-0 bg-slate-900/60 dark:bg-slate-900/80 z-[60] flex items-center justify-center p-4 transition-opacity animate-fade-in">
-                      <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-800">
-                        <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
-                          <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Alterar Registro do Usuário</h3>
-                          <button onClick={() => setEditingMember(null)} className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"><i className="fa-solid fa-xmark"></i></button>
+                    <div className="fixed inset-0 bg-slate-900/80 z-[60] flex items-center justify-center p-4 transition-opacity animate-fade-in backdrop-blur-sm">
+                      <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
+                        <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+                          <h3 className="text-xl font-black text-slate-800 dark:text-slate-100"><i className="fa-solid fa-user-pen text-brand-blue mr-3"></i>Editar Membro</h3>
+                          <button onClick={() => setEditingMember(null)} className="w-10 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors shadow-sm"><i className="fa-solid fa-xmark"></i></button>
                         </div>
-                        <form onSubmit={handleUpdateMember} className="p-6 space-y-4">
+                        <form onSubmit={handleUpdateMember} className="p-8 space-y-6">
                           <div>
-                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Nome Completo</label>
-                            <input type="text" value={editingMember.full_name} onChange={e=>setEditingMember({...editingMember, full_name: e.target.value})} required className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" />
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Nome Completo</label>
+                            <input type="text" value={editingMember.full_name} onChange={e=>setEditingMember({...editingMember, full_name: e.target.value})} required className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-sm" />
                           </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Agrupamento</label>
-                            <select value={editingMember.team_group} onChange={e=>setEditingMember({...editingMember, team_group: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100">
-                              <option value="Nenhum">Não designado</option>
-                              <option value="E1">Grupo E1</option>
-                              <option value="E2">Grupo E2</option>
-                              <option value="E3">Grupo E3</option>
-                              <option value="E4">Grupo E4</option>
-                            </select>
+                          <div className="grid grid-cols-2 gap-6">
+                            <div>
+                              <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Grupo de Quadra</label>
+                              <select value={editingMember.team_group} onChange={e=>setEditingMember({...editingMember, team_group: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-sm">
+                                <option value="Nenhum">Não designado</option>
+                                <option value="E1">Grupo E1</option>
+                                <option value="E2">Grupo E2</option>
+                                <option value="E3">Grupo E3</option>
+                                <option value="E4">Grupo E4</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Acesso no Sistema</label>
+                              <select value={editingMember.role} onChange={e=>setEditingMember({...editingMember, role: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-blue text-brand-blue dark:text-brand-light shadow-sm">
+                                <option value="Monitor">Monitor</option>
+                                <option value="Coordenador / Admin">Coordenador</option>
+                              </select>
+                            </div>
                           </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Nível de Acesso</label>
-                            <select value={editingMember.role} onChange={e=>setEditingMember({...editingMember, role: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100">
-                              <option value="Monitor">Monitor</option>
-                              <option value="Coordenador / Admin">Administrador</option>
-                            </select>
-                          </div>
-                          <div className="pt-4 flex justify-end gap-2">
-                            <button type="button" onClick={() => setEditingMember(null)} className="px-4 py-2 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium rounded hover:bg-slate-50 dark:hover:bg-slate-800 text-sm">Cancelar</button>
-                            <button type="submit" className="px-4 py-2 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium rounded text-sm">Salvar Dados</button>
+                          <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-4">
+                            <button type="button" onClick={() => setEditingMember(null)} className="px-8 py-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Cancelar</button>
+                            <button type="submit" className="px-10 py-4 bg-brand-blue hover:bg-brand-dark text-white font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg hover:-translate-y-1 transition-all flex items-center gap-2"><i className="fa-solid fa-floppy-disk text-sm"></i> Salvar Perfil</button>
                           </div>
                         </form>
                       </div>
@@ -1049,60 +1085,68 @@
                 </div>
               )}
 
-              {/* === TELA: CADASTRO === */}
+              {/* === TELA: CADASTRO DE EXERCÍCIO === */}
               {currentView === 'cadastro' && (
-                <div className="max-w-3xl mx-auto space-y-6 animate-fade-in pb-12">
-                  <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
-                    <div className="border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
-                      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Cadastro de Conteúdo</h2>
-                      <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Preencha os dados clínicos para submissão do exercício ao acervo.</p>
+                <div className="max-w-4xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-[2rem] shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                    <div className="border-b border-slate-100 dark:border-slate-800 pb-6 mb-8">
+                      <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 flex items-center gap-4"><div className="w-12 h-12 bg-brand-red/10 text-brand-red rounded-xl flex items-center justify-center"><i className="fa-solid fa-circle-plus"></i></div> Cadastrar Novo Exercício</h2>
+                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-3">Envie um exercício para avaliação da coordenação. Se você for coordenador, ele vai direto para o acervo.</p>
                     </div>
-                    {formStatus.success && <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-sm font-medium mb-6">Registro submetido com êxito no sistema.</div>}
-                    <form onSubmit={handleFormSubmit} className="space-y-6">
-                      <div className="space-y-4">
+                    {formStatus.success && <div className="bg-emerald-50 dark:bg-emerald-900/30 p-6 rounded-2xl border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 text-base font-bold mb-8 flex items-center justify-center gap-3"><i className="fa-solid fa-circle-check text-2xl"></i> Conteúdo enviado com sucesso!</div>}
+                    <form onSubmit={handleFormSubmit} className="space-y-8">
+                      <div className="space-y-6">
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 pl-2">Informações Principais</h3>
                         <div>
-                          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Nomenclatura do Exercício *</label>
-                          <input type="text" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} required className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" />
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Nome do Exercício *</label>
+                          <input type="text" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} required className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-sm" placeholder="Ex: Sentar e Levantar da Cadeira" />
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                           <div>
-                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Categoria *</label>
-                            <select value={formCat} onChange={e=>{setFormCat(e.target.value); setFormMuscleSelect('');}} required className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100">
-                              <option value="">A selecionar...</option>
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Categoria Geral *</label>
+                            <select value={formCat} onChange={e=>{setFormCat(e.target.value); setFormMuscleSelect('');}} required className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-sm">
+                              <option value="">Selecione a Categoria...</option>
                               {Object.keys(CATEGORIES).map(k => <option key={k} value={k}>{CATEGORIES[k].title}</option>)}
                             </select>
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Foco Específico *</label>
-                            <select value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} required disabled={!formCat} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 disabled:bg-slate-50 dark:disabled:bg-slate-900 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100">
-                              <option value="">A selecionar...</option>
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Foco Muscular / Objetivo *</label>
+                            <select value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} required disabled={!formCat} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-sm disabled:opacity-50">
+                              <option value="">Selecione o Foco...</option>
                               {formCat && CATEGORIES[formCat].subgroups.map(sub => <option key={sub} value={sub}>{sub}</option>)}
-                              <option value="Outro">Inserção manual</option>
+                              <option value="Outro">Digitar Manualmente</option>
                             </select>
                           </div>
                         </div>
-                        {formMuscleSelect === 'Outro' && <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Descrever Foco</label><input type="text" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" /></div>}
+                        {formMuscleSelect === 'Outro' && <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Descreva o Foco</label><input type="text" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-sm" /></div>}
                       </div>
-                      <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Intensidade Base</label><select value={formData.difficulty} onChange={e=>setFormData({...formData, difficulty: e.target.value})} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"><option>Iniciante / Leve</option><option>Intermediário / Moderado</option><option>Avançado / Intenso</option></select></div>
-                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Material Exigido</label><input type="text" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
-                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Prescrição Típica</label><input type="text" value={formData.dosage} onChange={e=>setFormData({...formData, dosage: e.target.value})} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100" placeholder="Ex: 3x10" /></div>
+                      
+                      <div className="space-y-6 pt-8 border-t border-slate-100 dark:border-slate-800">
+                         <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 pl-2">Parâmetros Geriátricos</h3>
+                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Dificuldade Estimada</label><select value={formData.difficulty} onChange={e=>setFormData({...formData, difficulty: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold text-slate-800 dark:text-slate-100 shadow-sm"><option>Iniciante / Leve</option><option>Intermediário / Moderado</option><option>Avançado / Intenso</option></select></div>
+                            <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Material Utilizado</label><input type="text" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold text-slate-800 dark:text-slate-100 shadow-sm" placeholder="Cadeira, Bastão..." /></div>
+                            <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Séries e Repetições</label><input type="text" value={formData.dosage} onChange={e=>setFormData({...formData, dosage: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold text-slate-800 dark:text-slate-100 shadow-sm" placeholder="Ex: 3x10" /></div>
                          </div>
                       </div>
-                      <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Diretrizes de Execução *</label><textarea required rows="3" value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100"></textarea></div>
-                        <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Contraindicações Clínicas</label><textarea rows="2" value={formData.precautions} onChange={e=>setFormData({...formData, precautions: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100"></textarea></div>
+
+                      <div className="space-y-6 pt-8 border-t border-slate-100 dark:border-slate-800">
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 pl-2">Passo a Passo</h3>
+                        <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Como Executar o Movimento *</label><textarea required rows="4" value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})} className="w-full p-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-medium leading-relaxed focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-sm" placeholder="1. Fique em pé...\n2. Levante a perna..."></textarea></div>
+                        <div><label className="block text-[10px] font-black uppercase tracking-widest text-amber-600 dark:text-amber-500 mb-2 pl-2"><i className="fa-solid fa-triangle-exclamation mr-1"></i> Cuidados com o Idoso</label><textarea rows="2" value={formData.precautions} onChange={e=>setFormData({...formData, precautions: e.target.value})} className="w-full p-5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 outline-none text-sm font-medium leading-relaxed focus:border-amber-400 text-amber-900 dark:text-amber-100 shadow-sm" placeholder="Não fazer se tiver artrose no joelho..."></textarea></div>
                       </div>
-                      <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                           <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Referência em Vídeo (URL)</label><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" placeholder="https://" /></div>
-                           <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Anexo Local (Mídia)</label><input type="file" accept="image/*,video/mp4" onChange={e=>setMediaFile(e.target.files[0])} className="w-full px-2 py-2 rounded border border-slate-300 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-medium file:bg-slate-100 dark:file:bg-slate-800 file:text-slate-700 dark:file:text-slate-300 cursor-pointer" /></div>
+
+                      <div className="space-y-6 pt-8 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 p-8 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-2"><i className="fa-brands fa-youtube text-brand-red text-lg"></i> Anexo Visual</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                           <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Link de Vídeo no YouTube (Recomendado)</label><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-red text-slate-800 dark:text-slate-100 shadow-sm" placeholder="https://youtube.com/watch?v=" /></div>
+                           <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Ou Envie Imagem/Vídeo Curto (Max 5MB)</label><input type="file" accept="image/*,video/mp4" onChange={e=>setMediaFile(e.target.files[0])} className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-[10px] file:uppercase file:tracking-widest file:font-black file:bg-slate-800 dark:file:bg-slate-700 file:text-white cursor-pointer bg-white dark:bg-slate-900 shadow-sm" /></div>
                         </div>
                       </div>
-                      <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-end">
-                        <button type="submit" disabled={formStatus.loading} className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium rounded-lg transition-colors text-sm disabled:opacity-50">
-                          {formStatus.loading ? "Processando..." : "Submeter Documento"}
+
+                      <div className="pt-8 flex justify-end">
+                        <button type="submit" disabled={formStatus.loading} className="w-full sm:w-auto px-12 py-4 bg-brand-red hover:bg-brand-redDark text-white font-black uppercase tracking-widest rounded-xl shadow-lg transition-all hover:-translate-y-1 text-xs disabled:opacity-50 flex items-center justify-center gap-3">
+                          {formStatus.loading ? <i className="fa-solid fa-spinner fa-spin text-lg"></i> : <><i className="fa-solid fa-paper-plane text-lg"></i> Submeter Exercício</>}
                         </button>
                       </div>
                     </form>
@@ -1112,48 +1156,72 @@
 
               {/* === TELA: DETALHES DO EXERCÍCIO === */}
               {currentView === 'detail' && selectedExercise && (
-                <div className="max-w-3xl mx-auto space-y-6 animate-fade-in pb-12">
-                  <div className="flex items-center justify-between mb-4">
-                    <button onClick={() => setCurrentView('library')} className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-sm font-medium"><i className="fa-solid fa-arrow-left mr-2"></i> Retornar ao Acervo</button>
-                    {isAdmin && <button onClick={() => handleDeleteExercise(selectedExercise.id)} className="text-red-500 hover:underline text-sm font-medium">Excluir Registro</button>}
+                <div className="max-w-4xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="flex items-center justify-between mb-4 px-2">
+                    <button onClick={() => setCurrentView('library')} className="text-slate-500 dark:text-slate-400 hover:text-brand-blue dark:hover:text-brand-light text-sm font-black uppercase tracking-widest transition-colors"><i className="fa-solid fa-arrow-left mr-2"></i> Retornar ao Acervo</button>
+                    {isAdmin && <button onClick={() => handleDeleteExercise(selectedExercise.id)} className="text-rose-500 hover:text-rose-700 text-[10px] font-black uppercase tracking-widest px-4 py-2 bg-rose-50 dark:bg-rose-900/30 rounded-lg transition-colors"><i className="fa-solid fa-trash mr-1"></i> Apagar</button>}
                   </div>
-                  <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden transition-colors">
-                    <div className="h-64 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 relative">
+                  <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden transition-colors">
+                    
+                    {/* PLAYER DE VÍDEO INTELIGENTE */}
+                    <div className="h-64 sm:h-[26rem] bg-slate-900 relative">
                       {getYouTubeId(selectedExercise.videoUrl) ? ( 
-                        <iframe className="w-full h-full absolute inset-0" src={`https://www.youtube.com/embed/${getYouTubeId(selectedExercise.videoUrl)}`} title="YouTube" frameBorder="0" allowFullScreen></iframe> 
+                        <div className="w-full h-full relative group">
+                           {/* Usando iframe do YouTube otimizado */}
+                           <iframe className="w-full h-full absolute inset-0" src={`https://www.youtube.com/embed/${getYouTubeId(selectedExercise.videoUrl)}?rel=0&showinfo=0`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                        </div>
                       ) : selectedExercise.mediaUrl ? ( 
                         selectedExercise.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i) ? 
                           <video src={selectedExercise.mediaUrl} controls className="w-full h-full object-contain bg-black"></video> : 
                           <img src={selectedExercise.mediaUrl} className="w-full h-full object-cover" /> 
                       ) : ( 
-                        <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-600 text-sm">Sem mídia de referência cadastrada.</div> 
+                        <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 dark:text-slate-600 bg-slate-100 dark:bg-slate-800">
+                           <i className="fa-solid fa-person-cane text-6xl mb-4 opacity-50"></i>
+                           <p className="font-black tracking-widest uppercase text-xs">Sem demonstração visual</p>
+                        </div> 
                       )}
                     </div>
-                    <div className="p-6 sm:p-8">
-                      <div className="flex gap-2 mb-4">
-                        <span className="text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-1 rounded">{CATEGORIES[selectedExercise.category]?.title || selectedExercise.category}</span>
-                        <span className="text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-1 rounded">{selectedExercise.muscleGroup}</span>
+
+                    <div className="p-8 sm:p-12">
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        <span className="text-[10px] font-black uppercase tracking-widest bg-brand-blue text-white px-3 py-1.5 rounded-lg shadow-sm">{CATEGORIES[selectedExercise.category]?.title || selectedExercise.category}</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">{selectedExercise.muscleGroup}</span>
                       </div>
-                      <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">{selectedExercise.title}</h1>
-                      <div className="grid grid-cols-3 gap-4 mb-8">
-                        <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded border border-slate-200 dark:border-slate-700"><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1">Intensidade</p><p className="font-medium text-sm text-slate-800 dark:text-slate-200">{selectedExercise.difficulty}</p></div>
-                        <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded border border-slate-200 dark:border-slate-700"><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1">Materiais</p><p className="font-medium text-sm text-slate-800 dark:text-slate-200">{selectedExercise.equipment}</p></div>
-                        <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded border border-slate-200 dark:border-slate-700"><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1">Prescrição</p><p className="font-medium text-sm text-slate-800 dark:text-slate-200">{selectedExercise.dosage}</p></div>
+                      <h1 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-tight mb-10">{selectedExercise.title}</h1>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+                           <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2"><i className="fa-solid fa-gauge-high mr-2 text-brand-blue"></i> Dificuldade</p>
+                           <p className="font-bold text-slate-800 dark:text-slate-200">{selectedExercise.difficulty}</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+                           <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2"><i className="fa-solid fa-box-open mr-2 text-brand-blue"></i> Material Base</p>
+                           <p className="font-bold text-slate-800 dark:text-slate-200">{selectedExercise.equipment}</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+                           <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2"><i className="fa-solid fa-clock-rotate-left mr-2 text-brand-blue"></i> Prescrição Base</p>
+                           <p className="font-bold text-slate-800 dark:text-slate-200">{selectedExercise.dosage}</p>
+                        </div>
                       </div>
-                      <div className="space-y-6 text-sm">
+
+                      <div className="space-y-12">
                         <div>
-                          <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-2">Instruções Práticas</h3>
-                          <div className="text-slate-600 dark:text-slate-300 whitespace-pre-line leading-relaxed">{selectedExercise.instructions}</div>
+                          <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 mb-5 flex items-center gap-3"><div className="w-10 h-10 bg-brand-blue/10 text-brand-blue rounded-xl flex items-center justify-center"><i className="fa-solid fa-person-running"></i></div> Execução Prática</h3>
+                          <div className="text-slate-600 dark:text-slate-300 font-medium leading-relaxed bg-slate-50 dark:bg-slate-800/30 p-8 rounded-3xl border border-slate-100 dark:border-slate-800 whitespace-pre-line text-base">{selectedExercise.instructions}</div>
                         </div>
                         {selectedExercise.precautions && ( 
                           <div>
-                            <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-2">Contraindicações e Cuidados</h3>
-                            <div className="text-slate-600 dark:text-slate-300 whitespace-pre-line leading-relaxed">{selectedExercise.precautions}</div>
+                            <h3 className="text-lg font-black text-amber-600 dark:text-amber-500 mb-5 flex items-center gap-3"><div className="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 text-amber-600 rounded-xl flex items-center justify-center"><i className="fa-solid fa-triangle-exclamation"></i></div> Cuidados Geriátricos</h3>
+                            <div className="bg-amber-50 dark:bg-amber-900/10 p-8 rounded-3xl border border-amber-200 dark:border-amber-800/50 text-amber-900 dark:text-amber-100 font-medium leading-relaxed whitespace-pre-line text-base">{selectedExercise.precautions}</div>
                           </div> 
                         )}
                       </div>
-                      <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
-                        Registro inserido por {selectedExercise.author || 'Membro da Equipe'}
+                      <div className="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 flex items-center gap-4">
+                        <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400"><i className="fa-solid fa-user-pen"></i></div>
+                        <div>
+                           <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Criado e Compartilhado por</p>
+                           <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{selectedExercise.author || 'Monitor da Equipe'}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1163,38 +1231,42 @@
               {/* === TELA: AULAS E RELATÓRIOS === */}
               {currentView === 'circuito' && (
                 <div className="max-w-5xl mx-auto space-y-6">
-                  <div className="flex gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 mb-6 overflow-x-auto no-scrollbar">
-                    <button onClick={() => setCircuitMode('agenda')} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'agenda' ? 'text-brand-blue dark:text-brand-light border-b-2 border-brand-blue dark:border-brand-light' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}>Agenda Base</button>
-                    <button onClick={startPlanning} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'plan' ? 'text-brand-blue dark:text-brand-light border-b-2 border-brand-blue dark:border-brand-light' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}>Novo Planejamento</button>
-                    <button onClick={() => setCircuitMode('history')} className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${circuitMode === 'history' || circuitMode === 'view' || circuitMode === 'report_edit' ? 'text-brand-blue dark:text-brand-light border-b-2 border-brand-blue dark:border-brand-light' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}>Base de Documentos</button>
+                  <div className="flex gap-2 sm:gap-3 p-2 bg-white dark:bg-slate-900 rounded-full shadow-sm border border-slate-200 dark:border-slate-800 overflow-x-auto no-scrollbar relative w-max max-w-full">
+                    <button onClick={() => setCircuitMode('agenda')} className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${circuitMode === 'agenda' ? 'bg-slate-800 dark:bg-slate-700 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}><i className="fa-regular fa-calendar-days mr-2"></i> Cronograma</button>
+                    <button onClick={startPlanning} className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${circuitMode === 'plan' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}><i className="fa-solid fa-route mr-2"></i> Planejar Aula</button>
+                    <button onClick={() => setCircuitMode('history')} className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${circuitMode === 'history' || circuitMode === 'view' || circuitMode === 'report_edit' ? 'bg-brand-blue text-white shadow-md' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}><i className="fa-solid fa-folder-open mr-2"></i> Diários / PDF</button>
                   </div>
 
                   {hasDraft && circuitMode !== 'plan' && circuitMode !== 'report_edit' && (
-                    <div className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 p-4 rounded-lg flex items-center justify-between shadow-sm animate-fade-in transition-colors">
-                      <div><h4 className="font-bold text-slate-800 dark:text-slate-100 text-sm">Dados Temporários Identificados</h4><p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Existem formulários não finalizados armazenados localmente.</p></div>
-                      <div className="flex gap-2">
-                        <button onClick={clearDraft} className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium rounded hover:bg-slate-200 dark:hover:bg-slate-700">Descartar</button>
-                        <button onClick={restoreDraft} className="px-3 py-1.5 bg-slate-800 dark:bg-slate-700 text-white text-xs font-medium rounded hover:bg-slate-900 dark:hover:bg-slate-600">Restaurar</button>
+                    <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-5 rounded-[2rem] flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm animate-fade-in gap-5 transition-colors">
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 rounded-2xl flex items-center justify-center text-2xl shadow-inner shrink-0"><i className="fa-solid fa-life-ring animate-pulse"></i></div>
+                        <div><h4 className="font-black text-amber-900 dark:text-amber-100 text-base">Rascunho Encontrado na Memória</h4><p className="text-xs font-medium text-amber-700 dark:text-amber-400 mt-0.5">Detectamos que você estava preenchendo um planejamento e parou.</p></div>
+                      </div>
+                      <div className="flex gap-3 w-full sm:w-auto">
+                        <button onClick={clearDraft} className="flex-1 sm:flex-none px-6 py-3.5 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-300 font-bold text-xs rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700 uppercase tracking-widest">Apagar</button>
+                        <button onClick={restoreDraft} className="flex-1 sm:flex-none px-6 py-3.5 bg-amber-500 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-amber-600 transition-colors shadow-md flex items-center justify-center gap-2"><i className="fa-solid fa-clock-rotate-left"></i> Retomar</button>
                       </div>
                     </div>
                   )}
 
                   {circuitMode === 'agenda' && ( 
-                    <div className="animate-fade-in bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden transition-colors">
-                      <div className="bg-slate-50 dark:bg-slate-800/50 px-6 py-4 border-b border-slate-200 dark:border-slate-800">
-                        <h2 className="text-base font-bold text-slate-800 dark:text-slate-100">Cronograma Operacional 2026.2</h2>
+                    <div className="animate-fade-in bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden transition-colors">
+                      <div className="bg-slate-50 dark:bg-slate-800/50 px-8 py-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-4">
+                        <div className="w-12 h-12 bg-white dark:bg-slate-700 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-600 flex items-center justify-center text-slate-400 dark:text-slate-300 text-xl shrink-0"><i className="fa-solid fa-calendar-check"></i></div>
+                        <div><h2 className="text-xl font-black text-slate-800 dark:text-slate-100">Cronograma de Aulas</h2><p className="text-slate-500 dark:text-slate-400 text-sm font-medium mt-1">Atividades semestrais na quadra da UPE.</p></div>
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
-                          <thead className="bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-semibold text-xs border-b border-slate-100 dark:border-slate-800">
-                            <tr><th className="px-6 py-3">Referência</th><th className="px-6 py-3">Data Programada</th><th className="px-6 py-3">Pauta Temática & Equipe</th></tr>
+                          <thead className="bg-white dark:bg-slate-900 text-slate-400 dark:text-slate-500 font-black uppercase text-[10px] tracking-widest border-b border-slate-100 dark:border-slate-800">
+                            <tr><th className="px-8 py-5">Ativ.</th><th className="px-8 py-5">Data</th><th className="px-8 py-5">Pauta & Grupo Responsável</th></tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                          <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
                             {AGENDA_DATA.map((item, idx) => ( 
-                              <tr key={idx} className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${item === upcomingActivity ? 'bg-slate-50 dark:bg-slate-800/50' : ''}`}>
-                                <td className="px-6 py-4 text-slate-800 dark:text-slate-200">{item.act}</td>
-                                <td className="px-6 py-4 font-medium text-slate-800 dark:text-slate-200 whitespace-nowrap">{item.date}</td>
-                                <td className="px-6 py-4"><p className="text-slate-800 dark:text-slate-200 mb-1">{item.title}</p><p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Equipe: {item.resp}</p></td>
+                              <tr key={idx} className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${item === upcomingActivity ? 'bg-emerald-50/50 dark:bg-emerald-900/10' : ''}`}>
+                                <td className="px-8 py-6 font-black text-slate-800 dark:text-slate-200 text-lg w-16">{item.act}</td>
+                                <td className="px-8 py-6 font-black text-emerald-600 dark:text-emerald-400 whitespace-nowrap w-32">{item.date}</td>
+                                <td className="px-8 py-6"><p className="font-bold text-slate-700 dark:text-slate-300 mb-2">{item.title}</p><p className="text-[10px] font-black uppercase tracking-widest text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg inline-block border border-slate-200 dark:border-slate-700 shadow-sm"><i className="fa-solid fa-users mr-1.5"></i> {item.resp}</p></td>
                               </tr> 
                             ))}
                           </tbody>
@@ -1205,107 +1277,129 @@
 
                   {circuitMode === 'plan' && ( 
                     <div className="space-y-6 animate-fade-in pb-12">
-                      <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
-                        <div className="border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
-                          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Planejamento Prévio</h2>
-                          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Defina a estrutura técnica da atividade e os responsáveis pelas estações.</p>
+                      <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-[2rem] shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                        <div className="border-b border-slate-100 dark:border-slate-800 pb-6 mb-8">
+                          <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 flex items-center gap-4"><div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-500 rounded-xl flex items-center justify-center"><i className="fa-solid fa-route"></i></div> Criação de Plano de Aula</h2>
+                          <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-2">Defina os exercícios e posicione os monitores nas estações antes de ir para a quadra.</p>
                         </div>
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Identificação da Atividade</label><input type="text" value={planDetails.activityNum} onChange={e=>setPlanDetails({...planDetails, activityNum: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100" placeholder="Ex: 39" /></div>
-                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Data</label><input type="date" value={planDetails.date} onChange={e=>setPlanDetails({...planDetails, date: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
+                        <div className="space-y-5">
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                            <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 pl-2">Nº da Atividade</label><input type="text" value={planDetails.activityNum} onChange={e=>setPlanDetails({...planDetails, activityNum: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:border-emerald-500 outline-none text-sm font-bold text-slate-800 dark:text-slate-100 shadow-sm transition-colors" placeholder="Ex: 39" /></div>
+                            <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 pl-2">Data da Aula</label><input type="date" value={planDetails.date} onChange={e=>setPlanDetails({...planDetails, date: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:border-emerald-500 outline-none text-sm font-bold text-slate-800 dark:text-slate-100 shadow-sm transition-colors" /></div>
                             <div>
-                              <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Eixo Temático</label>
-                              <select value={planDetails.theme} onChange={e=>setPlanDetails({...planDetails, theme: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100">
-                                <option value="">A selecionar...</option><option value="EXERCÍCIOS DE DUPLA TAREFA">Dupla Tarefa</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMSS E TRONCO">Mobilidade/Fortalecimento MMSS</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMII">Mobilidade/Fortalecimento MMII</option><option value="EXERCÍCIOS AERÓBICOS E CONDICIONAMENTO CARDIORRESPIRATÓRIO">Aeróbicos e Condicionamento</option><option value="OUTRA ATIVIDADE">Atividade Avaliativa/Integração</option>
+                              <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 pl-2">Eixo Temático</label>
+                              <select value={planDetails.theme} onChange={e=>setPlanDetails({...planDetails, theme: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:border-emerald-500 outline-none text-sm font-bold text-slate-800 dark:text-slate-100 shadow-sm transition-colors">
+                                <option value="">Selecionar Eixo...</option><option value="EXERCÍCIOS DE DUPLA TAREFA">Dupla Tarefa</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMSS E TRONCO">Mobilidade/Fortalecimento MMSS</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMII">Mobilidade/Fortalecimento MMII</option><option value="EXERCÍCIOS AERÓBICOS E CONDICIONAMENTO CARDIORRESPIRATÓRIO">Aeróbicos e Condicionamento</option><option value="OUTRA ATIVIDADE">Atividade Avaliativa/Gincana</option>
                               </select>
                             </div>
                           </div>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Equipe Destinada à Ação</label><input type="text" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails, students: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
+                          <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 pl-2 mt-2">Monitores Responsáveis Gerais</label><input type="text" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails, students: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:border-emerald-500 outline-none text-sm font-bold text-slate-800 dark:text-slate-100 shadow-sm transition-colors" placeholder="Ex: Francyellen, Sarah, Raissa..." /></div>
                         </div>
 
-                        <div className="space-y-6 pt-6 border-t border-slate-100 dark:border-slate-800 mt-6">
-                          <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Estrutura do Circuito</h3>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Procedimento de Aquecimento</label><textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className="w-full p-3 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
+                        <div className="space-y-6 pt-10 border-t border-slate-100 dark:border-slate-800 mt-10">
+                          <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 flex items-center gap-3 mb-6"><i className="fa-solid fa-map-location-dot text-brand-red"></i> Estruturação da Quadra</h3>
+                          <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 pl-2">Procedimento de Aquecimento Coletivo</label><textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className="w-full p-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:border-emerald-500 outline-none text-sm font-medium text-slate-800 dark:text-slate-100 shadow-sm transition-colors leading-relaxed" placeholder="Dança funcional, alongamento leve..."></textarea></div>
                           
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                             {circuit.map((stationExercises, index) => ( 
-                              <div key={index} className="bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col">
-                                <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 flex items-center justify-between">
-                                  <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">Estação {index + 1}</h4>
-                                  {index === 4 && <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">Funcional</span>}
+                              <div key={index} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col shadow-sm transition-colors">
+                                <div className={`px-6 py-4 flex items-center justify-between border-b ${index === 4 ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800/50' : 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800/50'}`}>
+                                  <div className="flex items-center gap-3">
+                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black text-white shadow-sm ${index === 4 ? 'bg-amber-500' : 'bg-emerald-500'}`}>{index + 1}</div>
+                                    <h4 className={`text-sm font-black uppercase tracking-widest ${index === 4 ? 'text-amber-800 dark:text-amber-500' : 'text-emerald-800 dark:text-emerald-500'}`}>Estação {index + 1}</h4>
+                                  </div>
+                                  {index === 4 && <span className="text-[10px] font-black text-amber-600 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-lg border border-amber-200 dark:border-slate-700 shadow-sm uppercase tracking-widest">Funcional</span>}
                                 </div>
-                                <div className="p-4 flex flex-col gap-3 flex-1">
-                                  <div><label className="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Responsável pela Estação</label><input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => { const newResp = [...planDetails.stationResponsibles]; newResp[index] = e.target.value; setPlanDetails({...planDetails, stationResponsibles: newResp}); }} className="w-full px-3 py-1.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-xs text-slate-800 dark:text-slate-100" placeholder="Nome dos monitores..." /></div>
-                                  <div className="space-y-2">
+                                <div className="p-6 flex flex-col gap-5 flex-1 bg-slate-50/50 dark:bg-slate-900/50">
+                                  <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 pl-1">Monitor(es) na Estação</label><input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => { const newResp = [...planDetails.stationResponsibles]; newResp[index] = e.target.value; setPlanDetails({...planDetails, stationResponsibles: newResp}); }} className="w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-xs font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 shadow-sm transition-colors" placeholder="Nome..." /></div>
+                                  <div className="space-y-3">
                                     {stationExercises.map(ex => ( 
-                                      <div key={ex.id} className="flex justify-between items-center bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-700">
-                                        <div className="truncate"><p className="text-xs font-semibold text-slate-700 dark:text-slate-200 truncate" title={ex.title}>{ex.title}</p><p className="text-[10px] text-slate-500 dark:text-slate-400">{ex.dosage}</p></div>
-                                        <button onClick={() => removeFromCircuit(index, ex.id)} className="text-slate-400 hover:text-red-500 shrink-0 ml-2"><i className="fa-solid fa-xmark"></i></button>
+                                      <div key={ex.id} className="flex justify-between items-center bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden group">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-blue"></div>
+                                        <div className="truncate pl-3 pr-2">
+                                           <p className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate" title={ex.title}>{ex.title}</p>
+                                           <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest"><i className="fa-solid fa-clock-rotate-left mr-1"></i> {ex.dosage}</p>
+                                        </div>
+                                        <button onClick={() => removeFromCircuit(index, ex.id)} className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-900/30 text-rose-500 hover:bg-rose-500 hover:text-white transition-colors flex items-center justify-center shrink-0"><i className="fa-solid fa-trash text-xs"></i></button>
                                       </div> 
                                     ))}
                                   </div>
-                                  <select value="" onChange={(e) => addToCircuit(index, e.target.value)} className="w-full px-2 py-2 border border-dashed border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 outline-none text-[10px] font-semibold text-slate-500 dark:text-slate-400 cursor-pointer mt-auto rounded">
-                                    <option value="">+ Anexar procedimento...</option>
+                                  <select value="" onChange={(e) => addToCircuit(index, e.target.value)} className="w-full px-4 py-3 border-2 border-dashed border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 outline-none text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 cursor-pointer mt-auto rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                                    <option value="">+ Inserir do Acervo...</option>
                                     {exercises.map(ex => ( <option key={ex.id} value={ex.id}>[{ex.muscleGroup}] {ex.title}</option> ))}
                                   </select>
                                 </div>
                               </div> 
                             ))}
                           </div>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 mt-4">Procedimento de Desaquecimento</label><textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className="w-full p-3 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
+                          <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2 pl-2 mt-6">Dinâmica de Desaquecimento</label><textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className="w-full p-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 focus:border-emerald-500 outline-none text-sm font-medium text-slate-800 dark:text-slate-100 shadow-sm transition-colors leading-relaxed" placeholder="Roda de conversa, alongamento estático..."></textarea></div>
                         </div>
-                        <div className="pt-6 border-t border-slate-100 dark:border-slate-800 mt-6 flex justify-end"><button onClick={handleSavePlan} className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 text-white font-medium rounded-lg hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors text-sm">Registrar Planejamento</button></div>
+                        <div className="pt-8 border-t border-slate-100 dark:border-slate-800 mt-8 flex justify-end">
+                           <button onClick={handleSavePlan} className="w-full sm:w-auto px-12 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black uppercase tracking-widest text-xs rounded-xl shadow-[0_8px_20px_-6px_rgba(16,185,129,0.5)] transition-transform hover:-translate-y-1 flex items-center justify-center gap-3"><i className="fa-solid fa-check-to-slot text-base"></i> Gravar Plano de Aula</button>
+                        </div>
                       </div>
                     </div> 
                   )}
 
                   {circuitMode === 'report_edit' && viewingCircuit && ( 
                     <div className="space-y-6 animate-fade-in pb-12">
-                      <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
-                        <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
-                          <div><h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Prontuário Pós-Ação</h2><p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Ref.: Atividade {planDetails.activityNum}</p></div>
-                          <button onClick={() => setCircuitMode('view')} className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 text-xl"><i className="fa-solid fa-xmark"></i></button>
+                      <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-[2rem] shadow-sm border border-slate-200 dark:border-slate-800 transition-colors relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue/5 dark:bg-brand-light/5 rounded-bl-full pointer-events-none"></div>
+                        <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-6 mb-8 relative z-10">
+                          <div>
+                             <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 flex items-center gap-4"><div className="w-12 h-12 bg-brand-blue/10 text-brand-blue rounded-xl flex items-center justify-center"><i className="fa-solid fa-pen-to-square"></i></div> Prontuário Pós-Aula</h2>
+                             <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-2">Ref.: Aula Oficial de Numeração {planDetails.activityNum}</p>
+                          </div>
+                          <button onClick={() => setCircuitMode('view')} className="w-12 h-12 bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-full flex items-center justify-center transition-colors text-xl"><i className="fa-solid fa-xmark"></i></button>
                         </div>
                         
-                        <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg p-4 mb-6">
-                          <div className="flex justify-between items-center mb-4"><h3 className="font-semibold text-slate-700 dark:text-slate-200 text-sm">Frequência e Parâmetros Clínicos</h3><button onClick={handleAddParticipant} className="text-xs bg-slate-800 dark:bg-slate-700 text-white px-3 py-1.5 rounded font-medium">Adicionar Paciente</button></div>
-                          <div className="max-h-80 overflow-y-auto space-y-2 pr-2">
+                        <div className="bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 mb-8 relative z-10 shadow-sm">
+                          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
+                             <h3 className="font-black text-brand-blue dark:text-brand-light uppercase text-[10px] tracking-widest flex items-center gap-2"><i className="fa-solid fa-heart-pulse text-sm"></i> Monitoramento de Sinais Vitais</h3>
+                             <button onClick={handleAddParticipant} className="text-[10px] font-black uppercase tracking-widest bg-slate-800 dark:bg-slate-700 text-white px-4 py-2.5 rounded-lg shadow-md hover:bg-black transition-colors w-full sm:w-auto"><i className="fa-solid fa-plus mr-1"></i> Paciente</button>
+                          </div>
+                          <div className="max-h-[28rem] overflow-y-auto space-y-3 pr-2">
                             {planDetails.attendanceList.map((p, i) => ( 
-                              <div key={p.id} className={`p-3 border rounded transition-colors ${p.present ? 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600' : 'bg-transparent border-slate-200 dark:border-slate-700'}`}>
-                                <label className="flex items-center gap-2 font-semibold text-sm text-slate-800 dark:text-slate-200 cursor-pointer"><input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="w-4 h-4"/>{p.name}</label>
-                                {p.present && <div className="mt-3 grid grid-cols-3 gap-2"><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">FC (Inic/Fin)</p><input placeholder="ex: 80/90" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">SpO2 (Inic/Fin)</p><input placeholder="ex: 98/97" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">PA (Inic/Fin)</p><input placeholder="ex: 12x8/13x8" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div></div>}
+                              <div key={p.id} className={`p-4 border rounded-xl transition-all shadow-sm ${p.present ? 'bg-white dark:bg-slate-800 border-brand-blue/30 dark:border-brand-blue/50' : 'bg-transparent border-slate-200 dark:border-slate-700'}`}>
+                                <label className="flex items-center gap-3 font-bold text-sm text-slate-800 dark:text-slate-200 cursor-pointer"><input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="w-5 h-5"/>{p.name}</label>
+                                {p.present && (
+                                   <div className="mt-4 grid grid-cols-3 gap-3">
+                                      <div><p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5 text-center">FC (Inic/Fin)</p><input placeholder="Ex: 80/90" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="w-full text-xs font-bold text-center py-2 border border-slate-200 dark:border-slate-600 dark:bg-slate-900 rounded-lg outline-none focus:border-brand-blue dark:text-slate-100 transition-colors shadow-inner"/></div>
+                                      <div><p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5 text-center">SpO2 (Inic/Fin)</p><input placeholder="Ex: 98/97" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="w-full text-xs font-bold text-center py-2 border border-slate-200 dark:border-slate-600 dark:bg-slate-900 rounded-lg outline-none focus:border-brand-blue dark:text-slate-100 transition-colors shadow-inner"/></div>
+                                      <div><p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5 text-center">PA (Inic/Fin)</p><input placeholder="Ex: 12x8/13x8" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="w-full text-xs font-bold text-center py-2 border border-slate-200 dark:border-slate-600 dark:bg-slate-900 rounded-lg outline-none focus:border-brand-blue dark:text-slate-100 transition-colors shadow-inner"/></div>
+                                   </div>
+                                )}
                               </div> 
                             ))}
                           </div>
                         </div>
 
-                        <div className="space-y-4 mb-6">
-                          <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2">Objetivos e Operação</h3>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Objetivos da Ação</label><textarea rows="2" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Síntese de Atividades</label><textarea rows="2" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Materiais Acionados</label><textarea rows="2" value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails, materials: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Aferição de Parâmetros</label><input type="text" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails, vitalSigns: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
-                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Registro Audiovisual</label><input type="text" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails, soundAndPhotos: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
+                        <div className="space-y-5 mb-8 relative z-10">
+                          <h3 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2">Objetivos e Operação Prática</h3>
+                          <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Finalidade da Aula</label><textarea rows="2" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-medium focus:border-brand-blue text-slate-800 dark:text-slate-100 transition-colors"></textarea></div>
+                          <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Síntese de Atividades</label><textarea rows="2" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-medium focus:border-brand-blue text-slate-800 dark:text-slate-100 transition-colors"></textarea></div>
+                          <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Materiais Acionados</label><textarea rows="2" value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails, materials: e.target.value})} className="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-medium focus:border-brand-blue text-slate-800 dark:text-slate-100 transition-colors"></textarea></div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Monitores na Aferição</label><input type="text" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails, vitalSigns: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 transition-colors" /></div>
+                            <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Registro Audiovisual</label><input type="text" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails, soundAndPhotos: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 transition-colors" /></div>
                           </div>
                         </div>
 
-                        <div className="space-y-4 mb-6">
-                          <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2">Documentação Narrativa</h3>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Relato Comportamental/Desenvolvimento</label><textarea rows="4" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
+                        <div className="space-y-5 mb-8 relative z-10">
+                          <h3 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2">Documentação Narrativa Oficial</h3>
+                          <div><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Relato Comportamental do Grupo</label><textarea rows="4" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-5 rounded-2xl bg-blue-50/50 dark:bg-slate-900 border border-brand-blue/20 dark:border-slate-700 outline-none text-sm font-medium leading-relaxed focus:border-brand-blue text-slate-800 dark:text-slate-100 transition-colors shadow-inner"></textarea></div>
                           
-                          <div>
-                            <div className="flex justify-between items-center mb-1">
-                               <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Evolução Sistêmica Diária</label>
-                               <button type="button" onClick={handleGenerateAutoEvolution} className="text-[10px] text-brand-blue dark:text-brand-light hover:underline font-medium">Sintetizar via Tabela</button>
+                          <div className="mt-6">
+                            <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-3 px-2 gap-3">
+                               <label className="text-[10px] font-black uppercase tracking-widest text-amber-600 dark:text-amber-500 flex items-center gap-2"><i className="fa-solid fa-file-medical"></i> Evolução Sistêmica Clínica</label>
+                               <button type="button" onClick={handleGenerateAutoEvolution} className="text-[9px] bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-black uppercase tracking-widest transition-colors shadow-md flex items-center justify-center gap-1.5"><i className="fa-solid fa-wand-magic-sparkles"></i> Gerar via Sinais Vitais</button>
                             </div>
-                            <textarea rows="5" value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails, dailyEvolution: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
+                            <textarea rows="6" value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails, dailyEvolution: e.target.value})} className="w-full p-5 rounded-2xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/50 outline-none text-sm font-medium leading-relaxed focus:border-amber-400 text-amber-900 dark:text-amber-100 transition-colors shadow-inner" placeholder="O sistema pode redigir este bloco automaticamente baseado na tabela acima."></textarea>
                           </div>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Adesão Total Verificada</label><input type="text" value={planDetails.attendanceCount} onChange={e=>setPlanDetails({...planDetails, attendanceCount: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100" placeholder="Ex: 32" /></div>
+                          <div className="pt-4"><label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-2 pl-2">Total Verificado de Idosos Presentes</label><input type="text" value={planDetails.attendanceCount} onChange={e=>setPlanDetails({...planDetails, attendanceCount: e.target.value})} className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 outline-none text-sm font-bold focus:border-brand-blue text-slate-800 dark:text-slate-100 transition-colors w-full sm:w-1/3" placeholder="Ex: 32" /></div>
                         </div>
 
-                        <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-end"><button onClick={handleUpdateReport} className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 text-white font-medium rounded-lg hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors text-sm">Firmar Documento</button></div>
+                        <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-end relative z-10"><button onClick={handleUpdateReport} className="w-full sm:w-auto px-12 py-4 bg-brand-blue hover:bg-brand-dark text-white font-black uppercase tracking-widest text-xs rounded-xl shadow-[0_8px_20px_-6px_rgba(32,43,92,0.5)] transition-transform hover:-translate-y-1 flex items-center justify-center gap-3"><i className="fa-solid fa-file-signature text-base"></i> Assinar Prontuário</button></div>
                       </div>
                     </div> 
                   )}
@@ -1313,20 +1407,27 @@
                   {circuitMode === 'history' && ( 
                     <div className="animate-fade-in">
                       {savedCircuits.length === 0 ? ( 
-                        <div className="bg-white dark:bg-slate-900 py-16 text-center border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm transition-colors"><p className="text-slate-500 dark:text-slate-400 text-sm">Nenhum relatório encontrado. Inicie um novo planejamento para registrar atividades.</p></div> 
+                        <div className="bg-white dark:bg-slate-900 py-24 text-center border border-slate-200 dark:border-slate-800 rounded-[2rem] shadow-sm transition-colors">
+                           <div className="w-32 h-32 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                              <i className="fa-solid fa-folder-open text-5xl text-slate-300 dark:text-slate-600"></i>
+                           </div>
+                           <h3 className="text-2xl font-black text-slate-800 dark:text-white mb-2">Base de dados vazia</h3>
+                           <p className="text-sm font-medium text-slate-500 dark:text-slate-400 max-w-sm mx-auto">Nenhum diário registrado. Inicie o planejamento de uma nova aula para alimentar o acervo semestral.</p>
+                        </div> 
                       ) : ( 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                           {savedCircuits.map(circ => { 
-                            const isComplete = circ.details?.resultObtained; 
+                            const isComplete = circ.details?.resultObtained || circ.details?.dailyEvolution; 
                             return ( 
-                              <div key={circ.id} className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 transition-colors flex flex-col" onClick={() => {setViewingCircuit(circ); setCircuitMode('view');}}>
-                                <div className="flex justify-between items-start mb-3">
-                                  <span className={`text-[10px] font-semibold px-2 py-1 rounded ${isComplete ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300' : 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'}`}>{isComplete ? 'Homologado' : 'Documentação Pendente'}</span>
-                                  <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">{circ.activity_date.split('-').reverse().join('/')}</span>
+                              <div key={circ.id} className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer hover:shadow-lg transition-all flex flex-col hover:-translate-y-1 relative overflow-hidden group" onClick={() => {setViewingCircuit(circ); setCircuitMode('view');}}>
+                                <div className={`absolute top-0 left-0 w-full h-2 transition-colors ${isComplete ? 'bg-brand-blue' : 'bg-emerald-400'}`}></div>
+                                <div className="flex justify-between items-start mb-6">
+                                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-inner transition-colors ${isComplete ? 'bg-blue-50 dark:bg-blue-900/30 text-brand-blue' : 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-500'}`}><i className={`fa-solid ${isComplete ? 'fa-file-signature' : 'fa-calendar-day'}`}></i></div>
+                                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">{circ.activity_date.split('-').reverse().join('/')}</span>
                                 </div>
-                                <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 mb-1">Referência {circ.details?.activityNum || '-'}</h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">{circ.details?.theme || 'Sem especificação temática'}</p>
-                                <div className="mt-auto pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-brand-blue dark:text-brand-light font-medium text-right">Analisar Processo &rarr;</div>
+                                <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 mb-2 group-hover:text-brand-blue dark:group-hover:text-brand-light transition-colors">Aula Oficial {circ.details?.activityNum || '-'}</h3>
+                                <p className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-6 line-clamp-2 leading-relaxed">{circ.details?.theme || 'Tema não definido.'}</p>
+                                <div className={`mt-auto pt-5 border-t border-slate-100 dark:border-slate-800 text-[10px] uppercase tracking-widest font-black text-right flex justify-end items-center gap-2 transition-colors ${isComplete ? 'text-brand-blue dark:text-brand-light' : 'text-emerald-600 dark:text-emerald-400'}`}>{isComplete ? 'Acessar Prontuário' : 'Preencher Pós-Aula'} <i className="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i></div>
                               </div> 
                             ) 
                           })}
@@ -1337,167 +1438,8 @@
 
                   {circuitMode === 'view' && viewingCircuit && ( 
                     <div className="space-y-6 animate-fade-in pb-12">
-                      <div className="flex flex-wrap gap-3 bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
-                        <button onClick={() => setCircuitMode('history')} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Voltar</button>
-                        {isAdmin && ( <button onClick={() => handleDeleteCircuit(viewingCircuit.id)} className="px-4 py-2 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-medium rounded hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors ml-auto">Excluir</button> )}
-                        <button onClick={startEditingReport} className={`px-4 py-2 text-sm font-medium rounded transition-colors ${!isAdmin && "ml-auto"} border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800`}>Atualizar Prontuário</button>
-                        <button onClick={() => handleGenerateReportPDF(viewingCircuit)} className="px-4 py-2 bg-slate-800 dark:bg-slate-700 text-white text-sm font-medium rounded hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors">Emissão PDF Atividade</button>
-                        <button onClick={() => handleGenerateEvolutionPDF(viewingCircuit)} className="px-4 py-2 border border-slate-800 dark:border-slate-500 text-slate-800 dark:text-slate-300 text-sm font-medium rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Emissão PDF Clínico</button>
-                      </div>
-
-                      <div className="bg-white dark:bg-slate-900 p-8 sm:p-12 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 text-sm text-slate-800 dark:text-slate-200 transition-colors">
-                        <div className="text-center mb-8 border-b border-slate-200 dark:border-slate-800 pb-6">
-                          <h2 className="font-bold uppercase text-lg text-slate-800 dark:text-slate-100">FICHA TÉCNICA - REFERÊNCIA {viewingCircuit.details?.activityNum || 'X'}</h2>
-                          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{viewingCircuit.details?.theme}</p>
-                        </div>
-                        
-                        <div className="max-w-3xl mx-auto space-y-6">
-                          <div className="grid grid-cols-2 border-b border-slate-100 dark:border-slate-800 pb-4 text-xs"><p><span className="font-semibold text-slate-500 dark:text-slate-400 uppercase">Data Referência:</span><br/> <span className="text-slate-800 dark:text-slate-200">{viewingCircuit.activity_date.split('-').reverse().join('/')}</span></p><p><span className="font-semibold text-slate-500 dark:text-slate-400 uppercase">Corpo Discente:</span><br/> <span className="text-slate-800 dark:text-slate-200">{viewingCircuit.details?.students}</span></p></div>
-                          <div><p className="font-semibold text-slate-500 dark:text-slate-400 uppercase text-xs mb-1">Ação Proposta</p><p className="whitespace-pre-line bg-slate-50 dark:bg-slate-800/50 p-3 rounded">{viewingCircuit.details?.proposedActivities || 'Não inserido.'}</p></div>
-                          <div><p className="font-semibold text-slate-500 dark:text-slate-400 uppercase text-xs mb-1">Finalidade Estipulada</p><p className="whitespace-pre-line">{viewingCircuit.details?.objectives || 'Não inserido.'}</p></div>
-                          <div><p className="font-semibold text-slate-500 dark:text-slate-400 uppercase text-xs mb-1">Aparato Material</p><p className="whitespace-pre-line">{viewingCircuit.details?.materials || 'Não inserido.'}</p></div>
-                          
-                          <div className="border border-slate-200 dark:border-slate-700 rounded p-4">
-                            <p className="font-bold text-slate-800 dark:text-slate-100 mb-3 border-b border-slate-100 dark:border-slate-800 pb-2">Procedimentos Diretos</p>
-                            <p className="mb-2"><strong className="text-slate-600 dark:text-slate-400">Preparação:</strong> {viewingCircuit.details?.warmUp || '-'}</p>
-                            <div className="space-y-2 mb-2 pl-4 border-l-2 border-slate-200 dark:border-slate-700">
-                              {viewingCircuit.stations && viewingCircuit.stations.map((station, idx) => ( 
-                                <div key={idx}>
-                                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">Estação {idx + 1} <span className="text-slate-400 dark:text-slate-500 font-normal">({viewingCircuit.details?.stationResponsibles?.[idx]})</span></p>
-                                  <p className="text-xs text-slate-600 dark:text-slate-400">{station.length === 0 ? 'Sem prescrição' : station.map(ex => ex.title).join(' / ')}</p>
-                                </div> 
-                              ))}
-                            </div>
-                            <p><strong className="text-slate-600 dark:text-slate-400">Transição:</strong> {viewingCircuit.details?.coolDown || '-'}</p>
-                          </div>
-
-                          {viewingCircuit.details?.attendanceList && viewingCircuit.details.attendanceList.some(p => p.present) && ( 
-                            <div className="border border-slate-200 dark:border-slate-700 rounded overflow-hidden mt-6">
-                              <div className="bg-slate-100 dark:bg-slate-800 p-2"><p className="font-semibold text-slate-600 dark:text-slate-300 text-xs text-center">Registro Operacional em Campo</p></div>
-                              <table className="w-full text-xs text-center">
-                                <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700"><tr><th className="p-2 text-left pl-4">Indivíduo</th><th className="p-2">FC In/Fin</th><th className="p-2">SpO2 In/Fin</th><th className="p-2">PA In/Fin</th></tr></thead>
-                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                  {viewingCircuit.details.attendanceList.filter(p => p.present).map(p => ( 
-                                    <tr key={p.id}><td className="p-2 text-left pl-4 font-medium text-slate-700 dark:text-slate-300">{p.name}</td><td className="p-2 text-slate-600 dark:text-slate-400">{p.fc_in || '-'} / {p.fc_out || '-'}</td><td className="p-2 text-slate-600 dark:text-slate-400">{p.spo2_in || '-'} / {p.spo2_out || '-'}</td><td className="p-2 text-slate-600 dark:text-slate-400">{p.pa_in || '-'} / {p.pa_out || '-'}</td></tr> 
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div> 
-                          )}
-
-                          <div><p className="font-semibold text-slate-500 dark:text-slate-400 uppercase text-xs mb-1 mt-6">Anotações Desenvolvimentais</p><p className="whitespace-pre-line text-slate-700 dark:text-slate-300">{viewingCircuit.details?.developmentNarrative || '-'}</p></div>
-                          <div><p className="font-semibold text-slate-500 dark:text-slate-400 uppercase text-xs mb-1">Conclusões Clínicas Sistêmicas</p><p className="whitespace-pre-line text-slate-700 dark:text-slate-300">{viewingCircuit.details?.dailyEvolution || '-'}</p></div>
-                          <div className="text-right pt-4 border-t border-slate-100 dark:border-slate-800"><p className="text-sm font-semibold text-slate-800 dark:text-slate-200">Contabilização Verificada: <span className="font-bold">{viewingCircuit.details?.attendanceCount || '-'}</span></p></div>
-                        </div>
-                      </div>
-                    </div> 
-                  )}
-                </div>
-              )}
-
-              {/* === BIBLIOTECA === */}
-              {currentView === 'library' && (
-                <div className="max-w-6xl mx-auto space-y-6">
-                  <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-4 transition-colors">
-                    <div className="relative w-full">
-                      <i className="fa-solid fa-magnifying-glass absolute left-4 top-3 text-slate-400 dark:text-slate-500"></i>
-                      <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Consultar repositório..." className="w-full pl-10 pr-4 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100 transition-colors" />
-                    </div>
-                    <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-                      <button onClick={() => {setFilterCat('all'); setFilterSub('Todos');}} className={`px-4 py-1.5 rounded text-xs font-semibold whitespace-nowrap border transition-colors ${filterCat === 'all' ? 'bg-slate-800 text-white border-slate-800 dark:bg-slate-700 dark:border-slate-700' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>Exibir Tudo</button>
-                      {Object.keys(CATEGORIES).map(key => ( <button key={key} onClick={() => {setFilterCat(key); setFilterSub('Todos');}} className={`px-4 py-1.5 rounded text-xs font-semibold whitespace-nowrap border flex items-center gap-2 transition-colors ${filterCat === key ? 'bg-brand-blue text-white border-brand-blue' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'}`}><i className={`fa-solid ${CATEGORIES[key].icon}`}></i> {CATEGORIES[key].shortTitle}</button> ))}
-                    </div>
-                    {filterCat !== 'all' && ( 
-                      <div className="flex gap-2 mt-1 overflow-x-auto pb-1 no-scrollbar items-center border-t border-slate-100 dark:border-slate-800 pt-3">
-                        <span className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 mr-2 shrink-0">Subgrupo:</span>
-                        {CATEGORIES[filterCat].subgroups.map(sub => ( <button key={sub} onClick={() => setFilterSub(sub)} className={`px-3 py-1 rounded text-xs font-medium whitespace-nowrap transition-colors ${filterSub === sub ? 'bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200' : 'bg-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>{sub}</button> ))}
-                      </div> 
-                    )}
-                  </div>
-
-                  {filteredExercises.length === 0 ? ( 
-                    <div className="bg-white dark:bg-slate-900 py-16 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm text-center transition-colors">
-                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Nenhuma correspondência no acervo atual.</p>
-                    </div> 
-                  ) : ( 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                      {filteredExercises.map(ex => { 
-                        const ytId = getYouTubeId(ex.videoUrl); 
-                        const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null; 
-                        const isImage = ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i); 
-                        const isVideo = ex.mediaUrl && ex.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i); 
-                        return ( 
-                          <div key={ex.id} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer overflow-hidden flex flex-col hover:border-slate-300 dark:hover:border-slate-600 transition-colors" onClick={() => { setSelectedExercise(ex); setCurrentView('detail'); }}>
-                            <div className="h-36 bg-slate-100 dark:bg-slate-800 flex items-center justify-center relative border-b border-slate-100 dark:border-slate-800">
-                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="text-slate-400 dark:text-slate-500"><i className="fa-solid fa-video text-2xl"></i></div> ) : ( <img src={ex.mediaUrl || `https://placehold.co/600x400/1e293b/ffffff?text=${ex.title.replace(/\s/g, '+')}`} className="w-full h-full object-cover" /> )}
-                            </div>
-                            <div className="p-4 flex-1 flex flex-col">
-                              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-2 truncate">{ex.muscleGroup}</span>
-                              <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm leading-tight line-clamp-2">{ex.title}</h3>
-                            </div>
-                          </div> 
-                        ) 
-                      })}
-                    </div> 
-                  )}
-                </div>
-              )}
-            </div>
-          </main>
-        </div>
-      );
-    };
-
-    const App = () => {
-      const [session, setSession] = useState(null);
-      const [loadingAuth, setLoadingAuth] = useState(true);
-      const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
-
-      useEffect(() => {
-        if (darkMode) {
-          document.documentElement.classList.add('dark');
-          localStorage.setItem('theme', 'dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-          localStorage.setItem('theme', 'light');
-        }
-      }, [darkMode]);
-
-      useEffect(() => {
-        if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then((registrations) => { for (let reg of registrations) { reg.unregister(); } });
-        supabase.auth.getSession().then(async ({ data: { session } }) => {
-          if (session) {
-            const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
-            setSession({ ...session.user, full_name: profile?.full_name || 'Pesquisador', role: profile?.role || 'Pesquisador', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
-          }
-          setLoadingAuth(false);
-        });
-      }, []);
-
-      const handleLogout = async () => { await supabase.auth.signOut(); setSession(null); };
-
-      if (loadingAuth) return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-brand-bg dark:bg-slate-900 transition-colors duration-300">
-          <div className="flex flex-col items-center">
-            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg border border-slate-100 p-2 mb-6">
-              <img src="image_fa7f41.png" alt="Logo GPENVH" className="w-full h-full object-contain" onerror="this.style.display='none'" />
-            </div>
-            <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-2">Autenticando acesso...</p>
-          </div>
-          <div className="flex gap-2 mt-4">
-            <div className="w-2 h-2 rounded-full bg-brand-main animate-pulse"></div>
-            <div className="w-2 h-2 rounded-full bg-brand-light animate-pulse" style={{animationDelay: '0.2s'}}></div>
-            <div className="w-2 h-2 rounded-full bg-brand-dark animate-pulse" style={{animationDelay: '0.4s'}}></div>
-          </div>
-        </div>
-      );
-      
-      if (!session) return <LoginPage onLogin={setSession} />;
-      return <Dashboard session={session} onLogout={handleLogout} updateSessionData={setSession} darkMode={darkMode} setDarkMode={setDarkMode} />;
-    };
-
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
-</body>
-</html>
+                      <div className="flex flex-wrap gap-4 bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                        <button onClick={() => setCircuitMode('history')} className="px-6 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"><i className="fa-solid fa-arrow-left mr-2"></i> Voltar</button>
+                        {isAdmin && ( <button onClick={() => handleDeleteCircuit(viewingCircuit.id)} className="px-6 py-3 bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-800/50 text-rose-600 dark:text-rose-400 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors md:ml-auto"><i className="fa-solid fa-trash mr-1.5"></i> Excluir</button> )}
+                        <button onClick={startEditingReport} className={`px-6 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-colors ${!isAdmin && "md:ml-auto"} border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800`}><i className="fa-solid fa-pen mr-1.5"></i> Editar Pós-Aula</button>
+                        <button onClick={() => handleGenerateReportPDF(viewingCircuit)} className="px-6 py-3 bg-slate-800 dark:bg-slate-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors shadow-sm"><i className="
