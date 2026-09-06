@@ -46,7 +46,6 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased selection:bg-brand-red selection:text-white transition-colors duration-300">
   <div id="root">
-    <!-- Tela de Carregamento Limpa -->
     <div class="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
       <div class="relative z-10 flex flex-col items-center">
         <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" class="h-28 drop-shadow-sm" onerror="this.style.display='none'" />
@@ -67,28 +66,45 @@
     const SUPABASE_ANON_KEY = "sb_publishable_WtX-V75sKhWRnm7G_x6W1Q_fzuagXGH"; 
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    const PRELOADED_EXERCISES = [
+      { id: 'pre_1', title: 'Rosca Concentrada / Martelo', category: 'mmss', muscleGroup: 'Biceps', difficulty: 'Iniciante / Leve', equipment: 'Halter', dosage: '3x10', instructions: 'Sentada no banco, posicionada para realizar a rosca unilateral com halter. Alternativa: rosca martelo com flexão de cotovelo com pegada neutra.', precautions: 'Manter a coluna reta e os movimentos controlados.', mediaUrl: 'https://placehold.co/600x400/202b5c/ffffff?text=Rosca+Concentrada', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_2', title: 'Remada Baixa com Elástico', category: 'mmss', muscleGroup: 'Costas', difficulty: 'Intermediário / Moderado', equipment: 'Miniband / Theraband', dosage: '3x10', instructions: 'Com as faixas fixadas nas grades ao nível dos cotovelos, realizar o movimento de remada puxando o elástico em direção ao corpo.', precautions: 'Evitar curvar os ombros para frente.', mediaUrl: 'https://placehold.co/600x400/202b5c/ffffff?text=Remada+Baixa', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_3', title: 'Abdominal Tradicional / Adaptação', category: 'core', muscleGroup: 'Abdômen', difficulty: 'Iniciante / Leve', equipment: 'Colchonete / Bambolê', dosage: 'Conforme resistência', instructions: 'Deite-se de costas, joelhos flexionados e mãos na cabeça. Eleve o tronco em direção aos joelhos. Adaptação: realizar a flexão com o instrutor segurando um bambolê à frente.', precautions: 'Não puxar o pescoço com as mãos.', mediaUrl: 'https://placehold.co/600x400/202b5c/ffffff?text=Abdominal', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_4', title: 'Ponte (Elevação Pélvica)', category: 'core', muscleGroup: 'Lombar', difficulty: 'Iniciante / Leve', equipment: 'Colchonete / Banco', dosage: 'Conforme resistência', instructions: 'Deite-se de costas, joelhos dobrados e pés no chão. Eleve o quadril contraindo abdômen e glúteos. Pode ser feito sobre um banco para reduzir a dificuldade.', precautions: 'Manter a estabilidade durante a elevação.', mediaUrl: 'https://placehold.co/600x400/202b5c/ffffff?text=Ponte+Pelvica', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_5', title: 'Extensão de Tríceps com Elástico', category: 'mmss', muscleGroup: 'Tríceps', difficulty: 'Intermediário / Moderado', equipment: 'Elástico', dosage: '3x12', instructions: 'Em pé, de frente para a grade, segurar o elástico com cotovelo a 90 graus e estender o braço para baixo.', precautions: 'Manter o cotovelo colado ao corpo.', mediaUrl: 'https://placehold.co/600x400/202b5c/ffffff?text=Extensao+Triceps', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_6', title: 'Sentar e Levantar + Passo Lateral', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '2x15', instructions: 'Levantar da cadeira com os braços nos ombros, dar um passo para o lado, voltar e sentar novamente.', precautions: 'Garantir que a cadeira não escorregue.', mediaUrl: 'https://placehold.co/600x400/10b981/ffffff?text=Sentar+e+Levantar', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_7', title: 'Agachamento com Step', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Intermediário / Moderado', equipment: 'Step', dosage: '2x12', instructions: 'Iniciar em pé sobre o step. Descer colocando os pés no chão de cada lado, agachar e voltar a subir no step.', precautions: 'Atenção redobrada ao equilíbrio na descida e subida.', mediaUrl: 'https://placehold.co/600x400/10b981/ffffff?text=Agachamento+Step', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_8', title: 'Stiff com Theraband', category: 'mmii', muscleGroup: 'Isquiostibiais', difficulty: 'Intermediário / Moderado', equipment: 'Theraband / Halter', dosage: 'A definir', instructions: 'Em pé, realizar flexão de quadril com leve flexão dos joelhos, retornando à posição ereta com extensão de quadril.', precautions: 'Manter as costas estabilizadas.', mediaUrl: 'https://placehold.co/600x400/10b981/ffffff?text=Stiff+Theraband', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_9', title: 'Elevação de Panturrilha no Step', category: 'mmii', muscleGroup: 'Panturrilha', difficulty: 'Iniciante / Leve', equipment: 'Step e Apoio', dosage: '2x10', instructions: 'Ficar em pé na ponta do step com apoio. Elevar os calcanhares ficando na ponta dos pés e descer lentamente.', precautions: 'Garantir que haja apoio de mãos para segurança.', mediaUrl: 'https://placehold.co/600x400/10b981/ffffff?text=Panturrilha+Step', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_10', title: 'Mobilidade do Tornozelo (Círculos)', category: 'mmii', muscleGroup: 'Tornozelo / Pé', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '2x10 cada lado', instructions: 'Sentado na cadeira, elevar levemente o pé e realizar movimentos circulares amplos com o tornozelo.', precautions: 'Nenhuma contraindicação direta.', mediaUrl: 'https://placehold.co/600x400/10b981/ffffff?text=Mobilidade+Tornozelo', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_11', title: 'Saltos Laterais / Deslocamento', category: 'aerobic', muscleGroup: 'Agilidade', difficulty: 'Intermediário / Moderado', equipment: 'Marcação no chão', dosage: '3 séries de 15s', instructions: 'O participante realiza saltos laterais sobre a marcação. Adaptação: pequenos deslocamentos rápidos.', precautions: 'Atenção ao impacto articular.', mediaUrl: 'https://placehold.co/600x400/e63946/ffffff?text=Saltos+Laterais', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_12', title: 'Corrida com Arremesso e Agachamento', category: 'dual', muscleGroup: 'Cognitiva + Motora', difficulty: 'Avançado / Intenso', equipment: 'Bola', dosage: '2x10', instructions: 'Em dupla: realizar corrida lateral associada a arremesso de bola e agachamento imediato após o passe.', precautions: 'Exige cognição alta e sincronia.', mediaUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Corrida+e+Arremesso', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_13', title: 'Bicicleta Estacionária com Toque', category: 'dual', muscleGroup: 'Cognitiva + Motora', difficulty: 'Intermediário / Moderado', equipment: 'Bicicleta', dosage: 'Contínuo', instructions: 'Pedalar mantendo estímulo cardiovascular enquanto toca de forma cruzada os joelhos com a mão oposta.', precautions: 'Não perder o controle da bicicleta.', mediaUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Bicicleta+Cognitiva', status: 'approved', author: 'Sistema ATIVIDOSO' },
+      { id: 'pre_14', title: 'Polichinelos', category: 'aerobic', muscleGroup: 'Todos', difficulty: 'Intermediário / Moderado', equipment: 'Nenhum', dosage: '2x10', instructions: 'Trabalho contínuo de abertura de pernas e braços para elevar a frequência cardiorrespiratória.', precautions: 'Atenção aos indivíduos com histórico de lesão no ombro.', mediaUrl: 'https://placehold.co/600x400/e63946/ffffff?text=Polichinelos', status: 'approved', author: 'Sistema ATIVIDOSO' }
+    ];
+
     const AGENDA_DATA = [
       { act: "17", date: "14/08/2026", title: "RETORNO DAS ATIVIDADES - Gincana/dinâmica", resp: "Todos" },
-      { act: "18", date: "21/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "1: Emyle, Vitória E, Vitória A., Gustavo" },
-      { act: "19", date: "28/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "2: Henrille, Clara, Lívia, Raíssa" },
-      { act: "20", date: "04/09/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "3: Sarah, Ellen, Maria Clara, Davi" },
-      { act: "21", date: "11/09/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "4: Letícia R., Nyslanny, Danyllo" },
-      { act: "22", date: "18/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "2: Henrille, Clara, Lívia, Raíssa" },
-      { act: "23", date: "25/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "1: Emyle, Vitória E, Vitória A.,Gustavo" },
-      { act: "24", date: "02/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "4: Letícia R., Nyslanny, Danyllo" },
-      { act: "25", date: "09/10/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "18", date: "21/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "19", date: "28/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "20", date: "04/09/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "21", date: "11/09/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "22", date: "18/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "23", date: "25/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "24", date: "02/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "25", date: "09/10/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
       { act: "26", date: "16/10/2026", title: "Atividade educativa em saúde e promoção do autocuidado", resp: "Todos" },
-      { act: "27", date: "23/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "1: Emyle, Vitória E, Vitória A., Gustavo" },
-      { act: "28", date: "30/10/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "2: Henrille, Clara, Lívia, Raíssa" },
-      { act: "29", date: "06/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "4: Letícia R., Nyslanny, Danyllo" },
-      { act: "30", date: "13/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "3: Sarah, Ellen, Maria Clara, Davi" },
+      { act: "27", date: "23/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { act: "28", date: "30/10/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { act: "29", date: "06/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { act: "30", date: "13/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
       { act: "31", date: "27/11/2026", title: "Avaliação participativa dos participantes e planejamento das próximas atividades", resp: "Todos" },
       { act: "32", date: "04/12/2026", title: "Atividade temática de integração/confraternização e encerramento do semestre letivo", resp: "Todos" }
     ];
 
     const CATEGORIES = {
-      mmss: { title: "Membros Superiores", shortTitle: "MMSS", icon: "fa-hand-fist", color: "text-blue-700 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-900/30", border: "border-blue-200 dark:border-blue-800", subgroups: ["Todos", "Costas", "Tríceps", "Biceps", "Ombro", "Punho", "Mãos / Destreza"] },
-      mmii: { title: "Membros Inferiores", shortTitle: "MMII", icon: "fa-shoe-prints", color: "text-emerald-700 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-900/30", border: "border-emerald-200 dark:border-emerald-800", subgroups: ["Todos", "Isquiostibiais", "Quadriceps", "Panturrilha", "Tornozelo / Pé"] },
+      mmss: { title: "Membros Superiores", shortTitle: "MMSS", icon: "fa-hand-fist", color: "text-blue-700 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-900/30", border: "border-blue-200 dark:border-blue-800", subgroups: ["Todos", "Costas", "Tríceps", "Biceps", "Ombro", "Punho", "Mãos / Destreza", "Peito"] },
+      mmii: { title: "Membros Inferiores", shortTitle: "MMII", icon: "fa-shoe-prints", color: "text-emerald-700 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-900/30", border: "border-emerald-200 dark:border-emerald-800", subgroups: ["Todos", "Isquiostibiais", "Quadriceps", "Panturrilha", "Tornozelo / Pé", "Glúteos"] },
       core: { title: "Core e Tronco", shortTitle: "Core", icon: "fa-child-reaching", color: "text-amber-700 dark:text-amber-400", bg: "bg-amber-50 dark:bg-amber-900/30", border: "border-amber-200 dark:border-amber-800", subgroups: ["Todos", "Abdômen", "Lombar", "Postura"] },
       aerobic: { title: "Aeróbico e Marcha", shortTitle: "Aeróbico", icon: "fa-heart-pulse", color: "text-rose-700 dark:text-rose-400", bg: "bg-rose-50 dark:bg-rose-900/30", border: "border-rose-200 dark:border-rose-800", subgroups: ["Todos", "Marcha", "Resistência", "Agilidade"] },
       dual: { title: "Dupla Tarefa", shortTitle: "Dupla Tarefa", icon: "fa-brain", color: "text-purple-700 dark:text-purple-400", bg: "bg-purple-50 dark:bg-purple-900/30", border: "border-purple-200 dark:border-purple-800", subgroups: ["Todos", "Cognitiva + Motora", "Equilíbrio + Fala"] }
@@ -106,7 +122,7 @@
       const [email, setEmail] = useState('');
       const [password, setPassword] = useState('');
       const [fullName, setFullName] = useState('');
-      const [teamGroup, setTeamGroup] = useState('Equipe 1');
+      const [teamGroup, setTeamGroup] = useState('E1');
       const [showPassword, setShowPassword] = useState(false);
       const [loading, setLoading] = useState(false);
       const [error, setError] = useState('');
@@ -154,10 +170,10 @@
                   <div>
                     <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Grupo de Extensão</label>
                     <select value={teamGroup} onChange={e=>setTeamGroup(e.target.value)} className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100">
-                      <option value="Equipe 1">Grupo Equipe 1</option>
-                      <option value="Equipe 2">Grupo Equipe 2</option>
-                      <option value="Equipe 3">Grupo Equipe 3</option>
-                      <option value="Equipe 4">Grupo Equipe 4</option>
+                      <option value="E1">Grupo E1</option>
+                      <option value="E2">Grupo E2</option>
+                      <option value="E3">Grupo E3</option>
+                      <option value="E4">Grupo E4</option>
                     </select>
                   </div>
                 </>
@@ -302,7 +318,11 @@
             supabaseClient.from('participants').select('*').order('name', { ascending: true }),
             supabaseClient.from('profiles').select('*').order('full_name', { ascending: true })
           ]);
-          if(ex) setExercises(ex); 
+          if(ex) {
+             setExercises([...PRELOADED_EXERCISES, ...ex]); 
+          } else {
+             setExercises(PRELOADED_EXERCISES);
+          }
           if(ci) setSavedCircuits(ci); 
           if(an) setAnnouncements(an); 
           if(pa && pa.length > 0) setParticipantsList(pa);
@@ -768,10 +788,10 @@
                           <select value={profileForm.team_group} onChange={e=>setProfileForm({...profileForm, team_group: e.target.value})} className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100">
                             <option value="">Selecione...</option>
                             <option value="Nenhum">Não aplicável</option>
-                            <option value="Equipe 1">Grupo Equipe 1</option>
-                            <option value="Equipe 2">Grupo Equipe 2</option>
-                            <option value="Equipe 3">Grupo Equipe 3</option>
-                            <option value="Equipe 4">Grupo Equipe 4</option>
+                            <option value="E1">Grupo E1</option>
+                            <option value="E2">Grupo E2</option>
+                            <option value="E3">Grupo E3</option>
+                            <option value="E4">Grupo E4</option>
                           </select>
                         </div>
                       </div>
@@ -862,7 +882,7 @@
                                     </div>
                                   </div> 
                                 ) 
-                              })
+                              }) 
                             )}
                           </div>
                         </div>
@@ -1012,10 +1032,10 @@
                             <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Agrupamento</label>
                             <select value={editingMember.team_group} onChange={e=>setEditingMember({...editingMember, team_group: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100">
                               <option value="Nenhum">Não designado</option>
-                              <option value="Equipe 1">Grupo Equipe 1</option>
-                              <option value="Equipe 2">Grupo Equipe 2</option>
-                              <option value="Equipe 3">Grupo Equipe 3</option>
-                              <option value="Equipe 4">Grupo Equipe 4</option>
+                              <option value="E1">Grupo E1</option>
+                              <option value="E2">Grupo E2</option>
+                              <option value="E3">Grupo E3</option>
+                              <option value="E4">Grupo E4</option>
                             </select>
                           </div>
                           <div>
@@ -1234,7 +1254,7 @@
                                   </div>
                                   <select value="" onChange={(e) => addToCircuit(index, e.target.value)} className="w-full px-2 py-2 border border-dashed border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 outline-none text-[10px] font-semibold text-slate-500 dark:text-slate-400 cursor-pointer mt-auto rounded">
                                     <option value="">+ Anexar procedimento...</option>
-                                    {approvedExercises.map(ex => ( <option key={ex.id} value={ex.id}>[{ex.muscleGroup}] {ex.title}</option> ))}
+                                    {exercises.map(ex => ( <option key={ex.id} value={ex.id}>[{ex.muscleGroup}] {ex.title}</option> ))}
                                   </select>
                                 </div>
                               </div> 
@@ -1416,7 +1436,7 @@
                         return ( 
                           <div key={ex.id} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer overflow-hidden flex flex-col hover:border-slate-300 dark:hover:border-slate-600 transition-colors" onClick={() => { setSelectedExercise(ex); setCurrentView('detail'); }}>
                             <div className="h-36 bg-slate-100 dark:bg-slate-800 flex items-center justify-center relative border-b border-slate-100 dark:border-slate-800">
-                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="text-slate-400 dark:text-slate-500"><i className="fa-solid fa-video text-2xl"></i></div> ) : ( <i className="fa-solid fa-dumbbell text-2xl text-slate-300 dark:text-slate-600"></i> )}
+                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover" /> ) : isVideo ? ( <div className="text-slate-400 dark:text-slate-500"><i className="fa-solid fa-video text-2xl"></i></div> ) : ( <img src={ex.mediaUrl || `https://placehold.co/600x400/1e293b/ffffff?text=${ex.title.replace(/\s/g, '+')}`} className="w-full h-full object-cover" /> )}
                             </div>
                             <div className="p-4 flex-1 flex flex-col">
                               <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-2 truncate">{ex.muscleGroup}</span>
