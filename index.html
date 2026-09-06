@@ -66,21 +66,14 @@
     const SUPABASE_ANON_KEY = "sb_publishable_WtX-V75sKhWRnm7G_x6W1Q_fzuagXGH"; 
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // BILIOTECA DO ATIVIDOSO COM VÍDEOS DO YOUTUBE
     const PRELOADED_EXERCISES = [
-      { id: 'pre_1', title: 'Rosca Concentrada / Martelo', category: 'mmss', muscleGroup: 'Biceps', difficulty: 'Iniciante / Leve', equipment: 'Halter', dosage: '3x10', instructions: 'Sentada no banco, posicionada para realizar a rosca unilateral com halter. Alternativa: rosca martelo com flexão de cotovelo com pegada neutra.', precautions: 'Manter a coluna reta e os movimentos controlados.', mediaUrl: 'https://placehold.co/600x400/202b5c/ffffff?text=Rosca+Concentrada', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_2', title: 'Remada Baixa com Elástico', category: 'mmss', muscleGroup: 'Costas', difficulty: 'Intermediário / Moderado', equipment: 'Miniband / Theraband', dosage: '3x10', instructions: 'Com as faixas fixadas nas grades ao nível dos cotovelos, realizar o movimento de remada puxando o elástico em direção ao corpo.', precautions: 'Evitar curvar os ombros para frente.', mediaUrl: 'https://placehold.co/600x400/202b5c/ffffff?text=Remada+Baixa', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_3', title: 'Abdominal Tradicional / Adaptação', category: 'core', muscleGroup: 'Abdômen', difficulty: 'Iniciante / Leve', equipment: 'Colchonete / Bambolê', dosage: 'Conforme resistência', instructions: 'Deite-se de costas, joelhos flexionados e mãos na cabeça. Eleve o tronco em direção aos joelhos. Adaptação: realizar a flexão com o instrutor segurando um bambolê à frente.', precautions: 'Não puxar o pescoço com as mãos.', mediaUrl: 'https://placehold.co/600x400/202b5c/ffffff?text=Abdominal', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_4', title: 'Ponte (Elevação Pélvica)', category: 'core', muscleGroup: 'Lombar', difficulty: 'Iniciante / Leve', equipment: 'Colchonete / Banco', dosage: 'Conforme resistência', instructions: 'Deite-se de costas, joelhos dobrados e pés no chão. Eleve o quadril contraindo abdômen e glúteos. Pode ser feito sobre um banco para reduzir a dificuldade.', precautions: 'Manter a estabilidade durante a elevação.', mediaUrl: 'https://placehold.co/600x400/202b5c/ffffff?text=Ponte+Pelvica', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_5', title: 'Extensão de Tríceps com Elástico', category: 'mmss', muscleGroup: 'Tríceps', difficulty: 'Intermediário / Moderado', equipment: 'Elástico', dosage: '3x12', instructions: 'Em pé, de frente para a grade, segurar o elástico com cotovelo a 90 graus e estender o braço para baixo.', precautions: 'Manter o cotovelo colado ao corpo.', mediaUrl: 'https://placehold.co/600x400/202b5c/ffffff?text=Extensao+Triceps', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_6', title: 'Sentar e Levantar + Passo Lateral', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '2x15', instructions: 'Levantar da cadeira com os braços nos ombros, dar um passo para o lado, voltar e sentar novamente.', precautions: 'Garantir que a cadeira não escorregue.', mediaUrl: 'https://placehold.co/600x400/10b981/ffffff?text=Sentar+e+Levantar', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_7', title: 'Agachamento com Step', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Intermediário / Moderado', equipment: 'Step', dosage: '2x12', instructions: 'Iniciar em pé sobre o step. Descer colocando os pés no chão de cada lado, agachar e voltar a subir no step.', precautions: 'Atenção redobrada ao equilíbrio na descida e subida.', mediaUrl: 'https://placehold.co/600x400/10b981/ffffff?text=Agachamento+Step', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_8', title: 'Stiff com Theraband', category: 'mmii', muscleGroup: 'Isquiostibiais', difficulty: 'Intermediário / Moderado', equipment: 'Theraband / Halter', dosage: 'A definir', instructions: 'Em pé, realizar flexão de quadril com leve flexão dos joelhos, retornando à posição ereta com extensão de quadril.', precautions: 'Manter as costas estabilizadas.', mediaUrl: 'https://placehold.co/600x400/10b981/ffffff?text=Stiff+Theraband', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_9', title: 'Elevação de Panturrilha no Step', category: 'mmii', muscleGroup: 'Panturrilha', difficulty: 'Iniciante / Leve', equipment: 'Step e Apoio', dosage: '2x10', instructions: 'Ficar em pé na ponta do step com apoio. Elevar os calcanhares ficando na ponta dos pés e descer lentamente.', precautions: 'Garantir que haja apoio de mãos para segurança.', mediaUrl: 'https://placehold.co/600x400/10b981/ffffff?text=Panturrilha+Step', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_10', title: 'Mobilidade do Tornozelo (Círculos)', category: 'mmii', muscleGroup: 'Tornozelo / Pé', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '2x10 cada lado', instructions: 'Sentado na cadeira, elevar levemente o pé e realizar movimentos circulares amplos com o tornozelo.', precautions: 'Nenhuma contraindicação direta.', mediaUrl: 'https://placehold.co/600x400/10b981/ffffff?text=Mobilidade+Tornozelo', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_11', title: 'Saltos Laterais / Deslocamento', category: 'aerobic', muscleGroup: 'Agilidade', difficulty: 'Intermediário / Moderado', equipment: 'Marcação no chão', dosage: '3 séries de 15s', instructions: 'O participante realiza saltos laterais sobre a marcação. Adaptação: pequenos deslocamentos rápidos.', precautions: 'Atenção ao impacto articular.', mediaUrl: 'https://placehold.co/600x400/e63946/ffffff?text=Saltos+Laterais', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_12', title: 'Corrida com Arremesso e Agachamento', category: 'dual', muscleGroup: 'Cognitiva + Motora', difficulty: 'Avançado / Intenso', equipment: 'Bola', dosage: '2x10', instructions: 'Em dupla: realizar corrida lateral associada a arremesso de bola e agachamento imediato após o passe.', precautions: 'Exige cognição alta e sincronia.', mediaUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Corrida+e+Arremesso', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_13', title: 'Bicicleta Estacionária com Toque', category: 'dual', muscleGroup: 'Cognitiva + Motora', difficulty: 'Intermediário / Moderado', equipment: 'Bicicleta', dosage: 'Contínuo', instructions: 'Pedalar mantendo estímulo cardiovascular enquanto toca de forma cruzada os joelhos com a mão oposta.', precautions: 'Não perder o controle da bicicleta.', mediaUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Bicicleta+Cognitiva', status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_14', title: 'Polichinelos', category: 'aerobic', muscleGroup: 'Todos', difficulty: 'Intermediário / Moderado', equipment: 'Nenhum', dosage: '2x10', instructions: 'Trabalho contínuo de abertura de pernas e braços para elevar a frequência cardiorrespiratória.', precautions: 'Atenção aos indivíduos com histórico de lesão no ombro.', mediaUrl: 'https://placehold.co/600x400/e63946/ffffff?text=Polichinelos', status: 'approved', author: 'Sistema ATIVIDOSO' }
+      { id: 'pre_1', title: 'Fortalecimento de Pernas na Cadeira', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '3 séries de 10', instructions: '1. Sente-se com a postura reta em uma cadeira firme.\n2. Estique uma perna de cada vez, contraindo a coxa.\n3. Segure por 2 segundos e retorne lentamente.', precautions: 'Não estenda o joelho além do ponto de conforto para evitar dor nas articulações.', videoUrl: 'https://www.youtube.com/watch?v=8CE4CGCXyAA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_2', title: 'Mobilidade Articular de Ombros', category: 'mmss', muscleGroup: 'Ombro', difficulty: 'Iniciante / Leve', equipment: 'Cabo de Vassoura ou Bastão', dosage: '2 séries de 12', instructions: '1. Em pé ou sentado, segure o bastão com as duas mãos, mais largas que a largura dos ombros.\n2. Eleve o bastão até a altura do rosto ou acima da cabeça.\n3. Desça controladamente.', precautions: 'Idosos com bursite ou tendinite devem elevar apenas até a linha do ombro (90 graus).', videoUrl: 'https://www.youtube.com/watch?v=A2wqkcjzIvk', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_3', title: 'Treino de Equilíbrio (Prevenção de Quedas)', category: 'dual', muscleGroup: 'Equilíbrio + Fala', difficulty: 'Intermediário / Moderado', equipment: 'Cadeira (para apoio)', dosage: '3x 20 segs (cada perna)', instructions: '1. Fique em pé atrás de uma cadeira e segure o encosto.\n2. Levante um dos pés do chão dobrando o joelho para trás.\n3. Tente soltar uma ou as duas mãos se sentir segurança.', precautions: 'Sempre realize próximo a uma parede ou com a cadeira firme para evitar risco de queda.', videoUrl: 'https://www.youtube.com/watch?v=nC-L0H_2PBE', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_4', title: 'Caminhada Estacionária Leve', category: 'aerobic', muscleGroup: 'Marcha', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '5 a 10 minutos', instructions: '1. Em pé, simule uma caminhada sem sair do lugar.\n2. Eleve os joelhos de forma alternada.\n3. Movimente os braços junto com a passada para ajudar no ritmo cardíaco.', precautions: 'Mantenha o ambiente livre de tapetes para não tropeçar.', videoUrl: 'https://www.youtube.com/watch?v=Ev6yE55dvOU', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_5', title: 'Panturrilha (Bomba Muscular Venosa)', category: 'mmii', muscleGroup: 'Panturrilha', difficulty: 'Iniciante / Leve', equipment: 'Parede ou Cadeira', dosage: '3 séries de 15', instructions: '1. Fique de pé e apoie as mãos na parede.\n2. Fique na ponta dos pés elevando os calcanhares.\n3. Desça lentamente controlando o peso do corpo.', precautions: 'Ajuda muito no retorno venoso (circulação), mas deve ser feito devagar para evitar cãibras.', videoUrl: 'https://www.youtube.com/watch?v=t1r-I6yQJj8', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_6', title: 'Alongamento Lombar na Cadeira', category: 'core', muscleGroup: 'Lombar', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '2x 30 segs', instructions: '1. Sente-se na ponta da cadeira com as pernas levemente afastadas.\n2. Incline o tronco para frente, soltando os braços em direção ao chão.\n3. Relaxe o pescoço e respire fundo.', precautions: 'Para retornar, suba o tronco desenrolando devagar para não causar tontura (hipotensão postural).', videoUrl: 'https://www.youtube.com/watch?v=r3Pj-X-H1oA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' }
     ];
 
     const AGENDA_DATA = [
@@ -1243,7 +1236,7 @@
                                   {index === 4 && <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">Funcional</span>}
                                 </div>
                                 <div className="p-4 flex flex-col gap-3 flex-1">
-                                  <div><label className="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Responsável pela Estação</label><input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => { const newResp = [...planDetails.stationResponsibles]; newResp[index] = e.target.value; setPlanDetails({...planDetails, stationResponsibles: newResp}); }} className="w-full px-3 py-1.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-xs text-slate-800 dark:text-slate-100" /></div>
+                                  <div><label className="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Responsável pela Estação</label><input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => { const newResp = [...planDetails.stationResponsibles]; newResp[index] = e.target.value; setPlanDetails({...planDetails, stationResponsibles: newResp}); }} className="w-full px-3 py-1.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-xs text-slate-800 dark:text-slate-100" placeholder="Nome dos monitores..." /></div>
                                   <div className="space-y-2">
                                     {stationExercises.map(ex => ( 
                                       <div key={ex.id} className="flex justify-between items-center bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-700">
@@ -1402,7 +1395,7 @@
                 </div>
               )}
 
-              {/* === TELA: BIBLIOTECA === */}
+              {/* === BIBLIOTECA === */}
               {currentView === 'library' && (
                 <div className="max-w-6xl mx-auto space-y-6">
                   <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-4 transition-colors">
@@ -1472,18 +1465,32 @@
 
       useEffect(() => {
         if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then((registrations) => { for (let reg of registrations) { reg.unregister(); } });
-        supabaseClient.auth.getSession().then(async ({ data: { session } }) => {
+        supabase.auth.getSession().then(async ({ data: { session } }) => {
           if (session) {
-            const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
-            setSession({ ...session.user, full_name: profile?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
+            const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+            setSession({ ...session.user, full_name: profile?.full_name || 'Pesquisador', role: profile?.role || 'Pesquisador', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
           }
           setLoadingAuth(false);
         });
       }, []);
 
-      const handleLogout = async () => { await supabaseClient.auth.signOut(); setSession(null); };
+      const handleLogout = async () => { await supabase.auth.signOut(); setSession(null); };
 
-      if (loadingAuth) return <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-300"><div className="flex flex-col items-center"><img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-28 drop-shadow-sm" onError={(e) => e.target.style.display='none'} /><p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-6">Autenticando acesso...</p></div><div className="flex gap-2 mt-4"><div className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600 animate-pulse"></div><div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-pulse" style={{animationDelay: '0.2s'}}></div><div className="w-2 h-2 rounded-full bg-slate-500 dark:bg-slate-400 animate-pulse" style={{animationDelay: '0.4s'}}></div></div></div>;
+      if (loadingAuth) return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-brand-bg dark:bg-slate-900 transition-colors duration-300">
+          <div className="flex flex-col items-center">
+            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg border border-slate-100 p-2 mb-6">
+              <img src="image_fa7f41.png" alt="Logo GPENVH" className="w-full h-full object-contain" onerror="this.style.display='none'" />
+            </div>
+            <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-2">Autenticando acesso...</p>
+          </div>
+          <div className="flex gap-2 mt-4">
+            <div className="w-2 h-2 rounded-full bg-brand-main animate-pulse"></div>
+            <div className="w-2 h-2 rounded-full bg-brand-light animate-pulse" style={{animationDelay: '0.2s'}}></div>
+            <div className="w-2 h-2 rounded-full bg-brand-dark animate-pulse" style={{animationDelay: '0.4s'}}></div>
+          </div>
+        </div>
+      );
       
       if (!session) return <LoginPage onLogin={setSession} />;
       return <Dashboard session={session} onLogout={handleLogout} updateSessionData={setSession} darkMode={darkMode} setDarkMode={setDarkMode} />;
