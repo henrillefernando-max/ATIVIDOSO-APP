@@ -637,37 +637,37 @@
       };
 
       const handleGenerateAutoEvolution = async () => {
-     const presentes = planDetails.attendanceList.filter(p => p.present);
-     if (presentes.length === 0) return alert("Aviso: Requer presença confirmada e parâmetros vitais inseridos na ficha para processar evolução.");
-     
-     const vitalsText = presentes.map(p => `${p.name} (PA inicial: ${p.pa_in||'?'} mmHg; SpO₂: ${p.spo2_in||'?'}%; FC inicial: ${p.fc_in||'?'} bpm / PA final: ${p.pa_out||'?'} mmHg; SpO₂: ${p.spo2_out||'?'}%; FC final: ${p.fc_out||'?'} bpm)`).join(', ');
-     
-     const prompt = `Você é um fisioterapeuta preenchendo um prontuário.
-     Resuma a evolução clínica da sessão de hoje para os seguintes idosos, 
-     avaliando se os sinais vitais se mantiveram estáveis:
-     ${vitalsText}
-     
-     Atividades realizadas: ${planDetails.proposedActivities || 'Circuito funcional'}.
-     Escreva um parágrafo profissional e direto.`;
+         const presentes = planDetails.attendanceList.filter(p => p.present);
+         if (presentes.length === 0) return alert("Aviso: Requer presença confirmada e parâmetros vitais inseridos na ficha para processar evolução.");
+         
+         const vitalsText = presentes.map(p => `${p.name} (PA inicial: ${p.pa_in||'?'} mmHg; SpO₂: ${p.spo2_in||'?'}%; FC inicial: ${p.fc_in||'?'} bpm / PA final: ${p.pa_out||'?'} mmHg; SpO₂: ${p.spo2_out||'?'}%; FC final: ${p.fc_out||'?'} bpm)`).join(', ');
+         
+         const prompt = `Você é um fisioterapeuta preenchendo um prontuário.
+         Resuma a evolução clínica da sessão de hoje para os seguintes idosos, 
+         avaliando se os sinais vitais se mantiveram estáveis:
+         ${vitalsText}
+         
+         Atividades realizadas: ${planDetails.proposedActivities || 'Circuito funcional'}.
+         Escreva um parágrafo profissional e direto.`;
 
-     // Mostra mensagem de carregamento na tela
-     setPlanDetails({...planDetails, dailyEvolution: 'Analisando dados clínicos com IA. Aguarde um instante...'});
+         // Mostra mensagem de carregamento na tela
+         setPlanDetails({...planDetails, dailyEvolution: 'Analisando dados clínicos com IA. Aguarde um instante...'});
 
-     try {
-        // Chama a Edge Function que acabamos de criar no Supabase
-        const { data, error } = await supabaseClient.functions.invoke('gerar-evolucao', {
-           body: { prompt: prompt }
-        });
+         try {
+            // Chama a Edge Function no Supabase
+            const { data, error } = await supabaseClient.functions.invoke('gerar-evolucao', {
+               body: { prompt: prompt }
+            });
 
-        if (error) throw error;
-        
-        // Coloca a resposta recebida dentro da caixinha de texto
-        setPlanDetails({...planDetails, dailyEvolution: data.resultado});
-     } catch (error) {
-        alert("Falha na comunicação com a IA: " + error.message);
-        setPlanDetails({...planDetails, dailyEvolution: ''});
-     }
-  };
+            if (error) throw error;
+            
+            // Coloca a resposta recebida dentro da caixinha de texto
+            setPlanDetails({...planDetails, dailyEvolution: data.resultado});
+         } catch (error) {
+            alert("Falha na comunicação com a IA: " + error.message);
+            setPlanDetails({...planDetails, dailyEvolution: ''});
+         }
+      };
 
         const data = await response.json();
         
@@ -1506,7 +1506,7 @@
         supabaseClient.auth.getSession().then(async ({ data: { session } }) => {
           if (session) {
             const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
-            setSession({ ...session.user, full_name: profile?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
+            setSession({ ...session.user, full_name: profile?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group, id: session.user.id });
           }
           setLoadingAuth(false);
         });
