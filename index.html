@@ -329,30 +329,28 @@
       };
 
       const upcomingActivity = useMemo(() => {
-        if(!session.team_group || session.team_group === 'Nenhum') return null;
         const hoje = new Date();
         const anoAtual = hoje.getFullYear();
         const mesAtual = hoje.getMonth() + 1;
         const diaAtual = hoje.getDate();
         const numeroHoje = parseInt(`${anoAtual}${String(mesAtual).padStart(2, '0')}${String(diaAtual).padStart(2, '0')}`);
         
-        let atividadeDestaSemana = null;
         for (let item of AGENDA_DATA) {
           const [d, m, y] = item.date.split('/'); 
           const numeroAtividade = parseInt(`${y}${m}${d}`);
           if (numeroAtividade >= numeroHoje) {
-            atividadeDestaSemana = item;
-            break; 
+            return item; 
           }
         }
-
-        if (!atividadeDestaSemana) return null;
-        const grupoUsuario = session.team_group.toLowerCase();
-        const responsaveis = atividadeDestaSemana.resp.toLowerCase();
-
-        if (responsaveis.includes(grupoUsuario) || responsaveis.includes('todos')) return atividadeDestaSemana; 
         return null; 
-      }, [session.team_group]);
+      }, []);
+
+      const isMyTurn = useMemo(() => {
+        if (!upcomingActivity || !session?.team_group || session.team_group === 'Nenhum') return false;
+        const resp = upcomingActivity.resp.toLowerCase();
+        const myGroup = session.team_group.toLowerCase();
+        return resp.includes(myGroup) || resp.includes('todos');
+      }, [upcomingActivity, session]);
 
       const handleSaveProfile = async (e) => {
         e.preventDefault(); 
@@ -794,16 +792,24 @@
                   </div>
                   
                   {upcomingActivity && (
-                    <div className="bg-white dark:bg-slate-900 border-l-4 border-emerald-500 p-6 rounded-xl shadow-sm flex flex-col md:flex-row items-center md:items-start gap-4 transition-colors">
+                    <div className={`border-l-4 p-6 rounded-xl shadow-sm flex flex-col md:flex-row items-center md:items-start gap-4 transition-colors ${isMyTurn ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-500' : 'bg-white dark:bg-slate-900 border-brand-blue dark:border-brand-light'}`}>
                       <div className="text-center md:text-left flex-1">
-                        <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Atividade Pendente: {session.team_group}</h3>
-                        <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">A {session.team_group} está responsável pela documentação da próxima atividade no ATIVIDOSO.</p>
+                        <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">
+                          {isMyTurn ? '🚨 Atenção: É a vez do seu grupo!' : 'Próxima Atividade da Agenda'}
+                        </h3>
+                        <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
+                          Responsável pela documentação: <strong className="text-brand-blue dark:text-brand-light">{upcomingActivity.resp}</strong>
+                        </p>
                         <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg border border-slate-100 dark:border-slate-700 mt-3 inline-block">
-                          <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-0.5 font-semibold">Cronograma Base</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-0.5 font-semibold">Data e Tema</p>
                           <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{upcomingActivity.date} — {upcomingActivity.title}</p>
                         </div>
                       </div>
-                      <button onClick={() => handleNavClick('circuito', 'plan')} className="w-full md:w-auto px-5 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors mt-2 md:mt-0 text-sm">Prosseguir ao Planejamento</button>
+                      {isMyTurn && (
+                        <button onClick={() => handleNavClick('circuito', 'plan')} className="w-full md:w-auto px-5 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors mt-2 md:mt-0 text-sm">
+                          Prosseguir ao Planejamento
+                        </button>
+                      )}
                     </div>
                   )}
 
