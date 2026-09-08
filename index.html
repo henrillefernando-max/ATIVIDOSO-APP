@@ -669,17 +669,6 @@
          }
       };
 
-        const data = await response.json();
-        
-        // Extrai a resposta da IA e coloca na caixinha de texto do seu app!
-        const textoGerado = data.candidates[0].content.parts[0].text;
-        setPlanDetails(prev => ({...prev, dailyEvolution: textoGerado}));
-
-    } catch (error) {
-        alert("Erro ao conectar com a IA.");
-        setPlanDetails(prev => ({...prev, dailyEvolution: ''}));
-    }
-};
 
       const handleGenerateReportPDF = (circuitData) => {
         const d = circuitData.details;
