@@ -22,7 +22,7 @@
       theme: { 
         extend: { 
           colors: { 
-            brand: { blue: '#202b5c', dark: '#161e42', light: '#4d60b5', red: '#e63946', redDark: '#c52833' } 
+            brand: { blue: '#202b5c', dark: '#161e42', light: '#4d60b5', red: '#e63946', redDark: '#c52833', ia: '#8b5cf6' } 
           } 
         } 
       } 
@@ -45,19 +45,7 @@
   </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased selection:bg-brand-red selection:text-white transition-colors duration-300">
-  <div id="root">
-    <div class="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
-      <div class="relative z-10 flex flex-col items-center">
-        <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" class="h-28 drop-shadow-sm" onerror="this.style.display='none'" />
-        <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-6">Carregando plataforma...</p>
-      </div>
-      <div class="flex gap-2 mt-4 relative z-10">
-        <div class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600 animate-pulse"></div>
-        <div class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-pulse" style="animation-delay: 0.2s"></div>
-        <div class="w-2 h-2 rounded-full bg-slate-500 dark:bg-slate-400 animate-pulse" style="animation-delay: 0.4s"></div>
-      </div>
-    </div>
-  </div>
+  <div id="root"></div>
 
   <script type="text/babel">
     const { useState, useEffect, useMemo, useRef } = React;
@@ -67,20 +55,12 @@
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const PRELOADED_EXERCISES = [
-      { id: 'pre_1', title: 'Membros Superiores: Exercícios com Carga Leve', category: 'mmss', muscleGroup: 'Todos', difficulty: 'Iniciante / Leve', equipment: 'Garrafas Pet ou Halteres Leves', dosage: '3x10', instructions: 'Sentado de forma ereta, realizar elevações frontais e laterais dos braços acompanhando a respiração.', precautions: 'Evitar elevar os braços acima da linha dos ombros se houver dor.', videoUrl: 'https://www.youtube.com/watch?v=crBBmPLJNAM', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_2', title: 'Fortalecimento de Braços Sentado na Cadeira', category: 'mmss', muscleGroup: 'Biceps', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '3x12', instructions: 'Com os pés bem apoiados, realizar flexão e extensão dos cotovelos (rosca) focando na força dos braços.', precautions: 'Manter a coluna bem apoiada no encosto.', videoUrl: 'https://www.youtube.com/watch?v=FdexNt6Sblc', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_3', title: 'Exercícios Mágicos para Ombros e Braços', category: 'mmss', muscleGroup: 'Ombro', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '2x15', instructions: 'Realizar rotações circulares com os ombros e movimentos guiados de alongamento para ganho de mobilidade.', precautions: 'Não ultrapassar o limite da dor articular.', videoUrl: 'https://www.youtube.com/watch?v=-EvsDX_8afI', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_4', title: '6 Exercícios de Equilíbrio e Prevenção de Quedas', category: 'core', muscleGroup: 'Postura', difficulty: 'Intermediário / Moderado', equipment: 'Cadeira (Apoio)', dosage: '3x10', instructions: 'Utilizando o encosto para segurança, praticar o apoio unipodal e transferência de peso lateral.', precautions: 'Manter o apoio de mãos sempre próximo.', videoUrl: 'https://www.youtube.com/watch?v=I4WExpJeCdA', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_5', title: 'Melhore o Equilíbrio e Estabilidade do Core', category: 'core', muscleGroup: 'Lombar', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: 'Conforme tolerância', instructions: 'Série focada na ativação muscular do centro do corpo (core) para facilitar caminhadas e estabilizar a lombar.', precautions: 'Fazer os movimentos de forma lenta.', videoUrl: 'https://www.youtube.com/watch?v=nNu2-e5_PiY', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_6', title: 'Fortalecimento de Pernas para Idosos', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Intermediário / Moderado', equipment: 'Cadeira', dosage: '3x10', instructions: 'Prática de sentar e levantar da cadeira cruzando os braços, focando no controle motor da descida.', precautions: 'A cadeira não pode ser de rodas e deve estar firme.', videoUrl: 'https://www.youtube.com/watch?v=zmileYNHP_A', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_7', title: 'Treino Completo de Equilíbrio para Terceira Idade', category: 'mmii', muscleGroup: 'Todos', difficulty: 'Avançado / Intenso', equipment: 'Nenhum', dosage: 'Contínuo (15 min)', instructions: 'Circuito guiado focando na estabilidade da pelve e dos membros inferiores com alternância de passos.', precautions: 'Se houver histórico de vertigem, estar acompanhado.', videoUrl: 'https://www.youtube.com/watch?v=W2EucDEc9Pg', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_8', title: 'Membro Inferior com Faixa Elástica (Miniband)', category: 'mmii', muscleGroup: 'Glúteos', difficulty: 'Intermediário / Moderado', equipment: 'Faixa Elástica', dosage: '3x12', instructions: 'Com a faixa acima dos joelhos, abrir e fechar as pernas contra a resistência.', precautions: 'Manter a planta do pé fixa no chão.', videoUrl: 'https://www.youtube.com/watch?v=K7pJpfH_xTs', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_9', title: 'Fortalecimento de Posteriores de Coxa', category: 'mmii', muscleGroup: 'Isquiostibiais', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '3x10', instructions: 'Em pé e apoiado na cadeira, flexionar o joelho levando o calcanhar em direção aos glúteos.', precautions: 'Atenção para não inclinar o tronco para frente.', videoUrl: 'https://www.youtube.com/watch?v=Ho8LeP5-s1I', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_10', title: 'Exercícios Aeróbicos em Casa', category: 'aerobic', muscleGroup: 'Resistência', difficulty: 'Intermediário / Moderado', equipment: 'Nenhum', dosage: '15 minutos contínuos', instructions: 'Série cardiovascular englobando caminhada estacionária e movimentos coordenados de braços e pernas.', precautions: 'Pausar e hidratar se a frequência subir muito.', videoUrl: 'https://www.youtube.com/watch?v=9cKe2I-Ta14', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_11', title: 'Aula Aeróbica Completa Sentado na Cadeira', category: 'aerobic', muscleGroup: 'Marcha', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '10 minutos contínuos', instructions: 'Simulação vigorosa de marcha na posição sentada, ideal para treino cardiovascular sem impacto.', precautions: 'Recomendado para restrição de carga ou sobrepeso.', videoUrl: 'https://www.youtube.com/watch?v=fq3usJz2uEw', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_12', title: 'Treino Aeróbico de 15 min (Iniciantes)', category: 'aerobic', muscleGroup: 'Todos', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '15 minutos contínuos', instructions: 'Passos laterais e elevações moderadas de joelhos voltadas ao condicionamento básico.', precautions: 'Adaptar a velocidade ao próprio ritmo.', videoUrl: 'https://www.youtube.com/watch?v=2fGNM_zqKEE', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_13', title: 'Dupla Tarefa: Cérebro e Equilíbrio', category: 'dual', muscleGroup: 'Cognitiva + Motora', difficulty: 'Intermediário / Moderado', equipment: 'Nenhum', dosage: 'Contínuo', instructions: 'Estimulação combinada exigindo execução de movimentos de marcha junto com raciocínio ou enumeração de palavras.', precautions: 'Privilegiar a segurança e realizar próximo a apoios.', videoUrl: 'https://www.youtube.com/watch?v=8HjNfnNAZUw', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' },
-      { id: 'pre_14', title: '11 Exercícios de Dupla Tarefa (Marcha)', category: 'dual', muscleGroup: 'Equilíbrio + Fala', difficulty: 'Avançado / Intenso', equipment: 'Cones/Obstáculos', dosage: 'Circuito', instructions: 'Progredir na caminhada contornando obstáculos enquanto realiza comandos vocais e contagens reversas.', precautions: 'Necessita de acompanhamento rigoroso do monitor/fisioterapeuta para evitar quedas.', videoUrl: 'https://www.youtube.com/watch?v=LUGL-JHe8xI', mediaUrl: null, status: 'approved', author: 'Sistema ATIVIDOSO' }
+      { id: 'pre_1', title: 'Fortalecimento de Pernas na Cadeira', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '3 séries de 10', instructions: '1. Sente-se com a postura reta em uma cadeira firme.\n2. Estique uma perna de cada vez, contraindo a coxa.\n3. Segure por 2 segundos e retorne lentamente.', precautions: 'Não estenda o joelho além do ponto de conforto para evitar dor nas articulações.', videoUrl: 'https://www.youtube.com/watch?v=8CE4CGCXyAA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_2', title: 'Mobilidade Articular de Ombros', category: 'mmss', muscleGroup: 'Ombro', difficulty: 'Iniciante / Leve', equipment: 'Bastão', dosage: '2 séries de 12', instructions: '1. Em pé ou sentado, segure o bastão com as duas mãos.\n2. Eleve o bastão até a altura do rosto ou acima da cabeça.\n3. Desça controladamente.', precautions: 'Idosos com bursite devem elevar apenas até a linha do ombro.', videoUrl: 'https://www.youtube.com/watch?v=A2wqkcjzIvk', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_3', title: 'Treino de Equilíbrio (Prevenção de Quedas)', category: 'dual', muscleGroup: 'Equilíbrio + Fala', difficulty: 'Intermediário / Moderado', equipment: 'Cadeira', dosage: '3x 20 segs', instructions: '1. Fique em pé atrás de uma cadeira e segure o encosto.\n2. Levante um dos pés do chão dobrando o joelho para trás.\n3. Tente soltar uma ou as duas mãos se sentir segurança.', precautions: 'Sempre realize próximo a uma parede.', videoUrl: 'https://www.youtube.com/watch?v=nC-L0H_2PBE', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_4', title: 'Caminhada Estacionária Leve', category: 'aerobic', muscleGroup: 'Marcha', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '5 a 10 min', instructions: '1. Em pé, simule uma caminhada sem sair do lugar.\n2. Eleve os joelhos de forma alternada.\n3. Movimente os braços junto com a passada.', precautions: 'Mantenha o ambiente livre de tapetes para não tropeçar.', videoUrl: 'https://www.youtube.com/watch?v=Ev6yE55dvOU', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_5', title: 'Panturrilha (Bomba Muscular Venosa)', category: 'mmii', muscleGroup: 'Panturrilha', difficulty: 'Iniciante / Leve', equipment: 'Parede', dosage: '3 séries de 15', instructions: '1. Fique de pé e apoie as mãos na parede.\n2. Fique na ponta dos pés elevando os calcanhares.\n3. Desça lentamente.', precautions: 'Deve ser feito devagar para evitar cãibras.', videoUrl: 'https://www.youtube.com/watch?v=t1r-I6yQJj8', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_6', title: 'Alongamento Lombar na Cadeira', category: 'core', muscleGroup: 'Lombar', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '2x 30 segs', instructions: '1. Sente-se na ponta da cadeira com as pernas levemente afastadas.\n2. Incline o tronco para frente, soltando os braços.\n3. Relaxe o pescoço e respire fundo.', precautions: 'Suba o tronco desenrolando devagar para não causar tontura.', videoUrl: 'https://www.youtube.com/watch?v=r3Pj-X-H1oA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' }
     ];
 
     const AGENDA_DATA = [
@@ -133,19 +113,15 @@
         setError('');
         if (isLogin) {
           const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-          if (error) { 
-            setError('Credenciais incorretas.'); 
-            setLoading(false); 
-          } else if (data.session) {
+          if (error) { setError('Credenciais incorretas.'); setLoading(false); } 
+          else if (data.session) {
             const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', data.session.user.id).single();
             onLogin({ ...data.session.user, full_name: profile?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
           }
         } else {
           const { data, error } = await supabaseClient.auth.signUp({ email, password });
-          if (error) { 
-            setError(error.message); 
-            setLoading(false); 
-          } else if (data.user) {
+          if (error) { setError(error.message); setLoading(false); } 
+          else if (data.user) {
             await supabaseClient.from('profiles').insert([{ id: data.user.id, full_name: fullName, role: 'Monitor', team_group: teamGroup }]);
             onLogin({ ...data.user, full_name: fullName, role: 'Monitor', team_group: teamGroup });
           }
@@ -170,10 +146,7 @@
                   <div>
                     <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Grupo de Extensão</label>
                     <select value={teamGroup} onChange={e=>setTeamGroup(e.target.value)} className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm transition-colors text-slate-800 dark:text-slate-100">
-                      <option value="E1">Grupo E1</option>
-                      <option value="E2">Grupo E2</option>
-                      <option value="E3">Grupo E3</option>
-                      <option value="E4">Grupo E4</option>
+                      <option value="E1">Grupo E1</option><option value="E2">Grupo E2</option><option value="E3">Grupo E3</option><option value="E4">Grupo E4</option>
                     </select>
                   </div>
                 </>
@@ -214,13 +187,8 @@
       const touchStartX = useRef(null);
       const touchEndX = useRef(null);
 
-      const onTouchStart = (e) => {
-        touchEndX.current = null;
-        touchStartX.current = e.targetTouches[0].clientX;
-      };
-      const onTouchMove = (e) => {
-        touchEndX.current = e.targetTouches[0].clientX;
-      };
+      const onTouchStart = (e) => { touchEndX.current = null; touchStartX.current = e.targetTouches[0].clientX; };
+      const onTouchMove = (e) => { touchEndX.current = e.targetTouches[0].clientX; };
       const onTouchEnd = () => {
         if (!touchStartX.current || !touchEndX.current) return;
         const distance = touchStartX.current - touchEndX.current;
@@ -252,7 +220,7 @@
       const [circuit, setCircuit] = useState([[], [], [], [], []]);
       const [viewingCircuit, setViewingCircuit] = useState(null);
       const [planDetails, setPlanDetails] = useState({ 
-        activityNum: '', theme: '', date: '', students: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['', '', '', '', ''], 
+        activityNum: '', theme: '', date: '', students: '', warmUp: '', coolDown: '', stationResponsibles: ['', '', '', '', ''], 
         proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', 
         developmentNarrative: '', dailyEvolution: '', resultObtained: '', attendanceCount: '', attendanceList: [] 
       });
@@ -318,11 +286,7 @@
             supabaseClient.from('participants').select('*').order('name', { ascending: true }),
             supabaseClient.from('profiles').select('*').order('full_name', { ascending: true })
           ]);
-          if(ex) {
-             setExercises([...PRELOADED_EXERCISES, ...ex]); 
-          } else {
-             setExercises(PRELOADED_EXERCISES);
-          }
+          if(ex) { setExercises([...PRELOADED_EXERCISES, ...ex]); } else { setExercises(PRELOADED_EXERCISES); }
           if(ci) setSavedCircuits(ci); 
           if(an) setAnnouncements(an); 
           if(pa && pa.length > 0) setParticipantsList(pa);
@@ -358,9 +322,7 @@
         for (let item of AGENDA_DATA) {
           const [d, m, y] = item.date.split('/'); 
           const numeroAtividade = parseInt(`${y}${m}${d}`);
-          if (numeroAtividade >= numeroHoje) {
-            return item; 
-          }
+          if (numeroAtividade >= numeroHoje) { return item; }
         }
         return null; 
       }, []);
@@ -386,90 +348,49 @@
         if(!error) { 
           setProfileStatus('Perfil atualizado com sucesso.'); 
           updateSessionData({ ...session, full_name: profileForm.full_name, team_group: profileForm.team_group, avatar_url: newAvatarUrl }); 
-        } else { 
-          setProfileStatus('Erro ao atualizar perfil.'); 
-        }
+        } else { setProfileStatus('Erro ao atualizar perfil.'); }
       };
 
       const handleUpdateMember = async (e) => {
         e.preventDefault();
-        const { error } = await supabaseClient.from('profiles').update({ 
-          full_name: editingMember.full_name, 
-          team_group: editingMember.team_group, 
-          role: editingMember.role 
-        }).eq('id', editingMember.id);
+        const { error } = await supabaseClient.from('profiles').update({ full_name: editingMember.full_name, team_group: editingMember.team_group, role: editingMember.role }).eq('id', editingMember.id);
         
         if(!error) {
           setTeamMembers(teamMembers.map(m => m.id === editingMember.id ? editingMember : m));
           setEditingMember(null);
           alert("Perfil modificado com sucesso.");
-        } else {
-          alert("Erro na atualização: " + error.message);
-        }
+        } else { alert("Erro na atualização: " + error.message); }
       };
 
       const handlePostAnnouncement = async (e) => {
         e.preventDefault();
-        const { data, error } = await supabaseClient.from('announcements').insert([{ 
-          title: newAnnouncement.title, 
-          content: newAnnouncement.content, 
-          link_url: newAnnouncement.link_url || null, 
-          author: session.full_name 
-        }]).select();
-        if (error) {
-          alert("Falha na submissão: " + error.message);
-        } else if (data) { 
-          setAnnouncements([data[0], ...announcements]); 
-          setNewAnnouncement({ title: '', content: '', link_url: '' }); 
-        }
+        const { data, error } = await supabaseClient.from('announcements').insert([{ title: newAnnouncement.title, content: newAnnouncement.content, link_url: newAnnouncement.link_url || null, author: session.full_name }]).select();
+        if (error) { alert("Falha na submissão: " + error.message); } else if (data) { setAnnouncements([data[0], ...announcements]); setNewAnnouncement({ title: '', content: '', link_url: '' }); }
       };
 
       const handleDeleteAnnouncement = async (id) => { 
         if(window.confirm("Confirmar exclusão deste registro?")) { 
           const { error } = await supabaseClient.from('announcements').delete().eq('id', id); 
-          if (error) {
-            alert("Erro na exclusão: " + error.message); 
-          } else {
-            setAnnouncements(announcements.filter(a => a.id !== id)); 
-          }
+          if (error) { alert("Erro na exclusão: " + error.message); } else { setAnnouncements(announcements.filter(a => a.id !== id)); }
         } 
       };
 
       const handleSendCustomEmail = async (e) => {
          e.preventDefault();
          if (!customEmailDest) return alert("Preencha o campo de e-mail do destinatário.");
-         
          setEmailStatus('Processando envio...');
-
          try {
             const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-               method: 'POST',
-               headers: { 'Content-Type': 'application/json' },
-               body: JSON.stringify({
-                  service_id: 'service_kciprxo',
-                  template_id: 'template_0gf0p9l',
-                  user_id: 'GiJe0KFVPsrE8JpC8', 
-                  template_params: {
-                     to_email: customEmailDest,
-                     message: customEmailMessage
-                  }
-               })
+               method: 'POST', headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({ service_id: 'service_kciprxo', template_id: 'template_0gf0p9l', user_id: 'GiJe0KFVPsrE8JpC8', template_params: { to_email: customEmailDest, message: customEmailMessage } })
             });
 
             if (response.ok) {
-               setEmailStatus('');
-               setCustomEmailDest('');
-               setCustomEmailMessage('');
-               alert("E-mail encaminhado com sucesso.");
+               setEmailStatus(''); setCustomEmailDest(''); setCustomEmailMessage(''); alert("E-mail encaminhado com sucesso.");
             } else {
-               const errorText = await response.text();
-               alert("Falha no servidor SMTP: " + errorText);
-               setEmailStatus('Erro na operação.');
+               const errorText = await response.text(); alert("Falha no servidor SMTP: " + errorText); setEmailStatus('Erro na operação.');
             }
-         } catch (err) {
-            alert("Falha de rede: " + err.message);
-            setEmailStatus('Erro na conexão.');
-         }
+         } catch (err) { alert("Falha de rede: " + err.message); setEmailStatus('Erro na conexão.'); }
       };
 
       const handleSendEmail = () => {
@@ -489,29 +410,14 @@
           url = supabaseClient.storage.from('midia_exercicios').getPublicUrl(fName).data.publicUrl;
         }
         
-        const ex = { 
-          title: formData.title, 
-          category: formCat, 
-          "muscleGroup": formMuscleSelect === 'Outro' ? formCustomMuscle : formMuscleSelect, 
-          difficulty: formData.difficulty, 
-          equipment: formData.equipment, 
-          dosage: formData.dosage, 
-          "videoUrl": formData.videoUrl, 
-          "mediaUrl": url, 
-          instructions: formData.instructions, 
-          precautions: formData.precautions, 
-          status: 'pending', 
-          author: session.full_name 
-        };
+        const ex = { title: formData.title, category: formCat, "muscleGroup": formMuscleSelect === 'Outro' ? formCustomMuscle : formMuscleSelect, difficulty: formData.difficulty, equipment: formData.equipment, dosage: formData.dosage, "videoUrl": formData.videoUrl, "mediaUrl": url, instructions: formData.instructions, precautions: formData.precautions, status: 'pending', author: session.full_name };
         
         const { error } = await supabaseClient.from('exercises').insert([ex]);
         
         if (!error) { 
           setFormStatus({ loading: false, success: true }); 
           setFormData({ title:'', difficulty:'Iniciante / Leve', equipment:'Nenhum', dosage:'', videoUrl:'', instructions:'', precautions:'' }); 
-          setFormCat(''); 
-          setFormMuscleSelect(''); 
-          setMediaFile(null); 
+          setFormCat(''); setFormMuscleSelect(''); setMediaFile(null); 
         } else { 
           setFormStatus({ loading: false, success: false }); 
           alert("Falha no envio de dados: " + error.message); 
@@ -559,15 +465,11 @@
       const updateAttendance = (idx, field, val) => {
          const list = [...planDetails.attendanceList]; 
          list[idx][field] = val;
-         setPlanDetails({
-           ...planDetails, 
-           attendanceList: list, 
-           attendanceCount: field === 'present' ? list.filter(p=>p.present).length.toString() : planDetails.attendanceCount
-         });
+         setPlanDetails({ ...planDetails, attendanceList: list, attendanceCount: field === 'present' ? list.filter(p=>p.present).length.toString() : planDetails.attendanceCount });
       };
 
       const startPlanning = () => { 
-        setPlanDetails({ activityNum: '', theme: '', date: '', students: '', warmUp: '', coolDown: 'Todos', stationResponsibles: ['','','','',''], proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', developmentNarrative: '', dailyEvolution: '', resultObtained: '', attendanceCount: '', attendanceList: [] }); 
+        setPlanDetails({ activityNum: '', theme: '', date: '', students: '', warmUp: '', coolDown: '', stationResponsibles: ['','','','',''], proposedActivities: '', objectives: '', vitalSigns: '', soundAndPhotos: '', specialCare: '', materials: '', developmentNarrative: '', dailyEvolution: '', resultObtained: '', attendanceCount: '', attendanceList: [] }); 
         setCircuit([[],[],[],[],[]]); 
         setCircuitMode('plan'); 
       };
@@ -636,38 +538,38 @@
         setCircuit(newCircuit); 
       };
 
-      const handleGenerateAutoEvolution = async () => {
+// --- INÍCIO DA PARTE 2 ---
+      // === FUNÇÃO UNIVERSAL DE INTELIGÊNCIA ARTIFICIAL ===
+      const handleAiGeneration = async (field, promptText) => {
+         setPlanDetails(prev => ({...prev, [field]: 'Processando diretrizes clínicas com IA. Aguarde um instante...'}));
+         try {
+            const { data, error } = await supabaseClient.functions.invoke('gerar-evolucao', {
+               body: { prompt: promptText }
+            });
+            if (error) throw error;
+            setPlanDetails(prev => ({...prev, [field]: data.resultado}));
+         } catch (error) {
+            alert("Falha de conexão com o Assistente de IA: " + error.message);
+            setPlanDetails(prev => ({...prev, [field]: ''}));
+         }
+      };
+
+      const gerarEvolucaoIA = () => {
          const presentes = planDetails.attendanceList.filter(p => p.present);
-         if (presentes.length === 0) return alert("Aviso: Requer presença confirmada e parâmetros vitais inseridos na ficha para processar evolução.");
+         if (presentes.length === 0) return alert("Aviso: Requer presença confirmada de pacientes com parâmetros vitais na ficha para processar evolução.");
          
          const vitalsText = presentes.map(p => `${p.name} (PA inicial: ${p.pa_in||'?'} mmHg; SpO₂: ${p.spo2_in||'?'}%; FC inicial: ${p.fc_in||'?'} bpm / PA final: ${p.pa_out||'?'} mmHg; SpO₂: ${p.spo2_out||'?'}%; FC final: ${p.fc_out||'?'} bpm)`).join(', ');
          
-         const prompt = `Você é um fisioterapeuta preenchendo um prontuário.
-         Resuma a evolução clínica da sessão de hoje para os seguintes idosos, 
-         avaliando se os sinais vitais se mantiveram estáveis:
+         const prompt = `Você é um fisioterapeuta preenchendo um prontuário gerontológico coletivo.
+         Resuma a evolução clínica da sessão de hoje para os seguintes idosos, avaliando se os sinais vitais se mantiveram estáveis:
          ${vitalsText}
          
          Atividades realizadas: ${planDetails.proposedActivities || 'Circuito funcional'}.
-         Escreva um parágrafo profissional e direto.`;
+         Escreva um único parágrafo profissional, direto e em linguagem clínica.`;
 
-         // Mostra mensagem de carregamento na tela
-         setPlanDetails({...planDetails, dailyEvolution: 'Analisando dados clínicos com IA. Aguarde um instante...'});
-
-         try {
-            // Chama a Edge Function no Supabase
-            const { data, error } = await supabaseClient.functions.invoke('gerar-evolucao', {
-               body: { prompt: prompt }
-            });
-
-            if (error) throw error;
-            
-            // Coloca a resposta recebida dentro da caixinha de texto
-            setPlanDetails({...planDetails, dailyEvolution: data.resultado});
-         } catch (error) {
-            alert("Falha na comunicação com a IA: " + error.message);
-            setPlanDetails({...planDetails, dailyEvolution: ''});
-         }
+         handleAiGeneration('dailyEvolution', prompt);
       };
+
       const handleGenerateReportPDF = (circuitData) => {
         const d = circuitData.details;
         let stHtml = ''; 
@@ -681,14 +583,14 @@
         }
         
         const element = document.createElement('div');
-        element.innerHTML = `<div style="font-family:Arial; font-size:14px; color:#333; line-height:1.5; padding:30px;"><div style="text-align:center; margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px; margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0; font-size:16px; color:#161E42; text-transform:uppercase; font-weight:bold;">RELATÓRIO DE ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</h2></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students||'-'}</p><br><p><strong>OBJETIVOS:</strong> ${d.objectives||'-'}</p><p><strong>ATIVIDADES PROPOSTAS:</strong> ${d.proposedActivities||'-'}</p><p><strong>MATERIAIS:</strong> ${d.materials||'-'}</p><p><strong>OPERAÇÃO (SV, Som, Cuid.):</strong> ${d.vitalSigns||'-'} | ${d.soundAndPhotos||'-'} | ${d.specialCare||'-'}</p><br><p><strong>AQUECIMENTO:</strong> ${d.warmUp||'-'}</p>${stHtml}<p><strong>DESAQUECIMENTO:</strong> ${d.coolDown||'-'}</p>${vitHtml}<br><p><strong>RELATO NARRATIVO DA DINÂMICA:</strong><br/>${d.developmentNarrative?d.developmentNarrative.replace(/\\n/g, '<br/>'):'-'}</p><br><p><strong>RESULTADOS OBTIDOS:</strong><br/>${d.resultObtained?d.resultObtained.replace(/\\n/g, '<br/>'):'-'}</p><br><p><strong>TOTAL DE PRESENTES:</strong> ${d.attendanceCount||'-'}</p></div>`;
+        element.innerHTML = `<div style="font-family:Arial; font-size:14px; color:#333; line-height:1.5; padding:30px;"><div style="text-align:center; margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px; margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0; font-size:16px; color:#161E42; text-transform:uppercase; font-weight:bold;">RELATÓRIO DE ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</h2></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students||'-'}</p><br><p><strong>OBJETIVOS:</strong> ${d.objectives||'-'}</p><p><strong>ATIVIDADES PROPOSTAS:</strong> ${d.proposedActivities||'-'}</p><p><strong>MATERIAIS:</strong> ${d.materials||'-'}</p><p><strong>OPERAÇÃO (SV, Som, Cuid.):</strong> ${d.vitalSigns||'-'} | ${d.soundAndPhotos||'-'} | ${d.specialCare||'-'}</p><br><p><strong>AQUECIMENTO:</strong> ${d.warmUp||'-'}</p>${stHtml}<p><strong>DESAQUECIMENTO:</strong> ${d.coolDown||'-'}</p>${vitHtml}<br><p><strong>RELATO NARRATIVO DA DINÂMICA:</strong><br/>${d.developmentNarrative?d.developmentNarrative.replace(/\n/g, '<br/>'):'-'}</p><br><p><strong>RESULTADOS OBTIDOS:</strong><br/>${d.resultObtained?d.resultObtained.replace(/\n/g, '<br/>'):'-'}</p><br><p><strong>TOTAL DE PRESENTES:</strong> ${d.attendanceCount||'-'}</p></div>`;
         html2pdf().set({ margin: 0.4, filename: `Relatorio_Atividade_${d.activityNum||'00'}.pdf`, html2canvas: { scale: 2, useCORS: true } }).from(element).save();
       };
 
       const handleGenerateEvolutionPDF = (circuitData) => {
         const d = circuitData.details;
         const element = document.createElement('div');
-        element.innerHTML = `<div style="font-family:Arial; font-size:14px; color:#333; line-height:1.5; padding:30px;"><div style="text-align:center; margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px; margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0; font-size:16px; color:#e63946; text-transform:uppercase; font-weight:bold;">DOCUMENTO DE EVOLUÇÃO CLÍNICA</h2><p style="margin:0; font-size:13px; color:#64748b;">ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</p></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students||'-'}</p><br><div style="padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;"><h3 style="color: #334155; margin-top: 0; font-size: 13px; text-transform: uppercase;">Evolução Clínica, Sinais Vitais e Intercorrências</h3><p style="white-space: pre-wrap; font-size: 13px;">${d.dailyEvolution?d.dailyEvolution.replace(/\\n/g, '<br/>'):'Sem anotações clínicas.'}</p></div><br><br><br><div style="text-align:center; margin-top: 50px;"><p>___________________________________________________</p><p style="font-size: 12px; color: #666;">Assinatura do Responsável Técnico</p></div></div>`;
+        element.innerHTML = `<div style="font-family:Arial; font-size:14px; color:#333; line-height:1.5; padding:30px;"><div style="text-align:center; margin-bottom:30px;"><img src="Logo_ATV_2024_Colorido_v2.png" style="max-height:80px; margin-bottom:10px;" onerror="this.style.display='none'"/><h2 style="margin:0; font-size:16px; color:#e63946; text-transform:uppercase; font-weight:bold;">DOCUMENTO DE EVOLUÇÃO CLÍNICA</h2><p style="margin:0; font-size:13px; color:#64748b;">ATIVIDADE ${d.activityNum||'X'} – ${d.theme||'-'}</p></div><p><strong>DATA:</strong> ${circuitData.activity_date.split('-').reverse().join('/')}</p><p><strong>DISCENTES RESPONSÁVEIS:</strong> ${d.students||'-'}</p><br><div style="padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;"><h3 style="color: #334155; margin-top: 0; font-size: 13px; text-transform: uppercase;">Evolução Clínica, Sinais Vitais e Intercorrências</h3><p style="white-space: pre-wrap; font-size: 13px;">${d.dailyEvolution?d.dailyEvolution.replace(/\n/g, '<br/>'):'Sem anotações clínicas.'}</p></div><br><br><br><div style="text-align:center; margin-top: 50px;"><p>___________________________________________________</p><p style="font-size: 12px; color: #666;">Assinatura do Responsável Técnico</p></div></div>`;
         html2pdf().set({ margin: 0.4, filename: `Evolucao_Clinica_Ativ_${d.activityNum||'00'}.pdf`, html2canvas: { scale: 2, useCORS: true } }).from(element).save();
       };
 
@@ -1247,11 +1149,24 @@
                             </div>
                           </div>
                           <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Equipe Destinada à Ação</label><input type="text" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails, students: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
+                          <div>
+                            <div className="flex justify-between items-center mb-1">
+                               <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Objetivos da Ação</label>
+                               <button type="button" onClick={() => handleAiGeneration('objectives', `Atue como fisioterapeuta. Escreva os objetivos curtos e diretos (em tópicos) para uma sessão de idosos focada em: ${planDetails.theme || 'exercícios gerais'}.`)} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Gerar com IA</button>
+                            </div>
+                            <textarea rows="2" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
+                          </div>
                         </div>
 
                         <div className="space-y-6 pt-6 border-t border-slate-100 dark:border-slate-800 mt-6">
                           <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Estrutura do Circuito</h3>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Procedimento de Aquecimento</label><textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className="w-full p-3 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
+                          <div>
+                            <div className="flex justify-between items-center mb-1">
+                               <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Procedimento de Aquecimento</label>
+                               <button type="button" onClick={() => handleAiGeneration('warmUp', `Descreva uma atividade lúdica e dinâmica de aquecimento de 10 minutos para idosos. Tema da aula principal: ${planDetails.theme || 'fisioterapia'}.`)} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Gerar com IA</button>
+                            </div>
+                            <textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className="w-full p-3 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
+                          </div>
                           
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
                             {circuit.map((stationExercises, index) => ( 
@@ -1261,7 +1176,7 @@
                                   {index === 4 && <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">Funcional</span>}
                                 </div>
                                 <div className="p-4 flex flex-col gap-3 flex-1">
-                                  <div><label className="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Responsável pela Estação</label><input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => { const newResp = [...planDetails.stationResponsibles]; newResp[index] = e.target.value; setPlanDetails({...planDetails, stationResponsibles: newResp}); }} className="w-full px-3 py-1.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-xs text-slate-800 dark:text-slate-100" /></div>
+                                  <div><label className="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Responsável pela Estação</label><input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => { const newResp = [...planDetails.stationResponsibles]; newResp[index] = e.target.value; setPlanDetails({...planDetails, stationResponsibles: newResp}); }} className="w-full px-3 py-1.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-xs text-slate-800 dark:text-slate-100" placeholder="Nome dos monitores..." /></div>
                                   <div className="space-y-2">
                                     {stationExercises.map(ex => ( 
                                       <div key={ex.id} className="flex justify-between items-center bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-700">
@@ -1278,7 +1193,13 @@
                               </div> 
                             ))}
                           </div>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 mt-4">Procedimento de Desaquecimento</label><textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className="w-full p-3 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-brand-blue outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
+                          <div>
+                            <div className="flex justify-between items-center mb-1">
+                               <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Procedimento de Desaquecimento</label>
+                               <button type="button" onClick={() => handleAiGeneration('coolDown', `Descreva uma atividade de desaquecimento e relaxamento de 10 minutos para idosos após uma sessão focada em: ${planDetails.theme || 'exercícios'}.`)} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Gerar com IA</button>
+                            </div>
+                            <textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className="w-full p-3 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
+                          </div>
                         </div>
                         <div className="pt-6 border-t border-slate-100 dark:border-slate-800 mt-6 flex justify-end"><button onClick={handleSavePlan} className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 text-white font-medium rounded-lg hover:bg-slate-900 dark:hover:bg-slate-600 transition-colors text-sm">Registrar Planejamento</button></div>
                       </div>
@@ -1308,7 +1229,13 @@
                         <div className="space-y-4 mb-6">
                           <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2">Objetivos e Operação</h3>
                           <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Objetivos da Ação</label><textarea rows="2" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Síntese de Atividades</label><textarea rows="2" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
+                          <div>
+                             <div className="flex justify-between items-center mb-1">
+                                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Síntese de Atividades</label>
+                                <button type="button" onClick={() => handleAiGeneration('proposedActivities', `Descreva em um parágrafo os exercícios e o circuito físico focado em ${planDetails.theme || 'fisioterapia'} para um grupo de idosos.`)} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Gerar com IA</button>
+                             </div>
+                             <textarea rows="2" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
+                          </div>
                           <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Materiais Acionados</label><textarea rows="2" value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails, materials: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Aferição de Parâmetros</label><input type="text" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails, vitalSigns: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100" /></div>
@@ -1318,12 +1245,18 @@
 
                         <div className="space-y-4 mb-6">
                           <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2">Documentação Narrativa</h3>
-                          <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Relato Comportamental/Desenvolvimento</label><textarea rows="4" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
+                          <div>
+                             <div className="flex justify-between items-center mb-1">
+                                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Relato Comportamental/Desenvolvimento</label>
+                                <button type="button" onClick={() => handleAiGeneration('developmentNarrative', `Escreva um relato comportamental de um parágrafo sobre a participação ativa e positiva de um grupo de idosos durante uma sessão de extensão em fisioterapia.`)} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Gerar com IA</button>
+                             </div>
+                             <textarea rows="4" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
+                          </div>
                           
                           <div>
                             <div className="flex justify-between items-center mb-1">
                                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Evolução Sistêmica Diária</label>
-                               <button type="button" onClick={handleGenerateAutoEvolution} className="text-[10px] text-brand-blue dark:text-brand-light hover:underline font-medium">Sintetizar via Tabela</button>
+                               <button type="button" onClick={gerarEvolucaoIA} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Sintetizar com IA</button>
                             </div>
                             <textarea rows="5" value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails, dailyEvolution: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
                           </div>
@@ -1342,7 +1275,7 @@
                       ) : ( 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                           {savedCircuits.map(circ => { 
-                            const isComplete = circ.details?.resultObtained; 
+                            const isComplete = circ.details?.resultObtained || circ.details?.dailyEvolution; 
                             return ( 
                               <div key={circ.id} className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 transition-colors flex flex-col" onClick={() => {setViewingCircuit(circ); setCircuitMode('view');}}>
                                 <div className="flex justify-between items-start mb-3">
@@ -1473,42 +1406,47 @@
       );
     };
 
-    const App = () => {
-      const [session, setSession] = useState(null);
+    const AppContainer = () => {
+      const [user, setUser] = useState(null);
       const [loadingAuth, setLoadingAuth] = useState(true);
       const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
 
       useEffect(() => {
-        if (darkMode) {
-          document.documentElement.classList.add('dark');
-          localStorage.setItem('theme', 'dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-          localStorage.setItem('theme', 'light');
-        }
+        if (darkMode) { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); } 
+        else { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); }
       }, [darkMode]);
 
       useEffect(() => {
-        if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then((registrations) => { for (let reg of registrations) { reg.unregister(); } });
         supabaseClient.auth.getSession().then(async ({ data: { session } }) => {
           if (session) {
             const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
-            setSession({ ...session.user, full_name: profile?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group, id: session.user.id });
+            setUser({ ...session.user, full_name: profile?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
           }
           setLoadingAuth(false);
         });
       }, []);
 
-      const handleLogout = async () => { await supabaseClient.auth.signOut(); setSession(null); };
+      if (loadingAuth) {
+         return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
+               <div className="relative z-10 flex flex-col items-center">
+                  <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" className="h-28 drop-shadow-sm" onerror="this.style.display='none'" />
+                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-6">Autenticando acesso...</p>
+               </div>
+               <div className="flex gap-2 mt-4 relative z-10">
+                  <div className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600 animate-pulse"></div>
+                  <div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                  <div className="w-2 h-2 rounded-full bg-slate-500 dark:bg-slate-400 animate-pulse" style={{animationDelay: '0.4s'}}></div>
+               </div>
+            </div>
+         );
+      }
 
-      if (loadingAuth) return <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-300"><div className="flex flex-col items-center"><img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo" className="h-28 drop-shadow-sm" onError={(e) => e.target.style.display='none'} /><p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-6">Autenticando acesso...</p></div><div className="flex gap-2 mt-4"><div className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600 animate-pulse"></div><div className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500 animate-pulse" style={{animationDelay: '0.2s'}}></div><div className="w-2 h-2 rounded-full bg-slate-500 dark:bg-slate-400 animate-pulse" style={{animationDelay: '0.4s'}}></div></div></div>;
-      
-      if (!session) return <LoginPage onLogin={setSession} />;
-      return <Dashboard session={session} onLogout={handleLogout} updateSessionData={setSession} darkMode={darkMode} setDarkMode={setDarkMode} />;
+      return user ? <Dashboard session={user} onLogout={async () => { await supabaseClient.auth.signOut(); setUser(null); }} updateSessionData={setUser} darkMode={darkMode} setDarkMode={setDarkMode} /> : <LoginPage onLogin={setUser} />;
     };
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    root.render(<AppContainer />);
   </script>
 </body>
 </html>
