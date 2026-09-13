@@ -101,6 +101,15 @@
       { id: 'a16', act: "32", date: "04/12/2026", title: "Atividade temática de integração/confraternização e encerramento do semestre letivo", resp: "Todos" }
     ];
 
+    const DEFAULT_INVENTORY = [
+      { id: 'inv_1', name: 'Halteres Emborrachados 1kg', quantity: 12, condition: 'Bom' },
+      { id: 'inv_2', name: 'Faixas Elásticas (Theraband)', quantity: 20, condition: 'Desgastado' },
+      { id: 'inv_3', name: 'Bolas Suíças (65cm)', quantity: 4, condition: 'Novo' },
+      { id: 'inv_4', name: 'Cones de Sinalização Coloridos', quantity: 15, condition: 'Bom' },
+      { id: 'inv_5', name: 'Bastões de Madeira (1m)', quantity: 10, condition: 'Bom' },
+      { id: 'inv_6', name: 'Colchonetes de EVA', quantity: 8, condition: 'Desgastado' }
+    ];
+
     const CATEGORIES = {
       mmss: { title: "Membros Superiores", shortTitle: "MMSS", icon: "fa-hand-fist", color: "text-blue-700 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-900/30", border: "border-blue-200 dark:border-blue-800", subgroups: ["Todos", "Costas", "Tríceps", "Biceps", "Ombro", "Punho", "Mãos / Destreza", "Peito"] },
       mmii: { title: "Membros Inferiores", shortTitle: "MMII", icon: "fa-shoe-prints", color: "text-emerald-700 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-900/30", border: "border-emerald-200 dark:border-emerald-800", subgroups: ["Todos", "Isquiostibiais", "Quadriceps", "Panturrilha", "Tornozelo / Pé", "Glúteos"] },
@@ -247,6 +256,24 @@
         const saved = localStorage.getItem('atv_pacientes');
         return saved ? JSON.parse(saved) : DEFAULT_PARTICIPANTS;
       });
+
+      // --- NOVOS ESTADOS: GESTÃO DE ESTOQUE/MATERIAIS ---
+      const [inventoryList, setInventoryList] = useState(() => {
+        const saved = localStorage.getItem('atv_estoque');
+        return saved ? JSON.parse(saved) : DEFAULT_INVENTORY;
+      });
+      const [suggestionsList, setSuggestionsList] = useState(() => {
+        const saved = localStorage.getItem('atv_sugestoes_materiais');
+        return saved ? JSON.parse(saved) : [];
+      });
+      const [inventoryTab, setInventoryTab] = useState('estoque'); // 'estoque' | 'sugestoes'
+      
+      const [isEditingInventory, setIsEditingInventory] = useState(false);
+      const [inventoryForm, setInventoryForm] = useState({ id: '', name: '', quantity: '', condition: 'Bom' });
+      
+      const [isSuggestingMaterial, setIsSuggestingMaterial] = useState(false);
+      const [suggestionForm, setSuggestionForm] = useState({ id: '', name: '', reason: '' });
+      // ----------------------------------------------------
       
       const [teamMembers, setTeamMembers] = useState([]);
       const [editingMember, setEditingMember] = useState(null);
@@ -278,6 +305,10 @@
       useEffect(() => { if(localStorage.getItem('atv_draft_planDetails')) setHasDraft(true); }, []);
       useEffect(() => { localStorage.setItem('atv_agenda_v2', JSON.stringify(agendaList)); }, [agendaList]);
       useEffect(() => { localStorage.setItem('atv_pacientes', JSON.stringify(participantsList)); }, [participantsList]);
+      
+      // Salva Estoque e Sugestões
+      useEffect(() => { localStorage.setItem('atv_estoque', JSON.stringify(inventoryList)); }, [inventoryList]);
+      useEffect(() => { localStorage.setItem('atv_sugestoes_materiais', JSON.stringify(suggestionsList)); }, [suggestionsList]);
 
       useEffect(() => {
          if (circuitMode === 'plan' || circuitMode === 'report_edit') {
@@ -488,7 +519,6 @@
         }
         setIsEditingPatient(false);
       };
-
       const handleDeletePatient = (id) => {
         if(window.confirm("Remover este paciente do cadastro?")) setParticipantsList(participantsList.filter(p => p.id !== id));
       };
@@ -499,10 +529,40 @@
         else setAgendaList([...agendaList, { ...agendaForm, id: Date.now().toString() }]);
         setAgendaForm({ id:'', act:'', date:'', title:'', resp:'' });
       };
-
       const handleDeleteAgenda = (id) => {
         if(window.confirm("Apagar este registro?")) setAgendaList(agendaList.filter(a => a.id !== id));
       };
+
+      // --- Funções CRUD Estoque e Sugestões ---
+      const handleSaveInventory = (e) => {
+        e.preventDefault();
+        if (inventoryForm.id) {
+          setInventoryList(inventoryList.map(item => item.id === inventoryForm.id ? inventoryForm : item));
+        } else {
+          setInventoryList([...inventoryList, { ...inventoryForm, id: Date.now().toString() }]);
+        }
+        setIsEditingInventory(false);
+      };
+      const handleDeleteInventory = (id) => {
+        if (window.confirm("Remover este material permanentemente do estoque?")) {
+          setInventoryList(inventoryList.filter(item => item.id !== id));
+        }
+      };
+      const handleSaveSuggestion = (e) => {
+        e.preventDefault();
+        const newSuggestion = { ...suggestionForm, id: Date.now().toString(), author: session.full_name, status: 'Pendente', date: new Date().toLocaleDateString('pt-BR') };
+        setSuggestionsList([newSuggestion, ...suggestionsList]);
+        setIsSuggestingMaterial(false);
+      };
+      const handleUpdateSuggestionStatus = (id, newStatus) => {
+        setSuggestionsList(suggestionsList.map(item => item.id === id ? { ...item, status: newStatus } : item));
+      };
+      const handleDeleteSuggestion = (id) => {
+        if (window.confirm("Excluir esta sugestão?")) {
+          setSuggestionsList(suggestionsList.filter(item => item.id !== id));
+        }
+      };
+      // ----------------------------------------
 
       const updateAttendance = (idx, field, val) => {
          const list = [...planDetails.attendanceList]; 
@@ -625,6 +685,7 @@
               <NavBtn v="library" icon="fa-layer-group" text="Acervo de Exercícios" />
               <NavBtn v="circuito" icon="fa-clipboard-list" text="Aulas & Prontuários" />
               <NavBtn v="pacientes" icon="fa-users-medical" text="Ficha de Pacientes" />
+              <NavBtn v="estoque" icon="fa-box-open" text="Materiais & Estoque" />
               
               <p className="text-[10px] font-extrabold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2 mt-6 px-6">Gestão</p>
               <button onClick={() => { handleNavClick('cadastro'); setFormStatus({loading: false, success: false}); }} className={`flex items-center gap-3 px-4 py-3 mx-2 rounded-xl text-sm font-medium w-[calc(100%-1rem)] transition-all duration-200 ${currentView === 'cadastro' ? 'bg-brand-blue text-white shadow-md shadow-brand-blue/20 dark:bg-brand-light' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-surface-800'}`}><i className="fa-solid fa-plus w-5 text-center"></i> Novo Exercício</button>
@@ -660,6 +721,7 @@
                   {currentView === 'equipe' && "Gestão de Permissões"}
                   {currentView === 'agenda' && "Gestão do Cronograma"}
                   {currentView === 'pacientes' && "Ficha Clínica de Pacientes"}
+                  {currentView === 'estoque' && "Gestão de Materiais e Estoque"}
                 </h2>
               </div>
               <div className="flex items-center gap-3">
@@ -701,6 +763,182 @@
                       </div>
                     </form>
                   </div>
+                </div>
+              )}
+
+              {/* === TELA: ESTOQUE E MATERIAIS === */}
+              {currentView === 'estoque' && (
+                <div className="max-w-5xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="flex bg-surface-100 dark:bg-surface-800 p-1 rounded-2xl w-max overflow-x-auto mx-auto shadow-inner border border-slate-200/50 dark:border-slate-700/50 mb-8">
+                    <button onClick={() => setInventoryTab('estoque')} className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all duration-200 whitespace-nowrap flex items-center gap-2 ${inventoryTab === 'estoque' ? 'bg-white dark:bg-surface-900 text-brand-blue dark:text-brand-light shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}><i className="fa-solid fa-boxes-stacked"></i> Estoque Atual</button>
+                    <button onClick={() => setInventoryTab('sugestoes')} className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all duration-200 whitespace-nowrap flex items-center gap-2 ${inventoryTab === 'sugestoes' ? 'bg-white dark:bg-surface-900 text-brand-blue dark:text-brand-light shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}><i className="fa-solid fa-lightbulb"></i> Sugestões de Aquisição</button>
+                  </div>
+
+                  {inventoryTab === 'estoque' && (
+                    <div className={cardClass + " overflow-hidden"}>
+                      <div className="p-6 sm:p-8 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-surface-800">
+                        <div>
+                          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Controle do Plantel de Materiais</h2>
+                          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Lista de equipamentos disponíveis para os circuitos físicos.</p>
+                        </div>
+                        {isAdmin && (
+                           <button onClick={() => { setInventoryForm({ id:'', name: '', quantity: '', condition: 'Bom' }); setIsEditingInventory(true); }} className={btnPrimaryClass}><i className="fa-solid fa-plus mr-2"></i>Adicionar Material</button>
+                        )}
+                      </div>
+
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm text-left">
+                          <thead className="bg-surface-50 dark:bg-surface-900/50 text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-wider">
+                            <tr><th className="px-6 py-4">Item / Material</th><th className="px-6 py-4 text-center">Quantidade</th><th className="px-6 py-4 text-center">Estado de Conservação</th>{isAdmin && <th className="px-6 py-4 text-center">Ações</th>}</tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                            {inventoryList.map(item => ( 
+                              <tr key={item.id} className="hover:bg-surface-50 dark:hover:bg-surface-800/80 transition-colors group">
+                                <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-100">{item.name}</td>
+                                <td className="px-6 py-4 text-center">
+                                  <span className="bg-slate-100 dark:bg-surface-900 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-300 font-bold border border-slate-200 dark:border-slate-700">{item.quantity} un.</span>
+                                </td>
+                                <td className="px-6 py-4 text-center">
+                                  <span className={`inline-flex items-center font-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-wide
+                                    ${item.condition === 'Novo' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 
+                                      item.condition === 'Bom' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 
+                                      item.condition === 'Desgastado' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : 
+                                      'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
+                                    {item.condition}
+                                  </span>
+                                </td>
+                                {isAdmin && (
+                                  <td className="px-6 py-4 text-center">
+                                    <div className="flex items-center justify-center gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <button onClick={() => { setInventoryForm(item); setIsEditingInventory(true); }} className="w-8 h-8 rounded-lg bg-surface-100 dark:bg-surface-700 text-brand-blue dark:text-brand-light hover:bg-brand-blue hover:text-white transition-colors flex items-center justify-center"><i className="fa-solid fa-pen text-xs"></i></button>
+                                      <button onClick={() => handleDeleteInventory(item.id)} className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-500 hover:text-white transition-colors flex items-center justify-center"><i className="fa-solid fa-trash text-xs"></i></button>
+                                    </div>
+                                  </td>
+                                )}
+                              </tr> 
+                            ))}
+                            {inventoryList.length === 0 && <tr><td colSpan={isAdmin ? 4 : 3} className="px-6 py-10 text-center text-slate-500">Nenhum material cadastrado no acervo físico.</td></tr>}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+
+                  {inventoryTab === 'sugestoes' && (
+                    <div className="space-y-6">
+                      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-white dark:bg-surface-800 p-6 sm:p-8 rounded-2xl shadow-soft ring-1 ring-slate-900/5 dark:ring-white/10">
+                        <div>
+                          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Painel de Sugestões</h2>
+                          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Surgiu a necessidade de algum material? Envie a solicitação para a coordenação avaliar.</p>
+                        </div>
+                        <button onClick={() => { setSuggestionForm({ id:'', name: '', reason: '' }); setIsSuggestingMaterial(true); }} className={btnPrimaryClass}><i className="fa-solid fa-cart-plus mr-2"></i>Sugerir Compra</button>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                         {suggestionsList.length === 0 && <div className="col-span-full py-16 text-center text-slate-500"><i className="fa-regular fa-lightbulb text-4xl mb-4 opacity-30"></i><p>Nenhuma sugestão enviada no momento.</p></div>}
+                         {suggestionsList.map(sug => (
+                            <div key={sug.id} className="bg-white dark:bg-surface-800 p-6 rounded-2xl shadow-soft border border-slate-200 dark:border-slate-700 relative">
+                               {isAdmin && <button onClick={() => handleDeleteSuggestion(sug.id)} className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"><i className="fa-solid fa-trash text-sm"></i></button>}
+                               
+                               <div className="mb-4">
+                                  <span className={`inline-flex items-center font-bold px-3 py-1 rounded-md text-[10px] uppercase tracking-wide border
+                                    ${sug.status === 'Comprado' ? 'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-900/10 dark:border-emerald-800/50' : 
+                                      sug.status === 'Aprovado' ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/10 dark:border-blue-800/50' : 
+                                      sug.status === 'Recusado' ? 'bg-red-50 text-red-600 border-red-200 dark:bg-red-900/10 dark:border-red-800/50' : 
+                                      'bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-900/10 dark:border-amber-800/50'}`}>
+                                    {sug.status === 'Pendente' && <i className="fa-solid fa-clock mr-1"></i>}
+                                    {sug.status === 'Aprovado' && <i className="fa-solid fa-thumbs-up mr-1"></i>}
+                                    {sug.status === 'Comprado' && <i className="fa-solid fa-box-open mr-1"></i>}
+                                    {sug.status === 'Recusado' && <i className="fa-solid fa-ban mr-1"></i>}
+                                    {sug.status}
+                                  </span>
+                               </div>
+                               
+                               <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">{sug.name}</h3>
+                               <p className="text-sm text-slate-600 dark:text-slate-400 italic mb-5 leading-relaxed">"{sug.reason}"</p>
+                               
+                               <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
+                                  <div className="text-[11px] font-bold text-slate-400">Enviado por: {sug.author} <span className="block font-normal mt-0.5">{sug.date}</span></div>
+                                  
+                                  {isAdmin && (
+                                     <div className="flex gap-2">
+                                        <select value={sug.status} onChange={(e) => handleUpdateSuggestionStatus(sug.id, e.target.value)} className="text-xs px-2 py-1.5 rounded-lg bg-surface-50 dark:bg-surface-900 border border-slate-200 dark:border-slate-700 outline-none font-bold text-slate-600 dark:text-slate-300 cursor-pointer">
+                                          <option value="Pendente">Pendente</option>
+                                          <option value="Aprovado">Aprovado</option>
+                                          <option value="Comprado">Comprado</option>
+                                          <option value="Recusado">Recusado</option>
+                                        </select>
+                                     </div>
+                                  )}
+                               </div>
+                            </div>
+                         ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Modais de Estoque/Sugestões */}
+                  {isEditingInventory && isAdmin && (
+                    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4 transition-opacity animate-fade-in">
+                      <div className="bg-white dark:bg-surface-800 w-full max-w-md rounded-[2rem] shadow-float ring-1 ring-slate-900/5 dark:ring-white/10 overflow-hidden">
+                        <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">{inventoryForm.id ? 'Editar Material' : 'Adicionar ao Estoque'}</h3>
+                          <button onClick={() => setIsEditingInventory(false)} className="w-8 h-8 rounded-full bg-surface-100 dark:bg-surface-700 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"><i className="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <form onSubmit={handleSaveInventory} className="p-8 space-y-5">
+                          <div>
+                            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Nome do Material/Equipamento</label>
+                            <input type="text" value={inventoryForm.name} onChange={e=>setInventoryForm({...inventoryForm, name: e.target.value})} required className={inputClass} placeholder="Ex: Bola Suíça 65cm" />
+                          </div>
+                          <div className="grid grid-cols-2 gap-5">
+                            <div>
+                              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Quantidade</label>
+                              <input type="number" min="0" value={inventoryForm.quantity} onChange={e=>setInventoryForm({...inventoryForm, quantity: e.target.value})} required className={inputClass} />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Estado Físico</label>
+                              <select value={inventoryForm.condition} onChange={e=>setInventoryForm({...inventoryForm, condition: e.target.value})} className={inputClass}>
+                                <option value="Novo">Novo</option>
+                                <option value="Bom">Bom</option>
+                                <option value="Desgastado">Desgastado</option>
+                                <option value="Danificado">Danificado</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div className="pt-6 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-700">
+                            <button type="button" onClick={() => setIsEditingInventory(false)} className={btnSecondaryClass}>Cancelar</button>
+                            <button type="submit" className={btnPrimaryClass}>Salvar Material</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  )}
+
+                  {isSuggestingMaterial && (
+                    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4 transition-opacity animate-fade-in">
+                      <div className="bg-white dark:bg-surface-800 w-full max-w-md rounded-[2rem] shadow-float ring-1 ring-slate-900/5 dark:ring-white/10 overflow-hidden">
+                        <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Sugerir Nova Aquisição</h3>
+                          <button onClick={() => setIsSuggestingMaterial(false)} className="w-8 h-8 rounded-full bg-surface-100 dark:bg-surface-700 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"><i className="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <form onSubmit={handleSaveSuggestion} className="p-8 space-y-5">
+                          <div>
+                            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Qual material precisamos?</label>
+                            <input type="text" value={suggestionForm.name} onChange={e=>setSuggestionForm({...suggestionForm, name: e.target.value})} required className={inputClass} placeholder="Ex: Pesos de tornozelo 2kg" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Por que precisamos disso?</label>
+                            <textarea value={suggestionForm.reason} onChange={e=>setSuggestionForm({...suggestionForm, reason: e.target.value})} required rows="3" className={inputClass} placeholder="Escreva a justificativa clínica ou operacional..."></textarea>
+                          </div>
+                          <div className="pt-6 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-700">
+                            <button type="button" onClick={() => setIsSuggestingMaterial(false)} className={btnSecondaryClass}>Cancelar</button>
+                            <button type="submit" className={btnPrimaryClass}>Enviar Sugestão</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  )}
+
                 </div>
               )}
 
@@ -966,6 +1204,10 @@
                         <div className={cardClass + " p-6 flex items-center justify-between group cursor-pointer"} onClick={() => handleNavClick('pacientes')}>
                           <div><p className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">{participantsList.length}</p><p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Pacientes</p></div>
                           <div className="w-12 h-12 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i className="fa-solid fa-users"></i></div>
+                        </div>
+                        <div className={cardClass + " p-6 flex items-center justify-between group cursor-pointer"} onClick={() => handleNavClick('estoque')}>
+                          <div><p className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">{inventoryList.length}</p><p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Estoque</p></div>
+                          <div className="w-12 h-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i className="fa-solid fa-boxes-stacked"></i></div>
                         </div>
                       </div>
 
@@ -1267,416 +1509,6 @@
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
-
-              {/* === TELA: AULAS E RELATÓRIOS (PLAN/DIÁRIO) === */}
-              {currentView === 'circuito' && (
-                <div className="max-w-6xl mx-auto space-y-8 animate-fade-in pb-12">
-                  
-                  {/* Navegação interna estilo Tabs Pílula */}
-                  <div className="flex bg-surface-100 dark:bg-surface-800 p-1 rounded-2xl w-max overflow-x-auto mx-auto shadow-inner border border-slate-200/50 dark:border-slate-700/50">
-                    <button onClick={() => setCircuitMode('agenda')} className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all duration-200 whitespace-nowrap ${circuitMode === 'agenda' ? 'bg-white dark:bg-surface-900 text-brand-blue dark:text-brand-light shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}>1. Agenda Base</button>
-                    <button onClick={startPlanning} className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all duration-200 whitespace-nowrap ${circuitMode === 'plan' ? 'bg-white dark:bg-surface-900 text-brand-blue dark:text-brand-light shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}>2. Novo Plano de Ação</button>
-                    <button onClick={() => setCircuitMode('history')} className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all duration-200 whitespace-nowrap ${circuitMode === 'history' || circuitMode === 'view' || circuitMode === 'report_edit' ? 'bg-white dark:bg-surface-900 text-brand-blue dark:text-brand-light shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}>3. Histórico e Prontuários</button>
-                  </div>
-
-                  {hasDraft && circuitMode !== 'plan' && circuitMode !== 'report_edit' && (
-                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between shadow-soft animate-fade-in transition-colors gap-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-amber-200/50 dark:bg-amber-900/50 rounded-full flex items-center justify-center text-amber-600 dark:text-amber-400 text-xl"><i className="fa-regular fa-floppy-disk"></i></div>
-                        <div>
-                          <h4 className="font-bold text-amber-900 dark:text-amber-100 text-sm">Rascunho não finalizado encontrado!</h4>
-                          <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">Gostaria de continuar de onde parou?</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-3 w-full sm:w-auto">
-                        <button onClick={clearDraft} className="flex-1 sm:flex-none px-4 py-2 bg-white/50 dark:bg-surface-800/50 text-amber-800 dark:text-amber-300 text-xs font-bold rounded-lg hover:bg-white dark:hover:bg-surface-800 border border-amber-200 dark:border-amber-700 transition-colors">Descartar</button>
-                        <button onClick={restoreDraft} className="flex-1 sm:flex-none px-4 py-2 bg-amber-500 text-white text-xs font-bold rounded-lg hover:bg-amber-600 transition-colors shadow-md shadow-amber-500/20">Restaurar Dados</button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 1. AGENDA */}
-                  {circuitMode === 'agenda' && ( 
-                    <div className={cardClass + " overflow-hidden animate-fade-in"}>
-                      <div className="bg-white dark:bg-surface-800 px-8 py-6 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-brand-light/10 text-brand-light flex items-center justify-center text-lg"><i className="fa-solid fa-calendar-days"></i></div>
-                        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Cronograma Operacional 2026.2</h2>
-                      </div>
-                      <div className="overflow-x-auto p-4 sm:p-8">
-                        <div className="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden">
-                          <table className="w-full text-sm text-left">
-                            <thead className="bg-surface-50 dark:bg-surface-900/50 text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-wider border-b border-slate-200 dark:border-slate-700">
-                              <tr><th className="px-6 py-4">Ref.</th><th className="px-6 py-4">Data</th><th className="px-6 py-4">Pauta Temática & Equipe</th></tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                              {agendaList.map((item, idx) => ( 
-                                <tr key={item.id || idx} className={`transition-colors ${item === upcomingActivity ? 'bg-brand-blue/5 dark:bg-brand-light/10' : 'hover:bg-surface-50 dark:hover:bg-surface-800/80'}`}>
-                                  <td className="px-6 py-4 text-slate-800 dark:text-slate-200 font-extrabold">{item.act}</td>
-                                  <td className="px-6 py-4 font-bold text-slate-600 dark:text-slate-400 whitespace-nowrap">
-                                    {item === upcomingActivity && <span className="mr-2 w-2 h-2 rounded-full bg-brand-light inline-block animate-pulse"></span>}
-                                    {item.date}
-                                  </td>
-                                  <td className="px-6 py-4">
-                                    <p className="font-bold text-slate-800 dark:text-slate-100 mb-1">{item.title}</p>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold flex items-center gap-1.5"><i className="fa-solid fa-users text-[10px]"></i> Equipe: {item.resp}</p>
-                                  </td>
-                                </tr> 
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div> 
-                  )}
-
-                  {/* 2. PLANO DE AÇÃO */}
-                  {circuitMode === 'plan' && ( 
-                    <div className="space-y-6 animate-fade-in">
-                      <div className={cardClass + " p-6 sm:p-10"}>
-                        <div className="border-b border-slate-100 dark:border-slate-800 pb-6 mb-8 text-center sm:text-left">
-                          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Construção do Plano de Ação</h2>
-                          <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">Estruture a dinâmica do dia e conecte os exercícios do acervo.</p>
-                        </div>
-                        
-                        <div className="space-y-10">
-                          {/* Sessão 1: Setup */}
-                          <div className="space-y-6">
-                            <h3 className="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2"><div className="w-6 h-6 rounded-full bg-brand-blue text-white flex items-center justify-center text-xs">1</div> Identidade da Sessão</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                              <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Número da Atividade</label><input type="text" value={planDetails.activityNum} onChange={e=>setPlanDetails({...planDetails, activityNum: e.target.value})} className={inputClass} placeholder="Ex: 39" /></div>
-                              <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Data da Execução</label><input type="date" value={planDetails.date} onChange={e=>setPlanDetails({...planDetails, date: e.target.value})} className={inputClass} /></div>
-                              <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Eixo Temático</label>
-                                <select value={planDetails.theme} onChange={e=>setPlanDetails({...planDetails, theme: e.target.value})} className={inputClass}>
-                                  <option value="">A selecionar...</option><option value="EXERCÍCIOS DE DUPLA TAREFA">Dupla Tarefa</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMSS E TRONCO">Mobilidade/Fortalecimento MMSS</option><option value="EXERCÍCIOS DE MOBILIDADE E FORTALECIMENTO DE MMII">Mobilidade/Fortalecimento MMII</option><option value="EXERCÍCIOS AERÓBICOS E CONDICIONAMENTO CARDIORRESPIRATÓRIO">Aeróbicos e Condicionamento</option><option value="OUTRA ATIVIDADE">Atividade Avaliativa/Integração</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                              <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Equipe Responsável</label><input type="text" value={planDetails.students} onChange={e=>setPlanDetails({...planDetails, students: e.target.value})} className={inputClass} placeholder="Nomes dos discentes atuantes" /></div>
-                              <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Objetivos Específicos</label><textarea rows="2" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className={inputClass} placeholder="O que se espera alcançar..."></textarea></div>
-                            </div>
-                          </div>
-
-                          {/* Sessão 2: Circuito */}
-                          <div className="space-y-6 pt-10 border-t border-slate-100 dark:border-slate-800">
-                            <h3 className="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2"><div className="w-6 h-6 rounded-full bg-brand-light text-white flex items-center justify-center text-xs">2</div> Arquitetura do Circuito</h3>
-                            
-                            <div className="bg-surface-50 dark:bg-surface-900/30 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/60">
-                              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Aquecimento Estruturado (Warm-up)</label>
-                              <textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className={inputClass} placeholder="Dinâmica inicial..."></textarea>
-                            </div>
-                            
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                              {circuit.map((stationExercises, index) => ( 
-                                <div key={index} className="bg-white dark:bg-surface-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col shadow-sm transition-all hover:border-brand-light/50">
-                                  <div className="px-5 py-3 border-b border-slate-200 dark:border-slate-700 bg-surface-50 dark:bg-surface-900 flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                      <div className="w-6 h-6 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-xs font-bold">{index + 1}</div>
-                                      <h4 className="text-sm font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Estação</h4>
-                                    </div>
-                                    {index === 4 && <span className="text-[10px] font-bold text-brand-light bg-brand-light/10 px-3 py-1 rounded-full uppercase tracking-wider">Foco Funcional</span>}
-                                  </div>
-                                  <div className="p-5 flex flex-col gap-4 flex-1">
-                                    <div>
-                                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 pl-1">Monitor(a) Orientador(a)</label>
-                                      <input type="text" value={planDetails.stationResponsibles[index]} onChange={(e) => { const newResp = [...planDetails.stationResponsibles]; newResp[index] = e.target.value; setPlanDetails({...planDetails, stationResponsibles: newResp}); }} className="w-full px-3 py-2 rounded-xl bg-surface-50 dark:bg-surface-900 border border-slate-200 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100 focus:border-brand-light" placeholder="Nome..." />
-                                    </div>
-                                    
-                                    <div className="space-y-2 flex-1">
-                                      {stationExercises.length === 0 && <div className="h-full flex items-center justify-center min-h-[60px] border-2 border-dashed border-slate-100 dark:border-slate-700/50 rounded-xl text-xs font-medium text-slate-400">Nenhum exercício vinculado</div>}
-                                      {stationExercises.map(ex => ( 
-                                        <div key={ex.id} className="flex justify-between items-center bg-white dark:bg-surface-800 p-3 rounded-xl border shadow-sm border-slate-200 dark:border-slate-700 hover:border-brand-light transition-colors group">
-                                          <div className="truncate pr-4">
-                                            <p className="text-sm font-bold text-slate-700 dark:text-slate-200 truncate" title={ex.title}>{ex.title}</p>
-                                            <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-0.5"><i className="fa-solid fa-prescription text-[10px] mr-1"></i> {ex.dosage}</p>
-                                          </div>
-                                          <button onClick={() => removeFromCircuit(index, ex.id)} className="w-8 h-8 rounded-lg bg-surface-100 dark:bg-surface-700 text-slate-400 hover:text-white hover:bg-red-500 shrink-0 transition-colors flex items-center justify-center"><i className="fa-solid fa-xmark"></i></button>
-                                        </div> 
-                                      ))}
-                                    </div>
-                                    
-                                    <div className="relative mt-2">
-                                      <select value="" onChange={(e) => addToCircuit(index, e.target.value)} className="w-full px-4 py-2.5 rounded-xl border border-brand-blue/30 dark:border-brand-light/30 bg-brand-blue/5 dark:bg-brand-light/5 text-brand-blue dark:text-brand-light font-bold text-xs uppercase tracking-wider outline-none cursor-pointer appearance-none text-center hover:bg-brand-blue/10 transition-colors">
-                                        <option value="">+ Anexar Exercício do Acervo</option>
-                                        {exercises.map(ex => ( <option key={ex.id} value={ex.id}>[{ex.muscleGroup}] {ex.title}</option> ))}
-                                      </select>
-                                      <i className="fa-solid fa-chevron-down absolute right-4 top-3 text-brand-blue/50 pointer-events-none"></i>
-                                    </div>
-                                  </div>
-                                </div> 
-                              ))}
-                            </div>
-                            
-                            <div className="bg-surface-50 dark:bg-surface-900/30 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 mt-6">
-                              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Desaquecimento (Cool-down)</label>
-                              <textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className={inputClass} placeholder="Dinâmica final e relaxamento..."></textarea>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="pt-10 border-t border-slate-100 dark:border-slate-800 mt-10 flex justify-end">
-                          <button onClick={handleSavePlan} className={btnPrimaryClass + " w-full sm:w-auto text-base px-8 py-3"}><i className="fa-regular fa-floppy-disk mr-2"></i> Gravar Plano no Banco de Dados</button>
-                        </div>
-                      </div>
-                    </div> 
-                  )}
-
-                  {/* 3. PRONTUÁRIO MODO EDIÇÃO (PÓS-AÇÃO) */}
-                  {circuitMode === 'report_edit' && viewingCircuit && ( 
-                    <div className="space-y-6 animate-fade-in pb-12">
-                      <div className={cardClass + " p-6 sm:p-10"}>
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 dark:border-slate-800 pb-6 mb-8 gap-4">
-                          <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded-full text-[10px] font-extrabold uppercase tracking-wider mb-2">Aberto para Edição</div>
-                            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Prontuário Pós-Ação</h2>
-                            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-1">Ref.: Atividade {planDetails.activityNum} — {planDetails.date}</p>
-                          </div>
-                          <button onClick={() => setCircuitMode('view')} className={btnSecondaryClass}><i className="fa-solid fa-xmark mr-2"></i> Cancelar</button>
-                        </div>
-                        
-                        <div className="space-y-10">
-                          
-                          {/* Lista de Presença */}
-                          <div>
-                            <div className="flex justify-between items-center mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
-                              <h3 className="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2"><i className="fa-solid fa-users-viewfinder text-brand-light"></i> Frequência e Parâmetros Vitais</h3>
-                            </div>
-                            <div className="bg-surface-50 dark:bg-surface-900/30 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 p-2 sm:p-4">
-                              <div className="max-h-[500px] overflow-y-auto space-y-3 pr-2 custom-scrollbar">
-                                {planDetails.attendanceList.map((p, i) => {
-                                  const patientDb = participantsList.find(db => db.id === p.id);
-                                  const fallRisk = patientDb?.fallRisk;
-                                  const isPresent = p.present;
-                                  return ( 
-                                    <div key={p.id} className={`p-4 sm:p-5 rounded-xl border transition-all duration-300 ${isPresent ? 'bg-white dark:bg-surface-800 border-brand-blue/30 dark:border-brand-light/30 shadow-sm ring-1 ring-brand-blue/5' : 'bg-transparent border-slate-200 dark:border-slate-700 opacity-70 hover:opacity-100'}`}>
-                                      <label className="flex items-center gap-3 cursor-pointer group">
-                                        <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${isPresent ? 'bg-brand-blue border-brand-blue text-white' : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-surface-900 group-hover:border-brand-blue'}`}>
-                                          {isPresent && <i className="fa-solid fa-check text-xs"></i>}
-                                        </div>
-                                        <input type="checkbox" checked={isPresent} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="hidden"/>
-                                        <span className={`font-bold text-base transition-colors ${isPresent ? 'text-brand-blue dark:text-brand-light' : 'text-slate-600 dark:text-slate-300'}`}>{p.name}</span>
-                                        
-                                        {fallRisk && <span className="ml-auto flex items-center gap-1.5 text-[10px] font-bold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 px-2.5 py-1 rounded-full uppercase tracking-wider border border-red-200 dark:border-red-800/50"><i className="fa-solid fa-triangle-exclamation"></i> Risco Queda</span>}
-                                      </label>
-                                      
-                                      <div className={`grid grid-cols-1 sm:grid-cols-3 gap-4 overflow-hidden transition-all duration-300 ease-in-out ${isPresent ? 'max-h-40 mt-5 opacity-100' : 'max-h-0 mt-0 opacity-0'}`}>
-                                        <div className="bg-surface-50 dark:bg-surface-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700/50">
-                                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5"><i className="fa-solid fa-heart-pulse text-rose-500"></i> FC (Início / Fim)</p>
-                                          <input placeholder="Ex: 80 / 95" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="w-full text-sm font-semibold p-2 bg-white dark:bg-surface-800 border border-slate-200 dark:border-slate-600 rounded-lg outline-none focus:border-brand-light focus:ring-2 focus:ring-brand-light/20 text-slate-800 dark:text-slate-100 transition-all"/>
-                                        </div>
-                                        <div className="bg-surface-50 dark:bg-surface-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700/50">
-                                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5"><i className="fa-solid fa-lungs text-blue-500"></i> SpO2 (Início / Fim)</p>
-                                          <input placeholder="Ex: 98 / 97" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="w-full text-sm font-semibold p-2 bg-white dark:bg-surface-800 border border-slate-200 dark:border-slate-600 rounded-lg outline-none focus:border-brand-light focus:ring-2 focus:ring-brand-light/20 text-slate-800 dark:text-slate-100 transition-all"/>
-                                        </div>
-                                        <div className="bg-surface-50 dark:bg-surface-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700/50">
-                                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5"><i className="fa-solid fa-stethoscope text-emerald-500"></i> PA (Início / Fim)</p>
-                                          <input placeholder="Ex: 12x8 / 13x8" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="w-full text-sm font-semibold p-2 bg-white dark:bg-surface-800 border border-slate-200 dark:border-slate-600 rounded-lg outline-none focus:border-brand-light focus:ring-2 focus:ring-brand-light/20 text-slate-800 dark:text-slate-100 transition-all"/>
-                                        </div>
-                                      </div>
-                                    </div> 
-                                  )
-                                })}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Operação */}
-                          <div>
-                            <div className="flex justify-between items-center mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
-                              <h3 className="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2"><i className="fa-solid fa-gears text-brand-light"></i> Execução e Operação</h3>
-                            </div>
-                            <div className="space-y-5">
-                              <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Objetivos da Ação (Revisão)</label><textarea rows="2" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className={inputClass}></textarea></div>
-                              <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Síntese Prática das Atividades</label><textarea rows="3" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className={inputClass}></textarea></div>
-                              <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Materiais Acionados na Prática</label><textarea rows="2" value={planDetails.materials} onChange={e=>setPlanDetails({...planDetails, materials: e.target.value})} className={inputClass}></textarea></div>
-                              
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-5 bg-surface-50 dark:bg-surface-900/30 border border-slate-200/50 dark:border-slate-700/50 rounded-2xl">
-                                <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Resp. Aferição Sinais Vitais</label><input type="text" value={planDetails.vitalSigns} onChange={e=>setPlanDetails({...planDetails, vitalSigns: e.target.value})} className={inputClass} placeholder="Nomes..." /></div>
-                                <div><label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Resp. Registro Audiovisual</label><input type="text" value={planDetails.soundAndPhotos} onChange={e=>setPlanDetails({...planDetails, soundAndPhotos: e.target.value})} className={inputClass} placeholder="Nomes..." /></div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Evolução Clínica */}
-                          <div>
-                            <div className="flex justify-between items-center mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
-                              <h3 className="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2"><i className="fa-solid fa-notes-medical text-brand-light"></i> Evolução Clínica Diária</h3>
-                            </div>
-                            <div className="space-y-5">
-                              <div>
-                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Relato Comportamental e Dinâmica</label>
-                                 <textarea rows="4" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className={inputClass} placeholder="Descreva o engajamento, dificuldades do grupo, etc..."></textarea>
-                              </div>
-                              <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Conclusões Clínicas Sistêmicas (Evolução)</label>
-                                <textarea rows="6" value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails, dailyEvolution: e.target.value})} className={inputClass} placeholder="Parecer fisioterapêutico final pós-sessão..."></textarea>
-                              </div>
-                              <div className="w-48"><label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Adesão Total Final</label><input type="text" value={planDetails.attendanceCount} onChange={e=>setPlanDetails({...planDetails, attendanceCount: e.target.value})} className={inputClass} placeholder="Ex: 32" /></div>
-                            </div>
-                          </div>
-
-                        </div>
-                        <div className="pt-10 border-t border-slate-100 dark:border-slate-800 mt-10 flex justify-end gap-4">
-                          <button onClick={() => setCircuitMode('view')} className={btnSecondaryClass}>Cancelar Edição</button>
-                          <button onClick={handleUpdateReport} className={btnPrimaryClass}><i className="fa-solid fa-check-double mr-2"></i> Firmar Prontuário</button>
-                        </div>
-                      </div>
-                    </div> 
-                  )}
-
-                  {/* 3. HISTÓRICO DE DOCUMENTOS */}
-                  {circuitMode === 'history' && ( 
-                    <div className="animate-fade-in">
-                      <div className="mb-6">
-                        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Acervo de Prontuários</h2>
-                        <p className="text-sm text-slate-500 mt-1">Histórico completo de intervenções e relatórios clínicos.</p>
-                      </div>
-
-                      {savedCircuits.length === 0 ? ( 
-                        <div className={cardClass + " py-24 flex flex-col items-center justify-center"}>
-                          <div className="w-20 h-20 bg-surface-50 dark:bg-surface-900 rounded-full flex items-center justify-center text-slate-300 dark:text-slate-700 text-3xl mb-4"><i className="fa-regular fa-folder-open"></i></div>
-                          <p className="text-base font-bold text-slate-700 dark:text-slate-200">Nenhum prontuário registrado</p>
-                          <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-1">Inicie um novo planejamento na aba correspondente.</p>
-                        </div> 
-                      ) : ( 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {savedCircuits.map(circ => { 
-                            const isComplete = circ.details?.resultObtained || circ.details?.dailyEvolution; 
-                            return ( 
-                              <div key={circ.id} className={cardClass + " p-6 flex flex-col hover:shadow-float hover:ring-brand-blue/30 dark:hover:ring-brand-light/30 transition-all duration-300 cursor-pointer group"} onClick={() => {setViewingCircuit(circ); setCircuitMode('view');}}>
-                                <div className="flex justify-between items-start mb-4">
-                                  <span className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider ${isComplete ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'}`}><i className={`fa-solid ${isComplete ? 'fa-check-double' : 'fa-hourglass-half'} mr-1`}></i> {isComplete ? 'Homologado' : 'Pendente'}</span>
-                                  <span className="text-[11px] font-extrabold text-slate-400 dark:text-slate-500 bg-surface-50 dark:bg-surface-900 px-2 py-1 rounded-md">{circ.activity_date.split('-').reverse().join('/')}</span>
-                                </div>
-                                <h3 className="text-lg font-extrabold text-slate-800 dark:text-slate-100 mb-2 leading-tight">Prontuário Ativ. {circ.details?.activityNum || '-'}</h3>
-                                <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-6 line-clamp-2">{circ.details?.theme || 'Sem especificação temática inserida.'}</p>
-                                <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800 text-xs font-bold text-brand-blue dark:text-brand-light flex items-center justify-end gap-2 group-hover:gap-3 transition-all">
-                                  Analisar Processo <i className="fa-solid fa-arrow-right"></i>
-                                </div>
-                              </div> 
-                            ) 
-                          })}
-                        </div> 
-                      )}
-                    </div> 
-                  )}
-
-                  {/* 4. VISUALIZAÇÃO DE PRONTUÁRIO */}
-                  {circuitMode === 'view' && viewingCircuit && ( 
-                    <div className="space-y-6 animate-fade-in pb-12">
-                      {/* Control Bar (Flutuante visual) */}
-                      <div className="flex flex-wrap gap-4 bg-white/80 dark:bg-surface-800/80 backdrop-blur-md p-4 rounded-2xl shadow-float ring-1 ring-slate-900/5 dark:ring-white/10 sticky top-24 z-20">
-                        <button onClick={() => setCircuitMode('history')} className={btnSecondaryClass + " !px-4"}><i className="fa-solid fa-arrow-left"></i></button>
-                        
-                        <div className="flex gap-3 flex-1 overflow-x-auto no-scrollbar">
-                           <button onClick={startEditingReport} className={btnPrimaryClass + " whitespace-nowrap"}><i className="fa-solid fa-pen-to-square mr-2"></i> Editar Prontuário</button>
-                           <button onClick={() => handleGenerateReportPDF(viewingCircuit)} className={btnSecondaryClass + " whitespace-nowrap bg-surface-50"}><i className="fa-solid fa-file-pdf text-red-500 mr-2"></i> PDF Geral</button>
-                           <button onClick={() => handleGenerateEvolutionPDF(viewingCircuit)} className={btnSecondaryClass + " whitespace-nowrap bg-surface-50"}><i className="fa-solid fa-notes-medical text-brand-blue mr-2"></i> PDF Clínico</button>
-                        </div>
-
-                        {isAdmin && ( <button onClick={() => handleDeleteCircuit(viewingCircuit.id)} className="px-5 py-2.5 bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 font-bold text-sm rounded-xl hover:bg-red-500 hover:text-white transition-all"><i className="fa-solid fa-trash"></i></button> )}
-                      </div>
-
-                      {/* Folha do Relatório */}
-                      <div className="bg-white dark:bg-surface-800 p-8 sm:p-14 rounded-3xl shadow-soft ring-1 ring-slate-900/5 dark:ring-white/10 text-sm text-slate-800 dark:text-slate-200">
-                        
-                        {/* Header Documento */}
-                        <div className="text-center mb-12 border-b-2 border-slate-100 dark:border-slate-800 pb-8">
-                          <img src="Logo_ATV_2024_Colorido_v2.png" className="h-16 mx-auto mb-6 grayscale opacity-80" onError={(e) => e.target.style.display='none'}/>
-                          <h2 className="font-extrabold uppercase text-xl text-slate-800 dark:text-slate-100 tracking-widest">Relatório e Prontuário Clínico</h2>
-                          <h3 className="font-bold text-brand-blue dark:text-brand-light text-lg mt-2">ATIVIDADE REFERÊNCIA {viewingCircuit.details?.activityNum || 'X'}</h3>
-                          <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-2 max-w-xl mx-auto">{viewingCircuit.details?.theme}</p>
-                        </div>
-                        
-                        <div className="max-w-4xl mx-auto space-y-10">
-                          
-                          {/* Metadados */}
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-surface-50 dark:bg-surface-900/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700/50">
-                            <div>
-                               <p className="font-extrabold text-[10px] text-slate-400 uppercase tracking-wider mb-1">Data Execução</p>
-                               <p className="font-bold text-base text-slate-800 dark:text-slate-200">{viewingCircuit.activity_date.split('-').reverse().join('/')}</p>
-                            </div>
-                            <div>
-                               <p className="font-extrabold text-[10px] text-slate-400 uppercase tracking-wider mb-1">Corpo Discente / Monitores</p>
-                               <p className="font-bold text-base text-slate-800 dark:text-slate-200">{viewingCircuit.details?.students || '--'}</p>
-                            </div>
-                          </div>
-
-                          {/* Infos Gerais */}
-                          <div className="space-y-6">
-                            <div><p className="font-extrabold text-brand-light uppercase text-xs tracking-wider mb-2 flex items-center gap-2"><i className="fa-solid fa-crosshairs"></i> Objetivos</p><div className="bg-surface-50 dark:bg-surface-900/30 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-medium whitespace-pre-line leading-relaxed">{viewingCircuit.details?.objectives || 'Sem anotações.'}</div></div>
-                            <div><p className="font-extrabold text-brand-light uppercase text-xs tracking-wider mb-2 flex items-center gap-2"><i className="fa-solid fa-gears"></i> Atividades Propostas</p><div className="text-slate-700 dark:text-slate-300 font-medium whitespace-pre-line leading-relaxed px-2">{viewingCircuit.details?.proposedActivities || 'Sem anotações.'}</div></div>
-                            <div><p className="font-extrabold text-brand-light uppercase text-xs tracking-wider mb-2 flex items-center gap-2"><i className="fa-solid fa-cubes"></i> Materiais</p><div className="text-slate-700 dark:text-slate-300 font-medium whitespace-pre-line leading-relaxed px-2">{viewingCircuit.details?.materials || 'Sem anotações.'}</div></div>
-                          </div>
-                          
-                          {/* Circuito Físico */}
-                          <div>
-                            <p className="font-extrabold text-brand-light uppercase text-xs tracking-wider mb-4 flex items-center gap-2"><i className="fa-solid fa-route"></i> Estrutura Prática (Circuito)</p>
-                            <div className="border border-slate-200 dark:border-slate-700 rounded-2xl p-6 relative overflow-hidden">
-                              <div className="absolute top-0 left-0 w-2 h-full bg-brand-light/30"></div>
-                              <div className="pl-4">
-                                <p className="mb-6"><strong className="text-slate-800 dark:text-slate-200 font-extrabold uppercase text-xs tracking-wider bg-slate-100 dark:bg-surface-900 px-3 py-1 rounded-md">Aquecimento:</strong> <span className="block mt-2 text-slate-600 dark:text-slate-300 font-medium">{viewingCircuit.details?.warmUp || 'Não detalhado'}</span></p>
-                                
-                                <div className="space-y-4 mb-6 pl-2 border-l-2 border-slate-100 dark:border-slate-800 py-2">
-                                  {viewingCircuit.stations && viewingCircuit.stations.map((station, idx) => ( 
-                                    <div key={idx} className="relative">
-                                      <div className="absolute -left-[13px] top-1 w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600 border-2 border-white dark:border-surface-800"></div>
-                                      <p className="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-1">Estação {idx + 1} <span className="text-slate-400 normal-case font-medium ml-2">({viewingCircuit.details?.stationResponsibles?.[idx] || 'Sem resp.'})</span></p>
-                                      <p className="text-sm font-medium text-slate-600 dark:text-slate-400">{station.length === 0 ? 'Sem exercícios cadastrados' : station.map(ex => ex.title).join(' • ')}</p>
-                                    </div> 
-                                  ))}
-                                </div>
-                                
-                                <p><strong className="text-slate-800 dark:text-slate-200 font-extrabold uppercase text-xs tracking-wider bg-slate-100 dark:bg-surface-900 px-3 py-1 rounded-md">Transição Final:</strong> <span className="block mt-2 text-slate-600 dark:text-slate-300 font-medium">{viewingCircuit.details?.coolDown || 'Não detalhado'}</span></p>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Tabela Clínica Real */}
-                          {viewingCircuit.details?.attendanceList && viewingCircuit.details.attendanceList.some(p => p.present) && ( 
-                            <div>
-                              <p className="font-extrabold text-brand-light uppercase text-xs tracking-wider mb-4 flex items-center gap-2"><i className="fa-solid fa-clipboard-check"></i> Monitoramento Clínico In Loco</p>
-                              <div className="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-x-auto shadow-sm">
-                                <table className="w-full text-xs text-center">
-                                  <thead className="bg-surface-50 dark:bg-surface-900/50 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider border-b border-slate-200 dark:border-slate-700"><tr><th className="p-4 text-left pl-6 w-1/3">Paciente</th><th className="p-4">FC Inic/Final</th><th className="p-4">SpO2 Inic/Final</th><th className="p-4">PA Inic/Final</th></tr></thead>
-                                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                                    {viewingCircuit.details.attendanceList.filter(p => p.present).map(p => ( 
-                                      <tr key={p.id} className="hover:bg-slate-50/50 dark:hover:bg-surface-800/30 transition-colors">
-                                        <td className="p-4 text-left pl-6 font-bold text-slate-800 dark:text-slate-200">{p.name}</td>
-                                        <td className="p-4 font-medium text-slate-600 dark:text-slate-400"><span className="bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-700 px-2 py-1 rounded-md inline-block min-w-[70px]">{p.fc_in || '--'} / {p.fc_out || '--'}</span></td>
-                                        <td className="p-4 font-medium text-slate-600 dark:text-slate-400"><span className="bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-700 px-2 py-1 rounded-md inline-block min-w-[70px]">{p.spo2_in || '--'} / {p.spo2_out || '--'}</span></td>
-                                        <td className="p-4 font-medium text-slate-600 dark:text-slate-400"><span className="bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-700 px-2 py-1 rounded-md inline-block min-w-[90px]">{p.pa_in || '--'} / {p.pa_out || '--'}</span></td>
-                                      </tr> 
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div> 
-                          )}
-
-                          {/* Evoluções */}
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 border-t border-slate-200 dark:border-slate-700 pt-8 mt-8">
-                             <div>
-                               <p className="font-extrabold text-brand-light uppercase text-xs tracking-wider mb-4 flex items-center gap-2"><i className="fa-solid fa-comment-medical"></i> Parecer Comportamental</p>
-                               <div className="text-slate-700 dark:text-slate-300 font-medium whitespace-pre-line leading-relaxed px-2 border-l-2 border-brand-light/30 pl-4">{viewingCircuit.details?.developmentNarrative || 'Sem registros.'}</div>
-                             </div>
-                             <div>
-                               <p className="font-extrabold text-emerald-600 dark:text-emerald-500 uppercase text-xs tracking-wider mb-4 flex items-center gap-2"><i className="fa-solid fa-file-medical"></i> Evolução Fisioterapêutica</p>
-                               <div className="text-slate-700 dark:text-slate-300 font-medium whitespace-pre-line leading-relaxed px-2 border-l-2 border-emerald-500/30 pl-4">{viewingCircuit.details?.dailyEvolution || 'Sem registros.'}</div>
-                             </div>
-                          </div>
-                          
-                          <div className="bg-surface-50 dark:bg-surface-900/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 flex justify-between items-center mt-12">
-                             <p className="text-sm font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Adesão Computada</p>
-                             <p className="text-2xl font-extrabold text-brand-blue dark:text-brand-light">{viewingCircuit.details?.attendanceCount || '0'}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div> 
-                  )}
                 </div>
               )}
 
