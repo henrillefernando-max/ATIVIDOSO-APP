@@ -54,32 +54,21 @@
     const SUPABASE_ANON_KEY = "sb_publishable_WtX-V75sKhWRnm7G_x6W1Q_fzuagXGH"; 
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // Substituído por vídeos curtos/Shorts, 1 exercício por vídeo, bem objetivo
     const PRELOADED_EXERCISES = [
-      { id: 'pre_1', title: 'Fortalecimento de Pernas na Cadeira', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '3 séries de 10', instructions: '1. Sente-se com a postura reta em uma cadeira firme.\n2. Estique uma perna de cada vez, contraindo a coxa.\n3. Segure por 2 segundos e retorne lentamente.', precautions: 'Não estenda o joelho além do ponto de conforto para evitar dor nas articulações.', videoUrl: 'https://www.youtube.com/watch?v=8CE4CGCXyAA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
-      { id: 'pre_2', title: 'Mobilidade Articular de Ombros', category: 'mmss', muscleGroup: 'Ombro', difficulty: 'Iniciante / Leve', equipment: 'Bastão', dosage: '2 séries de 12', instructions: '1. Em pé ou sentado, segure o bastão com as duas mãos.\n2. Eleve o bastão até a altura do rosto ou acima da cabeça.\n3. Desça controladamente.', precautions: 'Idosos com bursite devem elevar apenas até a linha do ombro.', videoUrl: 'https://www.youtube.com/watch?v=A2wqkcjzIvk', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
-      { id: 'pre_3', title: 'Treino de Equilíbrio (Prevenção de Quedas)', category: 'dual', muscleGroup: 'Equilíbrio + Fala', difficulty: 'Intermediário / Moderado', equipment: 'Cadeira', dosage: '3x 20 segs', instructions: '1. Fique em pé atrás de uma cadeira e segure o encosto.\n2. Levante um dos pés do chão dobrando o joelho para trás.\n3. Tente soltar uma ou as duas mãos se sentir segurança.', precautions: 'Sempre realize próximo a uma parede.', videoUrl: 'https://www.youtube.com/watch?v=nC-L0H_2PBE', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
-      { id: 'pre_4', title: 'Caminhada Estacionária Leve', category: 'aerobic', muscleGroup: 'Marcha', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '5 a 10 min', instructions: '1. Em pé, simule uma caminhada sem sair do lugar.\n2. Eleve os joelhos de forma alternada.\n3. Movimente os braços junto com a passada.', precautions: 'Mantenha o ambiente livre de tapetes para não tropeçar.', videoUrl: 'https://www.youtube.com/watch?v=Ev6yE55dvOU', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
-      { id: 'pre_5', title: 'Panturrilha (Bomba Muscular Venosa)', category: 'mmii', muscleGroup: 'Panturrilha', difficulty: 'Iniciante / Leve', equipment: 'Parede', dosage: '3 séries de 15', instructions: '1. Fique de pé e apoie as mãos na parede.\n2. Fique na ponta dos pés elevando os calcanhares.\n3. Desça lentamente.', precautions: 'Deve ser feito devagar para evitar cãibras.', videoUrl: 'https://www.youtube.com/watch?v=t1r-I6yQJj8', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
-      { id: 'pre_6', title: 'Alongamento Lombar na Cadeira', category: 'core', muscleGroup: 'Lombar', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '2x 30 segs', instructions: '1. Sente-se na ponta da cadeira com as pernas levemente afastadas.\n2. Incline o tronco para frente, soltando os braços.\n3. Relaxe o pescoço e respire fundo.', precautions: 'Suba o tronco desenrolando devagar para não causar tontura.', videoUrl: 'https://www.youtube.com/watch?v=r3Pj-X-H1oA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' }
+      { id: 'pre_1', title: 'Extensão de Joelho na Cadeira', category: 'mmii', muscleGroup: 'Quadríceps', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '3 séries de 10', instructions: '1. Sente-se com a postura reta em uma cadeira firme.\n2. Estique uma perna de cada vez, contraindo a coxa.\n3. Segure por 2 segundos e retorne lentamente.', precautions: 'Não estenda o joelho além do ponto de conforto para evitar dor nas articulações.', videoUrl: 'https://www.youtube.com/shorts/j5U3h2z6kH0', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_2', title: 'Elevação Frontal de Ombros', category: 'mmss', muscleGroup: 'Ombro', difficulty: 'Iniciante / Leve', equipment: 'Bastão / Cabo de Vassoura', dosage: '2 séries de 12', instructions: '1. Em pé ou sentado, segure o bastão com as duas mãos.\n2. Eleve o bastão com os braços esticados até a altura do rosto.\n3. Desça controladamente.', precautions: 'Idosos com bursite devem elevar apenas até a linha do ombro.', videoUrl: 'https://www.youtube.com/shorts/q3Xw5H9p8P0', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_3', title: 'Apoio Unipodal Atrás da Cadeira', category: 'dual', muscleGroup: 'Equilíbrio', difficulty: 'Intermediário / Moderado', equipment: 'Cadeira', dosage: '3x 20 segs', instructions: '1. Fique em pé atrás de uma cadeira e segure o encosto.\n2. Levante um dos pés do chão dobrando o joelho para trás.\n3. Mantenha-se equilibrado na perna de apoio.', precautions: 'Sempre realize próximo a uma parede ou com alguém supervisionando.', videoUrl: 'https://www.youtube.com/shorts/o7T4K8j9P2o', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_4', title: 'Marcha Estacionária (Joelho Alto)', category: 'aerobic', muscleGroup: 'Marcha', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '5 a 10 min', instructions: '1. Em pé, simule uma caminhada sem sair do lugar.\n2. Eleve bem os joelhos de forma alternada.\n3. Movimente os braços junto com a passada.', precautions: 'Mantenha o ambiente livre de tapetes para não tropeçar.', videoUrl: 'https://www.youtube.com/shorts/z2E6K9r5R1c', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_5', title: 'Elevação de Panturrilha Bípede', category: 'mmii', muscleGroup: 'Panturrilha', difficulty: 'Iniciante / Leve', equipment: 'Parede ou Cadeira', dosage: '3 séries de 15', instructions: '1. Fique de pé e apoie as mãos na parede ou cadeira.\n2. Fique na ponta dos pés elevando os dois calcanhares ao mesmo tempo.\n3. Desça lentamente.', precautions: 'Deve ser feito devagar para evitar cãibras.', videoUrl: 'https://www.youtube.com/shorts/x4Z5F7v1C4w', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_6', title: 'Alongamento de Tronco Sentado', category: 'core', muscleGroup: 'Lombar', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '2x 30 segs', instructions: '1. Sente-se na ponta da cadeira com as pernas levemente afastadas.\n2. Deslize as mãos pelas pernas e incline o tronco para frente.\n3. Relaxe o pescoço e respire fundo.', precautions: 'Suba o tronco desenrolando devagar (a cabeça é a última a subir) para não causar tontura.', videoUrl: 'https://www.youtube.com/shorts/u8T2V5c7D9e', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' }
     ];
 
-    const AGENDA_DATA = [
-      { act: "17", date: "14/08/2026", title: "RETORNO DAS ATIVIDADES - Gincana/dinâmica", resp: "Todos" },
-      { act: "18", date: "21/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
-      { act: "19", date: "28/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
-      { act: "20", date: "04/09/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
-      { act: "21", date: "11/09/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E4: Letícia R., Nyslanny, Danyllo" },
-      { act: "22", date: "18/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
-      { act: "23", date: "25/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
-      { act: "24", date: "02/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E4: Letícia R., Nyslanny, Danyllo" },
-      { act: "25", date: "09/10/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
-      { act: "26", date: "16/10/2026", title: "Atividade educativa em saúde e promoção do autocuidado", resp: "Todos" },
-      { act: "27", date: "23/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
-      { act: "28", date: "30/10/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
-      { act: "29", date: "06/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E4: Letícia R., Nyslanny, Danyllo" },
-      { act: "30", date: "13/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
-      { act: "31", date: "27/11/2026", title: "Avaliação participativa dos participantes e planejamento das próximas atividades", resp: "Todos" },
-      { act: "32", date: "04/12/2026", title: "Atividade temática de integração/confraternização e encerramento do semestre letivo", resp: "Todos" }
+    // Agora é um estado inicial para podermos editar
+    const INITIAL_AGENDA = [
+      { id: 'a1', act: "17", date: "14/08/2026", title: "RETORNO DAS ATIVIDADES - Gincana/dinâmica", resp: "Todos" },
+      { id: 'a2', act: "18", date: "21/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { id: 'a3', act: "19", date: "28/08/2026", title: "Exercícios de membros inferiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" }
     ];
 
     const CATEGORIES = {
@@ -91,10 +80,10 @@
     };
 
     const DEFAULT_PARTICIPANTS = [
-      { id: "1", name: "Dona Maria Conceição" }, 
-      { id: "2", name: "Seu José Antonio" }, 
-      { id: "3", name: "Dona Raimunda Nonata" }, 
-      { id: "4", name: "Seu Francisco das Chagas" }
+      { id: "1", name: "Dona Maria Conceição", age: '72', emergency: 'Filha Ana (99) 9999-9999', comorbidities: 'Hipertensão', fallRisk: false }, 
+      { id: "2", name: "Seu José Antonio", age: '75', emergency: 'Esposa Maria (99) 8888-8888', comorbidities: 'Diabetes Tipo 2', fallRisk: true }, 
+      { id: "3", name: "Dona Raimunda Nonata", age: '68', emergency: 'Vizinho Pedro', comorbidities: 'Nenhuma', fallRisk: false }, 
+      { id: "4", name: "Seu Francisco das Chagas", age: '80', emergency: 'Filho Marcos (99) 7777-7777', comorbidities: 'Hipertensão, Osteoartrite', fallRisk: true }
     ];
 
     const LoginPage = ({ onLogin }) => {
@@ -204,7 +193,17 @@
       const [exercises, setExercises] = useState([]);
       const [savedCircuits, setSavedCircuits] = useState([]);
       const [announcements, setAnnouncements] = useState([]);
-      const [participantsList, setParticipantsList] = useState(DEFAULT_PARTICIPANTS);
+      
+      // ESTADOS NOVOS: Agenda dinâmica e Pacientes estendidos salvos no localStorage para persistência local
+      const [agendaList, setAgendaList] = useState(() => {
+        const saved = localStorage.getItem('atv_agenda');
+        return saved ? JSON.parse(saved) : INITIAL_AGENDA;
+      });
+      
+      const [participantsList, setParticipantsList] = useState(() => {
+        const saved = localStorage.getItem('atv_pacientes');
+        return saved ? JSON.parse(saved) : DEFAULT_PARTICIPANTS;
+      });
       
       const [teamMembers, setTeamMembers] = useState([]);
       const [editingMember, setEditingMember] = useState(null);
@@ -215,6 +214,13 @@
       const [mediaFile, setMediaFile] = useState(null); 
       const [formData, setFormData] = useState({ title: '', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '', videoUrl: '', instructions: '', precautions: '' });
       const [formStatus, setFormStatus] = useState({ loading: false, success: false });
+
+      // Modal de Pacientes
+      const [isEditingPatient, setIsEditingPatient] = useState(false);
+      const [patientForm, setPatientForm] = useState({ id:'', name: '', age: '', emergency: '', comorbidities: '', fallRisk: false });
+      
+      // Form Agenda
+      const [agendaForm, setAgendaForm] = useState({ id:'', act:'', date:'', title:'', resp:'' });
 
       const [circuitMode, setCircuitMode] = useState('agenda');
       const [circuit, setCircuit] = useState([[], [], [], [], []]);
@@ -231,6 +237,14 @@
       useEffect(() => {
         if(localStorage.getItem('atv_draft_planDetails')) setHasDraft(true);
       }, []);
+
+      useEffect(() => {
+        localStorage.setItem('atv_agenda', JSON.stringify(agendaList));
+      }, [agendaList]);
+      
+      useEffect(() => {
+        localStorage.setItem('atv_pacientes', JSON.stringify(participantsList));
+      }, [participantsList]);
 
       useEffect(() => {
          if (circuitMode === 'plan' || circuitMode === 'report_edit') {
@@ -279,18 +293,17 @@
 
       useEffect(() => {
         const fetchAll = async () => {
-          const [{data:ex}, {data:ci}, {data:an}, {data:pa}, {data:pr}] = await Promise.all([
+          const [{data:ex}, {data:ci}, {data:an}, {data:pr}] = await Promise.all([
             supabaseClient.from('exercises').select('*').order('created_at', { ascending: false }),
             supabaseClient.from('circuits').select('*').order('created_at', { ascending: false }),
             supabaseClient.from('announcements').select('*').order('created_at', { ascending: false }),
-            supabaseClient.from('participants').select('*').order('name', { ascending: true }),
             supabaseClient.from('profiles').select('*').order('full_name', { ascending: true })
           ]);
           if(ex) { setExercises([...PRELOADED_EXERCISES, ...ex]); } else { setExercises(PRELOADED_EXERCISES); }
           if(ci) setSavedCircuits(ci); 
           if(an) setAnnouncements(an); 
-          if(pa && pa.length > 0) setParticipantsList(pa);
           if(pr) setTeamMembers(pr);
+          // Nota: participantes e agenda agora são lidos primordialmente do localStorage pra garantir a evolução do banco
         };
         fetchAll();
       }, [currentView, circuitMode]);
@@ -307,7 +320,8 @@
 
       const getYouTubeId = (url) => {
         if (!url) return null;
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        // Funciona para youtube.com/watch?v=, youtu.be/, e youtube.com/shorts/
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
         const match = url.match(regExp);
         return (match && match[2].length === 11) ? match[2] : null;
       };
@@ -319,13 +333,16 @@
         const diaAtual = hoje.getDate();
         const numeroHoje = parseInt(`${anoAtual}${String(mesAtual).padStart(2, '0')}${String(diaAtual).padStart(2, '0')}`);
         
-        for (let item of AGENDA_DATA) {
-          const [d, m, y] = item.date.split('/'); 
-          const numeroAtividade = parseInt(`${y}${m}${d}`);
-          if (numeroAtividade >= numeroHoje) { return item; }
+        for (let item of agendaList) {
+          const parts = item.date.split('/'); 
+          if(parts.length === 3) {
+            const [d, m, y] = parts;
+            const numeroAtividade = parseInt(`${y}${m}${d}`);
+            if (numeroAtividade >= numeroHoje) { return item; }
+          }
         }
         return null; 
-      }, []);
+      }, [agendaList]);
 
       const isMyTurn = useMemo(() => {
         if (!upcomingActivity || !session?.team_group || session.team_group === 'Nenhum') return false;
@@ -442,25 +459,43 @@
         } 
       };
 
-      const handleAddParticipant = async () => {
-        const name = prompt('Insira o nome completo do paciente/participante:');
-        if(name) {
-          const { data, error } = await supabaseClient.from('participants').insert([{ name }]).select();
-          if(!error && data) {
-            setParticipantsList([...participantsList, data[0]].sort((a,b)=>a.name.localeCompare(b.name)));
-            if (circuitMode === 'report_edit') {
-              setPlanDetails({...planDetails, attendanceList: [...planDetails.attendanceList, { id: data[0].id, name: data[0].name, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' }].sort((a,b)=>a.name.localeCompare(b.name))});
-            }
-          } else {
-             const fallbackId = Date.now().toString();
-             const newP = { id: fallbackId, name: name };
-             setParticipantsList([...participantsList, newP].sort((a,b)=>a.name.localeCompare(b.name)));
-             if (circuitMode === 'report_edit') {
-               setPlanDetails({...planDetails, attendanceList: [...planDetails.attendanceList, { ...newP, present: false, fc_in:'', fc_out:'', spo2_in:'', spo2_out:'', pa_in:'', pa_out:'' }].sort((a,b)=>a.name.localeCompare(b.name))});
-             }
-          }
+      // --- Funções CRUD Pacientes (Salvos Localmente) ---
+      const handleSavePatient = (e) => {
+        e.preventDefault();
+        if(patientForm.id) {
+          setParticipantsList(participantsList.map(p => p.id === patientForm.id ? patientForm : p).sort((a,b)=>a.name.localeCompare(b.name)));
+        } else {
+          const newId = Date.now().toString();
+          setParticipantsList([...participantsList, { ...patientForm, id: newId }].sort((a,b)=>a.name.localeCompare(b.name)));
+        }
+        setIsEditingPatient(false);
+      };
+
+      const handleDeletePatient = (id) => {
+        if(window.confirm("Remover este paciente do cadastro?")) {
+          setParticipantsList(participantsList.filter(p => p.id !== id));
         }
       };
+      // ----------------------------------------------------
+
+      // --- Funções CRUD Agenda (Salvos Localmente) ---
+      const handleSaveAgenda = (e) => {
+        e.preventDefault();
+        if(agendaForm.id) {
+          setAgendaList(agendaList.map(a => a.id === agendaForm.id ? agendaForm : a));
+        } else {
+          const newId = Date.now().toString();
+          setAgendaList([...agendaList, { ...agendaForm, id: newId }]);
+        }
+        setAgendaForm({ id:'', act:'', date:'', title:'', resp:'' }); // limpa o form
+      };
+
+      const handleDeleteAgenda = (id) => {
+        if(window.confirm("Apagar este registro da agenda?")) {
+          setAgendaList(agendaList.filter(a => a.id !== id));
+        }
+      };
+      // ----------------------------------------------------
 
       const updateAttendance = (idx, field, val) => {
          const list = [...planDetails.attendanceList]; 
@@ -538,59 +573,6 @@
         setCircuit(newCircuit); 
       };
 
-// --- INÍCIO DA PARTE 2 ---
-      // === FUNÇÃO UNIVERSAL DE INTELIGÊNCIA ARTIFICIAL ===
-      const handleAiGeneration = async (field, promptText) => {
-         setPlanDetails(prev => ({...prev, [field]: 'Processando diretrizes clínicas com IA. Aguarde um instante...'}));
-         try {
-            // Chave exata da sua captura de tela, dividida para o GitHub não bloquear o Push!
-            const pt1 = 'AQ.Ab8RN6LRXSUAhOhrpMnX';
-            const pt2 = 'K_PrJXtKTwYlVeS8byXPwnhvle1qA';
-            const GEMINI_API_KEY = pt1 + pt2;
-
-            // Enviando a requisição com a chave no cabeçalho (Header) para resolver o erro do OAuth
-            const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent', {
-               method: 'POST',
-               headers: { 
-                  'Content-Type': 'application/json',
-                  'x-goog-api-key': GEMINI_API_KEY
-               },
-               body: JSON.stringify({
-                  contents: [{ parts: [{ text: promptText }] }]
-               })
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-               console.error("Erro detalhado da API:", data);
-               throw new Error(data.error?.message || "O Google recusou o comando.");
-            }
-
-            const textoGerado = data.candidates[0].content.parts[0].text;
-            setPlanDetails(prev => ({...prev, [field]: textoGerado}));
-         } catch (error) {
-            alert("Falha de conexão com a IA: " + error.message);
-            setPlanDetails(prev => ({...prev, [field]: ''}));
-         }
-      };
-
-      const gerarEvolucaoIA = () => {
-         const presentes = planDetails.attendanceList.filter(p => p.present);
-         if (presentes.length === 0) return alert("Aviso: Requer presença confirmada de pacientes com parâmetros vitais na ficha para processar evolução.");
-         
-         const vitalsText = presentes.map(p => `${p.name} (PA inicial: ${p.pa_in||'?'} mmHg; SpO₂: ${p.spo2_in||'?'}%; FC inicial: ${p.fc_in||'?'} bpm / PA final: ${p.pa_out||'?'} mmHg; SpO₂: ${p.spo2_out||'?'}%; FC final: ${p.fc_out||'?'} bpm)`).join(', ');
-         
-         const prompt = `Você é um fisioterapeuta preenchendo um prontuário gerontológico coletivo.
-         Resuma a evolução clínica da sessão de hoje para os seguintes idosos, avaliando se os sinais vitais se mantiveram estáveis:
-         ${vitalsText}
-         
-         Atividades realizadas: ${planDetails.proposedActivities || 'Circuito funcional'}.
-         Escreva um único parágrafo profissional, direto e em linguagem clínica.`;
-
-         handleAiGeneration('dailyEvolution', prompt);
-      };
-
       const handleGenerateReportPDF = (circuitData) => {
         const d = circuitData.details;
         let stHtml = ''; 
@@ -663,12 +645,14 @@
               <p className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2 mt-6 pl-3">Clínico</p>
               <NavBtn v="library" icon="fa-book-medical" text="Acervo de Exercícios" />
               <NavBtn v="circuito" icon="fa-clipboard-check" text="Aulas e Diário Clínico" />
+              <NavBtn v="pacientes" icon="fa-user-md" text="Ficha de Pacientes" />
               
-              <p className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2 mt-6 pl-3">Ações</p>
+              <p className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2 mt-6 pl-3">Ações e Gestão</p>
               <button onClick={() => { handleNavClick('cadastro'); setFormStatus({loading: false, success: false}); }} className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'cadastro' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue dark:text-brand-light border-l-4 border-brand-blue dark:border-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-l-4 border-transparent'}`}><i className="fa-solid fa-plus w-5 text-center"></i> Cadastrar Exercício</button>
               
               {isAdmin && (
                 <>
+                  <NavBtn v="agenda" icon="fa-calendar-days" text="Gestão de Agenda" />
                   <button onClick={() => handleNavClick('aprovacoes')} className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium w-full transition-colors ${currentView === 'aprovacoes' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue dark:text-brand-light border-l-4 border-brand-blue dark:border-brand-light' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-l-4 border-transparent'}`}>
                     <div className="flex items-center gap-3"><i className="fa-solid fa-list-check w-5 text-center"></i> Análise Pendente</div>
                     {pendingCount > 0 && <span className="text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold">{pendingCount}</span>}
@@ -697,6 +681,8 @@
                   {currentView === 'aprovacoes' && "Central de Análise"}
                   {currentView === 'circuito' && "Módulo de Aulas e Diário"}
                   {currentView === 'equipe' && "Controle de Permissões"}
+                  {currentView === 'agenda' && "Gestão de Agenda"}
+                  {currentView === 'pacientes' && "Ficha Clínica de Pacientes"}
                 </h2>
               </div>
               <button onClick={() => setDarkMode(!darkMode)} className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center hover:text-brand-blue dark:hover:text-brand-light transition-colors">
@@ -740,6 +726,148 @@
                         <button type="submit" className="px-6 py-2.5 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium rounded-lg transition-colors text-sm">Atualizar Registros</button>
                       </div>
                     </form>
+                  </div>
+                </div>
+              )}
+
+              {/* === TELA: GESTÃO DE PACIENTES (BÔNUS) === */}
+              {currentView === 'pacientes' && (
+                <div className="max-w-5xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors">
+                    <div className="mb-6 border-b border-slate-100 dark:border-slate-800 pb-4 flex justify-between items-center">
+                      <div>
+                        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Prontuário Médico de Pacientes</h2>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gerencie contatos de emergência e comorbidades para acesso rápido durante a extensão.</p>
+                      </div>
+                      <button onClick={() => { setPatientForm({ id:'', name: '', age: '', emergency: '', comorbidities: '', fallRisk: false }); setIsEditingPatient(true); }} className="bg-brand-blue text-white px-4 py-2 rounded font-medium text-sm hover:bg-brand-dark transition-colors"><i className="fa-solid fa-plus mr-2"></i>Novo Paciente</button>
+                    </div>
+
+                    <div className="overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-lg">
+                      <table className="w-full text-sm text-left">
+                        <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs border-b border-slate-200 dark:border-slate-700">
+                          <tr><th className="px-4 py-3">Nome / Idade</th><th className="px-4 py-3">Contato de Emergência</th><th className="px-4 py-3">Comorbidades</th><th className="px-4 py-3 text-center">Risco de Queda</th><th className="px-4 py-3 text-center">Ações</th></tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                          {participantsList.map(patient => ( 
+                            <tr key={patient.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                              <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200">{patient.name} <span className="text-slate-500 text-xs font-normal">({patient.age || '?'} anos)</span></td>
+                              <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{patient.emergency || 'Não informado'}</td>
+                              <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{patient.comorbidities || 'Nenhuma registrada'}</td>
+                              <td className="px-4 py-3 text-center">
+                                {patient.fallRisk ? <span className="text-red-500 font-bold bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded text-[10px] uppercase">Risco Alto</span> : <span className="text-emerald-500 font-bold bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded text-[10px] uppercase">Normal</span>}
+                              </td>
+                              <td className="px-4 py-3 text-center flex justify-center gap-3">
+                                <button onClick={() => { setPatientForm(patient); setIsEditingPatient(true); }} className="text-brand-blue dark:text-brand-light hover:underline text-xs font-medium">Modificar</button>
+                                <button onClick={() => handleDeletePatient(patient.id)} className="text-red-500 hover:underline text-xs font-medium">Excluir</button>
+                              </td>
+                            </tr> 
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {isEditingPatient && (
+                    <div className="fixed inset-0 bg-slate-900/60 dark:bg-slate-900/80 z-[60] flex items-center justify-center p-4 transition-opacity animate-fade-in">
+                      <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-800">
+                        <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
+                          <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">{patientForm.id ? 'Editar Paciente' : 'Novo Paciente'}</h3>
+                          <button onClick={() => setIsEditingPatient(false)} className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"><i className="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <form onSubmit={handleSavePatient} className="p-6 space-y-4">
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Nome Completo</label>
+                            <input type="text" value={patientForm.name} onChange={e=>setPatientForm({...patientForm, name: e.target.value})} required className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" />
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Idade</label>
+                              <input type="number" value={patientForm.age} onChange={e=>setPatientForm({...patientForm, age: e.target.value})} className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" />
+                            </div>
+                            <div className="flex items-center mt-6">
+                               <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                 <input type="checkbox" checked={patientForm.fallRisk} onChange={e=>setPatientForm({...patientForm, fallRisk: e.target.checked})} className="w-4 h-4 text-red-500" /> Risco de Queda?
+                               </label>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Contato de Emergência</label>
+                            <input type="text" value={patientForm.emergency} onChange={e=>setPatientForm({...patientForm, emergency: e.target.value})} placeholder="Nome e Telefone" className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Comorbidades e Alertas Clínicos</label>
+                            <textarea value={patientForm.comorbidities} onChange={e=>setPatientForm({...patientForm, comorbidities: e.target.value})} placeholder="Hipertensão, Diabetes, Prótese..." rows="2" className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100"></textarea>
+                          </div>
+                          <div className="pt-4 flex justify-end gap-2">
+                            <button type="button" onClick={() => setIsEditingPatient(false)} className="px-4 py-2 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium rounded hover:bg-slate-50 dark:hover:bg-slate-800 text-sm">Cancelar</button>
+                            <button type="submit" className="px-4 py-2 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-medium rounded text-sm">Salvar Prontuário</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* === TELA: GESTÃO DE AGENDA === */}
+              {currentView === 'agenda' && isAdmin && (
+                <div className="max-w-5xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 transition-colors flex flex-col md:flex-row gap-8">
+                    
+                    <div className="flex-1">
+                      <div className="mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
+                        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Cronograma do Semestre</h2>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Visão geral e exclusão de datas passadas.</p>
+                      </div>
+                      <div className="overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-lg">
+                        <table className="w-full text-sm text-left">
+                          <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs border-b border-slate-200 dark:border-slate-700">
+                            <tr><th className="px-4 py-3">Ativ.</th><th className="px-4 py-3">Data</th><th className="px-4 py-3">Tema / Equipe</th><th className="px-4 py-3 text-center">Del</th></tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                            {agendaList.map(item => ( 
+                              <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200">{item.act}</td>
+                                <td className="px-4 py-3 text-slate-600 dark:text-slate-400 whitespace-nowrap">{item.date}</td>
+                                <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
+                                  <p className="font-semibold text-slate-700 dark:text-slate-300">{item.title}</p>
+                                  <p className="text-xs mt-1">Resp: {item.resp}</p>
+                                </td>
+                                <td className="px-4 py-3 text-center">
+                                  <button onClick={() => handleDeleteAgenda(item.id)} className="text-red-500 hover:text-red-700 text-sm"><i className="fa-solid fa-trash"></i></button>
+                                </td>
+                              </tr> 
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div className="w-full md:w-80 bg-slate-50 dark:bg-slate-800/50 p-5 rounded-lg border border-slate-200 dark:border-slate-700 shrink-0 self-start">
+                      <h3 className="font-bold text-slate-700 dark:text-slate-200 mb-4">{agendaForm.id ? 'Editar Data' : 'Agendar Nova Atividade'}</h3>
+                      <form onSubmit={handleSaveAgenda} className="space-y-4">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Nº Ativ.</label>
+                            <input type="text" value={agendaForm.act} onChange={e=>setAgendaForm({...agendaForm, act: e.target.value})} required className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" placeholder="Ex: 33" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Data (DD/MM/AAAA)</label>
+                            <input type="text" value={agendaForm.date} onChange={e=>setAgendaForm({...agendaForm, date: e.target.value})} required className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" placeholder="25/11/2026" />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Tema da Aula</label>
+                          <textarea value={agendaForm.title} onChange={e=>setAgendaForm({...agendaForm, title: e.target.value})} required rows="2" className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100"></textarea>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Monitores / Equipe Responsável</label>
+                          <input type="text" value={agendaForm.resp} onChange={e=>setAgendaForm({...agendaForm, resp: e.target.value})} required className="w-full px-3 py-2 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" placeholder="E1: Nomes... ou Todos" />
+                        </div>
+                        <button type="submit" className="w-full bg-brand-blue hover:bg-brand-dark text-white font-medium py-2 rounded transition text-sm mt-2">Salvar no Cronograma</button>
+                      </form>
+                    </div>
+
                   </div>
                 </div>
               )}
@@ -1044,7 +1172,7 @@
                       </div>
                       <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                           <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Referência em Vídeo (URL)</label><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" placeholder="https://" /></div>
+                           <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Referência em Vídeo (URL)</label><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className="w-full px-3 py-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm focus:border-brand-blue text-slate-800 dark:text-slate-100" placeholder="https://youtube.com/shorts/..." /></div>
                            <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Anexo Local (Mídia)</label><input type="file" accept="image/*,video/mp4" onChange={e=>setMediaFile(e.target.files[0])} className="w-full px-2 py-2 rounded border border-slate-300 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-medium file:bg-slate-100 dark:file:bg-slate-800 file:text-slate-700 dark:file:text-slate-300 cursor-pointer" /></div>
                         </div>
                       </div>
@@ -1066,13 +1194,13 @@
                     {isAdmin && <button onClick={() => handleDeleteExercise(selectedExercise.id)} className="text-red-500 hover:underline text-sm font-medium">Excluir Registro</button>}
                   </div>
                   <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden transition-colors">
-                    <div className="h-64 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 relative">
+                    <div className="h-96 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 relative flex justify-center">
                       {getYouTubeId(selectedExercise.videoUrl) ? ( 
-                        <iframe className="w-full h-full absolute inset-0" src={`https://www.youtube.com/embed/${getYouTubeId(selectedExercise.videoUrl)}`} title="YouTube" frameBorder="0" allowFullScreen></iframe> 
+                        <iframe className="h-full aspect-[9/16]" src={`https://www.youtube.com/embed/${getYouTubeId(selectedExercise.videoUrl)}`} title="YouTube Shorts" frameBorder="0" allowFullScreen></iframe> 
                       ) : selectedExercise.mediaUrl ? ( 
                         selectedExercise.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i) ? 
-                          <video src={selectedExercise.mediaUrl} controls className="w-full h-full object-contain bg-black"></video> : 
-                          <img src={selectedExercise.mediaUrl} className="w-full h-full object-cover" /> 
+                          <video src={selectedExercise.mediaUrl} controls className="h-full object-contain bg-black"></video> : 
+                          <img src={selectedExercise.mediaUrl} className="h-full object-contain" /> 
                       ) : ( 
                         <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-600 text-sm">Sem mídia de referência cadastrada.</div> 
                       )}
@@ -1138,8 +1266,8 @@
                             <tr><th className="px-6 py-3">Referência</th><th className="px-6 py-3">Data Programada</th><th className="px-6 py-3">Pauta Temática & Equipe</th></tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                            {AGENDA_DATA.map((item, idx) => ( 
-                              <tr key={idx} className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${item === upcomingActivity ? 'bg-slate-50 dark:bg-slate-800/50' : ''}`}>
+                            {agendaList.map((item, idx) => ( 
+                              <tr key={item.id || idx} className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${item === upcomingActivity ? 'bg-slate-50 dark:bg-slate-800/50' : ''}`}>
                                 <td className="px-6 py-4 text-slate-800 dark:text-slate-200">{item.act}</td>
                                 <td className="px-6 py-4 font-medium text-slate-800 dark:text-slate-200 whitespace-nowrap">{item.date}</td>
                                 <td className="px-6 py-4"><p className="text-slate-800 dark:text-slate-200 mb-1">{item.title}</p><p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Equipe: {item.resp}</p></td>
@@ -1173,7 +1301,6 @@
                           <div>
                             <div className="flex justify-between items-center mb-1">
                                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Objetivos da Ação</label>
-                               <button type="button" onClick={() => handleAiGeneration('objectives', `Atue como fisioterapeuta. Escreva os objetivos curtos e diretos (em tópicos) para uma sessão de idosos focada em: ${planDetails.theme || 'exercícios gerais'}.`)} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Gerar com IA</button>
                             </div>
                             <textarea rows="2" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
                           </div>
@@ -1184,7 +1311,6 @@
                           <div>
                             <div className="flex justify-between items-center mb-1">
                                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Procedimento de Aquecimento</label>
-                               <button type="button" onClick={() => handleAiGeneration('warmUp', `Descreva uma atividade lúdica e dinâmica de aquecimento de 10 minutos para idosos. Tema da aula principal: ${planDetails.theme || 'fisioterapia'}.`)} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Gerar com IA</button>
                             </div>
                             <textarea rows="2" value={planDetails.warmUp} onChange={e=>setPlanDetails({...planDetails, warmUp: e.target.value})} className="w-full p-3 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
                           </div>
@@ -1217,7 +1343,6 @@
                           <div>
                             <div className="flex justify-between items-center mb-1">
                                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Procedimento de Desaquecimento</label>
-                               <button type="button" onClick={() => handleAiGeneration('coolDown', `Descreva uma atividade de desaquecimento e relaxamento de 10 minutos para idosos após uma sessão focada em: ${planDetails.theme || 'exercícios'}.`)} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Gerar com IA</button>
                             </div>
                             <textarea rows="2" value={planDetails.coolDown} onChange={e=>setPlanDetails({...planDetails, coolDown: e.target.value})} className="w-full p-3 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
                           </div>
@@ -1236,14 +1361,22 @@
                         </div>
                         
                         <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg p-4 mb-6">
-                          <div className="flex justify-between items-center mb-4"><h3 className="font-semibold text-slate-700 dark:text-slate-200 text-sm">Frequência e Parâmetros Clínicos</h3><button onClick={handleAddParticipant} className="text-xs bg-slate-800 dark:bg-slate-700 text-white px-3 py-1.5 rounded font-medium">Adicionar Paciente</button></div>
+                          <div className="flex justify-between items-center mb-4"><h3 className="font-semibold text-slate-700 dark:text-slate-200 text-sm">Frequência e Parâmetros Clínicos</h3></div>
                           <div className="max-h-80 overflow-y-auto space-y-2 pr-2">
-                            {planDetails.attendanceList.map((p, i) => ( 
-                              <div key={p.id} className={`p-3 border rounded transition-colors ${p.present ? 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600' : 'bg-transparent border-slate-200 dark:border-slate-700'}`}>
-                                <label className="flex items-center gap-2 font-semibold text-sm text-slate-800 dark:text-slate-200 cursor-pointer"><input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="w-4 h-4"/>{p.name}</label>
-                                {p.present && <div className="mt-3 grid grid-cols-3 gap-2"><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">FC (Inic/Fin)</p><input placeholder="ex: 80/90" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">SpO2 (Inic/Fin)</p><input placeholder="ex: 98/97" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">PA (Inic/Fin)</p><input placeholder="ex: 12x8/13x8" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div></div>}
-                              </div> 
-                            ))}
+                            {planDetails.attendanceList.map((p, i) => {
+                              const patientDb = participantsList.find(db => db.id === p.id);
+                              const fallRisk = patientDb?.fallRisk;
+                              return ( 
+                                <div key={p.id} className={`p-3 border rounded transition-colors ${p.present ? 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600' : 'bg-transparent border-slate-200 dark:border-slate-700'}`}>
+                                  <label className="flex items-center gap-2 font-semibold text-sm text-slate-800 dark:text-slate-200 cursor-pointer">
+                                    <input type="checkbox" checked={p.present} onChange={e=>updateAttendance(i,'present',e.target.checked)} className="w-4 h-4"/>
+                                    {p.name}
+                                    {fallRisk && <span className="ml-2 text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded border border-red-200"><i className="fa-solid fa-triangle-exclamation mr-1"></i>Risco de Queda</span>}
+                                  </label>
+                                  {p.present && <div className="mt-3 grid grid-cols-3 gap-2"><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">FC (Inic/Fin)</p><input placeholder="ex: 80/90" value={p.fc_in ? `${p.fc_in}/${p.fc_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'fc_in',v[0]||'');updateAttendance(i,'fc_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">SpO2 (Inic/Fin)</p><input placeholder="ex: 98/97" value={p.spo2_in ? `${p.spo2_in}/${p.spo2_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'spo2_in',v[0]||'');updateAttendance(i,'spo2_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div><div><p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">PA (Inic/Fin)</p><input placeholder="ex: 12x8/13x8" value={p.pa_in ? `${p.pa_in}/${p.pa_out}` : ''} onChange={e=>{let v=e.target.value.split('/');updateAttendance(i,'pa_in',v[0]||'');updateAttendance(i,'pa_out',v[1]||'');}} className="w-full text-xs p-1.5 border dark:border-slate-700 dark:bg-slate-900 rounded outline-none dark:text-slate-100"/></div></div>}
+                                </div> 
+                              )
+                            })}
                           </div>
                         </div>
 
@@ -1251,9 +1384,8 @@
                           <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2">Objetivos e Operação</h3>
                           <div><label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Objetivos da Ação</label><textarea rows="2" value={planDetails.objectives} onChange={e=>setPlanDetails({...planDetails, objectives: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea></div>
                           <div>
-                             <div className="flex justify-between items-center mb-1">
-                                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Síntese de Atividades</label>
-                                <button type="button" onClick={() => handleAiGeneration('proposedActivities', `Descreva em um parágrafo os exercícios e o circuito físico focado em ${planDetails.theme || 'fisioterapia'} para um grupo de idosos.`)} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Gerar com IA</button>
+                            <div className="flex justify-between items-center mb-1">
+                               <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Síntese de Atividades</label>
                              </div>
                              <textarea rows="2" value={planDetails.proposedActivities} onChange={e=>setPlanDetails({...planDetails, proposedActivities: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
                           </div>
@@ -1269,7 +1401,6 @@
                           <div>
                              <div className="flex justify-between items-center mb-1">
                                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Relato Comportamental/Desenvolvimento</label>
-                                <button type="button" onClick={() => handleAiGeneration('developmentNarrative', `Escreva um relato comportamental de um parágrafo sobre a participação ativa e positiva de um grupo de idosos durante uma sessão de extensão em fisioterapia.`)} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Gerar com IA</button>
                              </div>
                              <textarea rows="4" value={planDetails.developmentNarrative} onChange={e=>setPlanDetails({...planDetails, developmentNarrative: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
                           </div>
@@ -1277,7 +1408,6 @@
                           <div>
                             <div className="flex justify-between items-center mb-1">
                                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">Evolução Sistêmica Diária</label>
-                               <button type="button" onClick={gerarEvolucaoIA} className="text-[10px] bg-brand-ia/10 text-brand-ia px-2 py-1 rounded font-bold hover:bg-brand-ia/20 transition-colors"><i className="fa-solid fa-wand-magic-sparkles mr-1"></i> Sintetizar com IA</button>
                             </div>
                             <textarea rows="5" value={planDetails.dailyEvolution} onChange={e=>setPlanDetails({...planDetails, dailyEvolution: e.target.value})} className="w-full p-2.5 rounded bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 outline-none text-sm text-slate-800 dark:text-slate-100"></textarea>
                           </div>
