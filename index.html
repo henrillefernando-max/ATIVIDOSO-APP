@@ -56,103 +56,32 @@
 
     // Substituído por vídeos curtos/Shorts, 1 exercício por vídeo, bem objetivo
     const PRELOADED_EXERCISES = [
-      { 
-        id: 'pre_1', 
-        title: 'Extensão de Joelho na Cadeira', 
-        category: 'mmii', 
-        muscleGroup: 'Quadríceps', 
-        difficulty: 'Iniciante / Leve', 
-        equipment: 'Cadeira', 
-        dosage: '3 séries de 10', 
-        instructions: '1. Sente-se com a postura reta em uma cadeira firme.\n2. Estique uma perna de cada vez, contraindo a coxa.', 
-        precautions: 'Não estenda o joelho além do ponto de conforto.', 
-        videoUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw', 
-        mediaUrl: '', 
-        status: 'approved', 
-        author: 'Coordenação ATIVIDOSO' 
-      },
-      { 
-        id: 'pre_2', 
-        title: 'Elevação Frontal de Ombros', 
-        category: 'mmss', 
-        muscleGroup: 'Ombro', 
-        difficulty: 'Iniciante / Leve', 
-        equipment: 'Bastão / Cabo de Vassoura', 
-        dosage: '2 séries de 12', 
-        instructions: '1. Segure o bastão com as duas mãos.\n2. Eleve o bastão com os braços esticados até a altura do rosto.', 
-        precautions: 'Idosos com bursite devem elevar apenas até a linha do ombro.', 
-        videoUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw', 
-        mediaUrl: '', 
-        status: 'approved', 
-        author: 'Coordenação ATIVIDOSO' 
-      },
-      { 
-        id: 'pre_3', 
-        title: 'Apoio Unipodal Atrás da Cadeira', 
-        category: 'dual', 
-        muscleGroup: 'Equilíbrio', 
-        difficulty: 'Intermediário / Moderado', 
-        equipment: 'Cadeira', 
-        dosage: '3x 20 segs', 
-        instructions: '1. Fique em pé atrás de uma cadeira.\n2. Levante um dos pés do chão dobrando o joelho para trás.', 
-        precautions: 'Sempre realize próximo a uma parede ou com supervisão.', 
-        videoUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw', 
-        mediaUrl: '', 
-        status: 'approved', 
-        author: 'Coordenação ATIVIDOSO' 
-      },
-      { 
-        id: 'pre_4', 
-        title: 'Marcha Estacionária', 
-        category: 'aerobic', 
-        muscleGroup: 'Marcha', 
-        difficulty: 'Iniciante / Leve', 
-        equipment: 'Nenhum', 
-        dosage: '5 a 10 min', 
-        instructions: '1. Em pé, simule uma caminhada sem sair do lugar.\n2. Eleve bem os joelhos de forma alternada.', 
-        precautions: 'Mantenha o ambiente livre de tapetes para não tropeçar.', 
-        videoUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw', 
-        mediaUrl: '', 
-        status: 'approved', 
-        author: 'Coordenação ATIVIDOSO' 
-      },
-      { 
-        id: 'pre_5', 
-        title: 'Elevação de Panturrilha', 
-        category: 'mmii', 
-        muscleGroup: 'Panturrilha', 
-        difficulty: 'Iniciante / Leve', 
-        equipment: 'Parede ou Cadeira', 
-        dosage: '3 séries de 15', 
-        instructions: '1. Fique de pé e apoie as mãos na parede.\n2. Fique na ponta dos pés elevando os dois calcanhares.', 
-        precautions: 'Deve ser feito devagar para evitar cãibras.', 
-        videoUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw', 
-        mediaUrl: '', 
-        status: 'approved', 
-        author: 'Coordenação ATIVIDOSO' 
-      },
-      { 
-        id: 'pre_6', 
-        title: 'Alongamento de Tronco Sentado', 
-        category: 'core', 
-        muscleGroup: 'Lombar', 
-        difficulty: 'Iniciante / Leve', 
-        equipment: 'Cadeira', 
-        dosage: '2x 30 segs', 
-        instructions: '1. Sente-se na ponta da cadeira.\n2. Deslize as mãos pelas pernas e incline o tronco para frente.', 
-        precautions: 'Suba o tronco desenrolando devagar para não causar tontura.', 
-        videoUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw', 
-        mediaUrl: '', 
-        status: 'approved', 
-        author: 'Coordenação ATIVIDOSO' 
-      }
+      { id: 'pre_1', title: 'Fortalecimento de Pernas na Cadeira', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '3 séries de 10', instructions: '1. Sente-se com a postura reta em uma cadeira firme.\n2. Estique uma perna de cada vez, contraindo a coxa.\n3. Segure por 2 segundos e retorne lentamente.', precautions: 'Não estenda o joelho além do ponto de conforto para evitar dor nas articulações.', videoUrl: 'https://www.youtube.com/watch?v=8CE4CGCXyAA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_2', title: 'Mobilidade Articular de Ombros', category: 'mmss', muscleGroup: 'Ombro', difficulty: 'Iniciante / Leve', equipment: 'Bastão', dosage: '2 séries de 12', instructions: '1. Em pé ou sentado, segure o bastão com as duas mãos.\n2. Eleve o bastão até a altura do rosto ou acima da cabeça.\n3. Desça controladamente.', precautions: 'Idosos com bursite devem elevar apenas até a linha do ombro.', videoUrl: 'https://www.youtube.com/watch?v=A2wqkcjzIvk', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_3', title: 'Treino de Equilíbrio (Prevenção de Quedas)', category: 'dual', muscleGroup: 'Equilíbrio + Fala', difficulty: 'Intermediário / Moderado', equipment: 'Cadeira', dosage: '3x 20 segs', instructions: '1. Fique em pé atrás de uma cadeira e segure o encosto.\n2. Levante um dos pés do chão dobrando o joelho para trás.\n3. Tente soltar uma ou as duas mãos se sentir segurança.', precautions: 'Sempre realize próximo a uma parede.', videoUrl: 'https://www.youtube.com/watch?v=nC-L0H_2PBE', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_4', title: 'Caminhada Estacionária Leve', category: 'aerobic', muscleGroup: 'Marcha', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '5 a 10 min', instructions: '1. Em pé, simule uma caminhada sem sair do lugar.\n2. Eleve os joelhos de forma alternada.\n3. Movimente os braços junto com a passada.', precautions: 'Mantenha o ambiente livre de tapetes para não tropeçar.', videoUrl: 'https://www.youtube.com/watch?v=Ev6yE55dvOU', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_5', title: 'Panturrilha (Bomba Muscular Venosa)', category: 'mmii', muscleGroup: 'Panturrilha', difficulty: 'Iniciante / Leve', equipment: 'Parede', dosage: '3 séries de 15', instructions: '1. Fique de pé e apoie as mãos na parede.\n2. Fique na ponta dos pés elevando os calcanhares.\n3. Desça lentamente.', precautions: 'Deve ser feito devagar para evitar cãibras.', videoUrl: 'https://www.youtube.com/watch?v=t1r-I6yQJj8', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_6', title: 'Alongamento Lombar na Cadeira', category: 'core', muscleGroup: 'Lombar', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '2x 30 segs', instructions: '1. Sente-se na ponta da cadeira com as pernas levemente afastadas.\n2. Incline o tronco para frente, soltando os braços.\n3. Relaxe o pescoço e respire fundo.', precautions: 'Suba o tronco desenrolando devagar para não causar tontura.', videoUrl: 'https://www.youtube.com/watch?v=r3Pj-X-H1oA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' }
     ];
 
     // Agora é um estado inicial para podermos editar
     const INITIAL_AGENDA = [
       { id: 'a1', act: "17", date: "14/08/2026", title: "RETORNO DAS ATIVIDADES - Gincana/dinâmica", resp: "Todos" },
-      { id: 'a2', act: "18", date: "21/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
-      { id: 'a3', act: "19", date: "28/08/2026", title: "Exercícios de membros inferiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" }
+      { id: 'a2', act: "18", date: "21/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { id: 'a3', act: "19", date: "28/08/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { id: 'a4', act: "20", date: "04/09/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { id: 'a5', act: "21", date: "11/09/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { id: 'a6', act: "22", date: "18/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { id: 'a7', act: "23", date: "25/09/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { id: 'a8', act: "24", date: "02/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { id: 'a9', act: "25", date: "09/10/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { id: 'a10', act: "26", date: "16/10/2026", title: "Atividade educativa em saúde e promoção do autocuidado", resp: "Todos" },
+      { id: 'a11', act: "27", date: "23/10/2026", title: "Exercícios aeróbicos e condicionamento cardiorrespiratório", resp: "E1: Emyle, Vitória E, Vitória A. Gustavo" },
+      { id: 'a12', act: "28", date: "30/10/2026", title: "Exercícios de dupla tarefa (motora, cognitiva e controle postural)", resp: "E2: Henrille, Clara, Lívia, Raíssa" },
+      { id: 'a13', act: "29", date: "06/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros superiores", resp: "E4: Letícia R., Nyslanny, Danyllo" },
+      { id: 'a14', act: "30", date: "13/11/2026", title: "Exercícios de mobilidade e fortalecimento muscular de membros inferiores", resp: "E3: Sarah, Ellen, Maria Clara, Davi" },
+      { id: 'a15', act: "31", date: "27/11/2026", title: "Avaliação participativa dos participantes e planejamento das próximas atividades", resp: "Todos" },
+      { id: 'a16', act: "32", date: "04/12/2026", title: "Atividade temática de integração/confraternização e encerramento do semestre letivo", resp: "Todos" }
     ];
 
     const CATEGORIES = {
@@ -278,9 +207,9 @@
       const [savedCircuits, setSavedCircuits] = useState([]);
       const [announcements, setAnnouncements] = useState([]);
       
-      // ESTADOS NOVOS: Agenda dinâmica e Pacientes estendidos salvos no localStorage para persistência local
+      // ESTADOS NOVOS: Agenda dinâmica e Pacientes estendidos
       const [agendaList, setAgendaList] = useState(() => {
-        const saved = localStorage.getItem('atv_agenda');
+        const saved = localStorage.getItem('atv_agenda_v2'); // A chave "v2" força o carregamento da lista completa
         return saved ? JSON.parse(saved) : INITIAL_AGENDA;
       });
       
@@ -323,7 +252,7 @@
       }, []);
 
       useEffect(() => {
-        localStorage.setItem('atv_agenda', JSON.stringify(agendaList));
+        localStorage.setItem('atv_agenda_v2', JSON.stringify(agendaList)); // Salvando na chave v2
       }, [agendaList]);
       
       useEffect(() => {
