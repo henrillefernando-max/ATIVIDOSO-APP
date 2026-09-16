@@ -44,7 +44,6 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     body { font-family: 'Inter', sans-serif; overscroll-behavior-x: none; }
     
-    /* Custom Modern Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -57,10 +56,7 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
     
-    .glass-header {
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-    }
+    .glass-header { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   </style>
 </head>
 <body class="bg-surface-50 dark:bg-surface-900 text-slate-800 dark:text-slate-100 antialiased selection:bg-brand-light selection:text-white transition-colors duration-300">
@@ -74,12 +70,12 @@
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const PRELOADED_EXERCISES = [
-      { id: 'pre_1', title: 'Fortalecimento de Pernas na Cadeira', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '3 séries de 10', instructions: '1. Sente-se com a postura reta em uma cadeira firme.\n2. Estique uma perna de cada vez, contraindo a coxa.\n3. Segure por 2 segundos e retorne lentamente.', precautions: 'Não estenda o joelho além do ponto de conforto para evitar dor nas articulações.', videoUrl: 'https://www.youtube.com/watch?v=8CE4CGCXyAA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
-      { id: 'pre_2', title: 'Mobilidade Articular de Ombros', category: 'mmss', muscleGroup: 'Ombro', difficulty: 'Iniciante / Leve', equipment: 'Bastão', dosage: '2 séries de 12', instructions: '1. Em pé ou sentado, segure o bastão com as duas mãos.\n2. Eleve o bastão até a altura do rosto ou acima da cabeça.\n3. Desça controladamente.', precautions: 'Idosos com bursite devem elevar apenas até a linha do ombro.', videoUrl: 'https://www.youtube.com/watch?v=A2wqkcjzIvk', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
-      { id: 'pre_3', title: 'Treino de Equilíbrio (Prevenção de Quedas)', category: 'dual', muscleGroup: 'Equilíbrio + Fala', difficulty: 'Intermediário / Moderado', equipment: 'Cadeira', dosage: '3x 20 segs', instructions: '1. Fique em pé atrás de uma cadeira e segure o encosto.\n2. Levante um dos pés do chão dobrando o joelho para trás.\n3. Tente soltar uma ou as duas mãos se sentir segurança.', precautions: 'Sempre realize próximo a uma parede.', videoUrl: 'https://www.youtube.com/watch?v=nC-L0H_2PBE', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
-      { id: 'pre_4', title: 'Caminhada Estacionária Leve', category: 'aerobic', muscleGroup: 'Marcha', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '5 a 10 min', instructions: '1. Em pé, simule uma caminhada sem sair do lugar.\n2. Eleve os joelhos de forma alternada.\n3. Movimente os braços junto com a passada.', precautions: 'Mantenha o ambiente livre de tapetes para não tropeçar.', videoUrl: 'https://www.youtube.com/watch?v=Ev6yE55dvOU', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
-      { id: 'pre_5', title: 'Panturrilha (Bomba Muscular Venosa)', category: 'mmii', muscleGroup: 'Panturrilha', difficulty: 'Iniciante / Leve', equipment: 'Parede', dosage: '3 séries de 15', instructions: '1. Fique de pé e apoie as mãos na parede.\n2. Fique na ponta dos pés elevando os calcanhares.\n3. Desça lentamente.', precautions: 'Deve ser feito devagar para evitar cãibras.', videoUrl: 'https://www.youtube.com/watch?v=t1r-I6yQJj8', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
-      { id: 'pre_6', title: 'Alongamento Lombar na Cadeira', category: 'core', muscleGroup: 'Lombar', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '2x 30 segs', instructions: '1. Sente-se na ponta da cadeira com as pernas levemente afastadas.\n2. Incline o tronco para frente, soltando os braços.\n3. Relaxe o pescoço e respire fundo.', precautions: 'Suba o tronco desenrolando devagar para não causar tontura.', videoUrl: 'https://www.youtube.com/watch?v=r3Pj-X-H1oA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' }
+      { id: 'pre_1', title: 'Fortalecimento de Pernas na Cadeira', category: 'mmii', muscleGroup: 'Quadriceps', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '3 séries de 10', instructions: '1. Sente-se com a postura reta em uma cadeira firme.\n2. Estique uma perna de cada vez, contraindo a coxa.', precautions: 'Não estenda o joelho além do ponto de conforto para evitar dor nas articulações.', videoUrl: 'https://www.youtube.com/watch?v=8CE4CGCXyAA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_2', title: 'Mobilidade Articular de Ombros', category: 'mmss', muscleGroup: 'Ombro', difficulty: 'Iniciante / Leve', equipment: 'Bastão', dosage: '2 séries de 12', instructions: '1. Em pé ou sentado, segure o bastão com as duas mãos.\n2. Eleve o bastão até a altura do rosto ou acima da cabeça.', precautions: 'Idosos com bursite devem elevar apenas até a linha do ombro.', videoUrl: 'https://www.youtube.com/watch?v=A2wqkcjzIvk', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_3', title: 'Treino de Equilíbrio (Prevenção de Quedas)', category: 'dual', muscleGroup: 'Equilíbrio + Fala', difficulty: 'Intermediário / Moderado', equipment: 'Cadeira', dosage: '3x 20 segs', instructions: '1. Fique em pé atrás de uma cadeira e segure o encosto.\n2. Levante um dos pés do chão dobrando o joelho para trás.', precautions: 'Sempre realize próximo a uma parede.', videoUrl: 'https://www.youtube.com/watch?v=nC-L0H_2PBE', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_4', title: 'Caminhada Estacionária Leve', category: 'aerobic', muscleGroup: 'Marcha', difficulty: 'Iniciante / Leve', equipment: 'Nenhum', dosage: '5 a 10 min', instructions: '1. Em pé, simule uma caminhada sem sair do lugar.\n2. Eleve os joelhos de forma alternada.', precautions: 'Mantenha o ambiente livre de tapetes para não tropeçar.', videoUrl: 'https://www.youtube.com/watch?v=Ev6yE55dvOU', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_5', title: 'Panturrilha (Bomba Muscular Venosa)', category: 'mmii', muscleGroup: 'Panturrilha', difficulty: 'Iniciante / Leve', equipment: 'Parede', dosage: '3 séries de 15', instructions: '1. Fique de pé e apoie as mãos na parede.\n2. Fique na ponta dos pés elevando os calcanhares.', precautions: 'Deve ser feito devagar para evitar cãibras.', videoUrl: 'https://www.youtube.com/watch?v=t1r-I6yQJj8', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' },
+      { id: 'pre_6', title: 'Alongamento Lombar na Cadeira', category: 'core', muscleGroup: 'Lombar', difficulty: 'Iniciante / Leve', equipment: 'Cadeira', dosage: '2x 30 segs', instructions: '1. Sente-se na ponta da cadeira com as pernas levemente afastadas.\n2. Incline o tronco para frente, soltando os braços.', precautions: 'Suba o tronco desenrolando devagar para não causar tontura.', videoUrl: 'https://www.youtube.com/watch?v=r3Pj-X-H1oA', mediaUrl: '', status: 'approved', author: 'Coordenação ATIVIDOSO' }
     ];
 
     const INITIAL_AGENDA = [
@@ -125,7 +121,6 @@
       { id: "4", name: "Seu Francisco das Chagas", age: '80', emergency: 'Filho Marcos (99) 7777-7777', comorbidities: 'Hipertensão, Osteoartrite', fallRisk: true }
     ];
 
-    // CSS Classes reutilizáveis
     const inputClass = "w-full px-4 py-2.5 rounded-xl bg-surface-50 dark:bg-surface-800 border border-slate-200 dark:border-slate-700 focus:border-brand-light focus:ring-4 focus:ring-brand-light/20 outline-none text-sm transition-all duration-200 text-slate-800 dark:text-slate-100 placeholder:text-slate-400";
     const cardClass = "bg-white dark:bg-surface-800 rounded-2xl sm:rounded-3xl shadow-soft ring-1 ring-slate-900/5 dark:ring-white/10 transition-colors";
     const btnPrimaryClass = "px-6 py-2.5 bg-brand-blue hover:bg-brand-dark dark:bg-brand-light dark:hover:bg-brand-blue text-white font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-brand-blue/30 active:scale-95 text-sm";
@@ -257,7 +252,6 @@
         return saved ? JSON.parse(saved) : DEFAULT_PARTICIPANTS;
       });
 
-      // --- NOVOS ESTADOS: GESTÃO DE ESTOQUE/MATERIAIS ---
       const [inventoryList, setInventoryList] = useState(() => {
         const saved = localStorage.getItem('atv_estoque');
         return saved ? JSON.parse(saved) : DEFAULT_INVENTORY;
@@ -266,14 +260,13 @@
         const saved = localStorage.getItem('atv_sugestoes_materiais');
         return saved ? JSON.parse(saved) : [];
       });
-      const [inventoryTab, setInventoryTab] = useState('estoque'); // 'estoque' | 'sugestoes'
+      const [inventoryTab, setInventoryTab] = useState('estoque');
       
       const [isEditingInventory, setIsEditingInventory] = useState(false);
       const [inventoryForm, setInventoryForm] = useState({ id: '', name: '', quantity: '', condition: 'Bom' });
       
       const [isSuggestingMaterial, setIsSuggestingMaterial] = useState(false);
       const [suggestionForm, setSuggestionForm] = useState({ id: '', name: '', reason: '' });
-      // ----------------------------------------------------
       
       const [teamMembers, setTeamMembers] = useState([]);
       const [editingMember, setEditingMember] = useState(null);
@@ -305,8 +298,6 @@
       useEffect(() => { if(localStorage.getItem('atv_draft_planDetails')) setHasDraft(true); }, []);
       useEffect(() => { localStorage.setItem('atv_agenda_v2', JSON.stringify(agendaList)); }, [agendaList]);
       useEffect(() => { localStorage.setItem('atv_pacientes', JSON.stringify(participantsList)); }, [participantsList]);
-      
-      // Salva Estoque e Sugestões
       useEffect(() => { localStorage.setItem('atv_estoque', JSON.stringify(inventoryList)); }, [inventoryList]);
       useEffect(() => { localStorage.setItem('atv_sugestoes_materiais', JSON.stringify(suggestionsList)); }, [suggestionsList]);
 
@@ -533,20 +524,14 @@
         if(window.confirm("Apagar este registro?")) setAgendaList(agendaList.filter(a => a.id !== id));
       };
 
-      // --- Funções CRUD Estoque e Sugestões ---
       const handleSaveInventory = (e) => {
         e.preventDefault();
-        if (inventoryForm.id) {
-          setInventoryList(inventoryList.map(item => item.id === inventoryForm.id ? inventoryForm : item));
-        } else {
-          setInventoryList([...inventoryList, { ...inventoryForm, id: Date.now().toString() }]);
-        }
+        if (inventoryForm.id) setInventoryList(inventoryList.map(item => item.id === inventoryForm.id ? inventoryForm : item));
+        else setInventoryList([...inventoryList, { ...inventoryForm, id: Date.now().toString() }]);
         setIsEditingInventory(false);
       };
       const handleDeleteInventory = (id) => {
-        if (window.confirm("Remover este material permanentemente do estoque?")) {
-          setInventoryList(inventoryList.filter(item => item.id !== id));
-        }
+        if (window.confirm("Remover este material permanentemente do estoque?")) setInventoryList(inventoryList.filter(item => item.id !== id));
       };
       const handleSaveSuggestion = (e) => {
         e.preventDefault();
@@ -558,11 +543,8 @@
         setSuggestionsList(suggestionsList.map(item => item.id === id ? { ...item, status: newStatus } : item));
       };
       const handleDeleteSuggestion = (id) => {
-        if (window.confirm("Excluir esta sugestão?")) {
-          setSuggestionsList(suggestionsList.filter(item => item.id !== id));
-        }
+        if (window.confirm("Excluir esta sugestão?")) setSuggestionsList(suggestionsList.filter(item => item.id !== id));
       };
-      // ----------------------------------------
 
       const updateAttendance = (idx, field, val) => {
          const list = [...planDetails.attendanceList]; 
@@ -651,6 +633,8 @@
         );
       };
 
+      // --- FINAL DA PARTE 1 ---
+      // --- INÍCIO DA PARTE 2 ---
       return (
         <div className="min-h-screen flex bg-surface-50 dark:bg-surface-900 relative transition-colors duration-300" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
           
