@@ -2571,9 +2571,385 @@
                         ) 
                       })}
                     </div> 
+                  {/* ==========================================
+                  TELA: HOME / DASHBOARD GERAL
+              ========================================== */}
+              {currentView === 'home' && (
+                <div className="max-w-6xl mx-auto space-y-8 animate-fade-in pb-12">
+                  <div className="bg-gradient-to-br from-[#161e42] via-[#202b5c] to-[#4d60b5] rounded-[2rem] p-8 sm:p-12 shadow-float text-white relative overflow-hidden flex flex-col justify-center min-h-[220px]">
+                    <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/10 blur-3xl rounded-full"></div>
+                    <div className="absolute bottom-[-20%] left-[20%] w-48 h-48 bg-brand-light/40 blur-3xl rounded-full"></div>
+                    <div className="relative z-10">
+                      <p className="text-white/80 font-semibold tracking-wider text-sm mb-2 uppercase">Visão Geral</p>
+                      <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">Olá, {session.full_name.split(' ')[0]}.</h1>
+                      <p className="text-white/70 text-base max-w-lg leading-relaxed">Bem-vindo(a) ao painel de gerenciamento clínico. Acompanhe a agenda, pacientes e o acervo de extensão.</p>
+                    </div>
+                  </div>
+                  
+                  {upcomingActivity && (
+                    <div className={`p-6 sm:p-8 rounded-[2rem] shadow-soft border ring-1 transition-colors flex flex-col md:flex-row items-center md:items-start gap-6 ${isMyTurn ? 'bg-emerald-50/50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800/50 ring-emerald-500/20' : 'bg-white dark:bg-surface-800 border-slate-100 dark:border-slate-800 ring-slate-900/5 dark:ring-white/10'}`}>
+                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 shadow-sm ${isMyTurn ? 'bg-emerald-500 text-white' : 'bg-brand-blue/10 text-brand-blue dark:bg-brand-light/20 dark:text-brand-light'}`}>
+                        <i className={`fa-solid ${isMyTurn ? 'fa-bell fa-shake' : 'fa-calendar-day'}`}></i>
+                      </div>
+                      <div className="text-center md:text-left flex-1">
+                        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">
+                          {isMyTurn ? 'Atenção: Seu grupo é o responsável!' : 'Próxima Atividade da Agenda'}
+                        </h3>
+                        <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
+                          Responsabilidade: <strong className={isMyTurn ? "text-emerald-600 dark:text-emerald-400" : "text-brand-blue dark:text-brand-light"}>{upcomingActivity.resp}</strong>
+                        </p>
+                        <div className="bg-surface-100 dark:bg-surface-900/50 px-4 py-3 rounded-xl border border-slate-200/50 dark:border-slate-700/50 mt-4 inline-block">
+                          <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold mb-1">Data e Tema</p>
+                          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{upcomingActivity.date} — {upcomingActivity.title}</p>
+                        </div>
+                      </div>
+                      {isMyTurn && (
+                        <button onClick={() => handleNavClick('circuito', 'plan')} className="w-full md:w-auto px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-500/30 transition-all active:scale-95 text-sm self-center md:self-auto">
+                          Iniciar Planejamento
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-2 space-y-6">
+                      <div className={cardClass + " overflow-hidden flex flex-col h-full"}>
+                        <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 bg-surface-50 dark:bg-surface-800">
+                          <div className="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center"><i className="fa-solid fa-bullhorn text-sm"></i></div>
+                          <h3 className="font-bold text-slate-800 dark:text-slate-100">Quadro de Avisos</h3>
+                        </div>
+                        <div className="p-6 flex-1 flex flex-col">
+                          {isAdmin && (
+                            <div className="bg-surface-50 dark:bg-surface-900/50 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 mb-6">
+                              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">Emitir Comunicado</p>
+                              <form onSubmit={handlePostAnnouncement} className="space-y-3">
+                                <input type="text" placeholder="Título" value={newAnnouncement.title} onChange={e=>setNewAnnouncement({...newAnnouncement, title: e.target.value})} required className={inputClass} />
+                                <textarea placeholder="Mensagem..." value={newAnnouncement.content} onChange={e=>setNewAnnouncement({...newAnnouncement, content: e.target.value})} required className={inputClass} rows="2"></textarea>
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                  <input type="url" placeholder="URL Referência (Opcional)" value={newAnnouncement.link_url} onChange={e=>setNewAnnouncement({...newAnnouncement, link_url: e.target.value})} className={inputClass} />
+                                  <button type="submit" className={btnPrimaryClass + " whitespace-nowrap"}>Postar</button>
+                                </div>
+                              </form>
+                            </div>
+                          )}
+                          <div className="space-y-4 flex-1">
+                            {announcements.length === 0 ? ( 
+                              <div className="h-full flex flex-col items-center justify-center py-10 text-slate-400">
+                                <i className="fa-regular fa-comments text-4xl mb-3 opacity-20"></i>
+                                <p className="text-sm font-medium">Nenhum aviso no momento.</p>
+                              </div> 
+                            ) : ( 
+                              announcements.map(aviso => { 
+                                const date = new Date(aviso.created_at).toLocaleDateString('pt-BR', {day:'2-digit', month:'short'}); 
+                                return ( 
+                                  <div key={aviso.id} className="bg-white dark:bg-surface-800 border border-slate-200 dark:border-slate-700 border-l-4 border-l-brand-blue p-5 rounded-xl relative group hover:shadow-md transition-shadow">
+                                    {isAdmin && (
+                                      <button onClick={() => handleDeleteAnnouncement(aviso.id)} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface-50 dark:bg-surface-900 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all opacity-100 sm:opacity-0 sm:group-hover:opacity-100 flex items-center justify-center">
+                                        <i className="fa-solid fa-trash text-xs"></i>
+                                      </button>
+                                    )}
+                                    <div className="pr-8">
+                                      <div className="flex items-center gap-3 mb-2">
+                                        <span className="bg-brand-blue/10 text-brand-blue dark:bg-brand-light/20 dark:text-brand-light text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">{date}</span>
+                                        <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center"><i className="fa-solid fa-user-pen mr-1.5 opacity-50"></i> {aviso.author}</span>
+                                      </div>
+                                      <h4 className="text-base font-bold text-slate-800 dark:text-slate-100 mb-1">{aviso.title}</h4>
+                                      <p className="text-sm text-slate-600 dark:text-slate-300 whitespace-pre-line mb-3 leading-relaxed">{aviso.content}</p>
+                                      {aviso.link_url && (
+                                        <a href={aviso.link_url} target="_blank" className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-light hover:text-brand-blue transition-colors">
+                                          <i className="fa-solid fa-arrow-up-right-from-square"></i> Acessar anexo externo
+                                        </a>
+                                      )}
+                                    </div>
+                                  </div> 
+                                ) 
+                              }) 
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-2 lg:grid-cols-1 gap-5">
+                        <div className={cardClass + " p-6 flex items-center justify-between group cursor-pointer"} onClick={() => handleNavClick('library')}>
+                          <div><p className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">{approvedExercises.length}</p><p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Exercícios</p></div>
+                          <div className="w-12 h-12 rounded-full bg-brand-light/10 text-brand-light flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i className="fa-solid fa-dumbbell"></i></div>
+                        </div>
+                        <div className={cardClass + " p-6 flex items-center justify-between group cursor-pointer"} onClick={() => { handleNavClick('circuito', 'history') }}>
+                          <div><p className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">{savedCircuits.length}</p><p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Prontuários</p></div>
+                          <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i className="fa-solid fa-file-medical"></i></div>
+                        </div>
+                        <div className={cardClass + " p-6 flex items-center justify-between group cursor-pointer"} onClick={() => handleNavClick('pacientes')}>
+                          <div><p className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">{participantsList.length}</p><p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Pacientes</p></div>
+                          <div className="w-12 h-12 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i className="fa-solid fa-users"></i></div>
+                        </div>
+                        <div className={cardClass + " p-6 flex items-center justify-between group cursor-pointer"} onClick={() => handleNavClick('estoque')}>
+                          <div><p className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">{inventoryList.length}</p><p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Estoque</p></div>
+                          <div className="w-12 h-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i className="fa-solid fa-boxes-stacked"></i></div>
+                        </div>
+                      </div>
+
+                      {isAdmin && (
+                        <div className={cardClass + " p-6"}>
+                           <h4 className="font-bold text-slate-800 dark:text-slate-100 mb-1 text-base">Notificar Equipe (SMTP)</h4>
+                           <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">Envie alertas rápidos para monitores.</p>
+                           <form onSubmit={handleSendCustomEmail} className="space-y-4">
+                              <div><input type="email" placeholder="E-mail destinatário" value={customEmailDest} onChange={e => setCustomEmailDest(e.target.value.replace(/\s/g, ''))} required className={inputClass} /></div>
+                              <div><textarea placeholder="Mensagem..." value={customEmailMessage} onChange={e => setCustomEmailMessage(e.target.value)} rows="3" className={inputClass} ></textarea></div>
+                              <button type="submit" className={btnPrimaryClass + " w-full"}>Transmitir Mensagem</button>
+                              {emailStatus && <p className="text-[11px] font-semibold text-brand-light text-center mt-2">{emailStatus}</p>}
+                           </form>
+                           <div className="mt-5 pt-5 border-t border-slate-100 dark:border-slate-800">
+                             <button onClick={handleSendEmail} className={btnSecondaryClass + " w-full flex justify-center items-center gap-2"}><i className="fa-regular fa-envelope"></i> E-mail Padrão Agenda</button>
+                           </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ==========================================
+                  TELA: GESTÃO DE AGENDA (ADMIN)
+              ========================================== */}
+              {currentView === 'agenda' && isAdmin && (
+                <div className="max-w-6xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="flex flex-col lg:flex-row gap-6">
+                    <div className={`flex-1 ${cardClass} overflow-hidden order-2 lg:order-1`}>
+                      <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-surface-800">
+                        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Cronograma do Semestre</h2>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Visão geral e exclusão de datas.</p>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm text-left">
+                          <thead className="bg-surface-50 dark:bg-surface-900/50 text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                            <tr><th className="px-6 py-4">Ref.</th><th className="px-6 py-4">Data</th><th className="px-6 py-4">Pauta / Equipe</th><th className="px-6 py-4 text-center">Ação</th></tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                            {agendaList.map(item => ( 
+                              <tr key={item.id} className="hover:bg-surface-50 dark:hover:bg-surface-800/80 transition-colors group">
+                                <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">{item.act}</td>
+                                <td className="px-6 py-4 text-slate-600 dark:text-slate-400 whitespace-nowrap font-medium">{item.date}</td>
+                                <td className="px-6 py-4"><p className="font-bold text-slate-700 dark:text-slate-300">{item.title}</p><p className="text-xs text-brand-light mt-1"><i className="fa-solid fa-users text-[10px] mr-1"></i> {item.resp}</p></td>
+                                <td className="px-6 py-4 text-center">
+                                  <button onClick={() => handleDeleteAgenda(item.id)} className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-500 hover:text-white transition-colors opacity-100 lg:opacity-0 group-hover:opacity-100 mx-auto flex items-center justify-center"><i className="fa-solid fa-trash text-xs"></i></button>
+                                </td>
+                              </tr> 
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div className={`w-full lg:w-96 ${cardClass} p-6 lg:p-8 shrink-0 self-start order-1 lg:order-2`}>
+                      <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 border-b border-slate-100 dark:border-slate-800 pb-3">{agendaForm.id ? 'Editar Data' : 'Agendar Atividade'}</h3>
+                      <form onSubmit={handleSaveAgenda} className="space-y-5">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Nº Ativ.</label><input type="text" value={agendaForm.act} onChange={e=>setAgendaForm({...agendaForm, act: e.target.value})} required className={inputClass} placeholder="Ex: 33" /></div>
+                          <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Data</label><input type="text" value={agendaForm.date} onChange={e=>setAgendaForm({...agendaForm, date: e.target.value})} required className={inputClass} placeholder="DD/MM/AAAA" /></div>
+                        </div>
+                        <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Tema da Aula</label><textarea value={agendaForm.title} onChange={e=>setAgendaForm({...agendaForm, title: e.target.value})} required rows="2" className={inputClass}></textarea></div>
+                        <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Equipe Responsável</label><input type="text" value={agendaForm.resp} onChange={e=>setAgendaForm({...agendaForm, resp: e.target.value})} required className={inputClass} placeholder="Ex: E1: Nomes..." /></div>
+                        <div className="pt-2"><button type="submit" className={btnPrimaryClass + " w-full"}>Confirmar Agendamento</button></div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ==========================================
+                  TELA: CADASTRO DE EXERCÍCIO
+              ========================================== */}
+              {currentView === 'cadastro' && (
+                <div className="max-w-4xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className={cardClass + " p-6 sm:p-10"}>
+                    <div className="border-b border-slate-100 dark:border-slate-800 pb-6 mb-8 text-center sm:text-left">
+                      <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Cadastro de Novo Conteúdo</h2>
+                      <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">Preencha os dados clínicos para submeter o exercício à análise.</p>
+                    </div>
+                    {formStatus.success && <div className="bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800/50 text-sm font-bold mb-8 flex items-center gap-3"><i className="fa-solid fa-circle-check text-lg"></i> Registro submetido com êxito. Aguardando aprovação.</div>}
+                    
+                    <form onSubmit={handleFormSubmit} className="space-y-8">
+                      {/* Bloco 1 */}
+                      <div className="bg-surface-50 dark:bg-surface-900/30 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-5">
+                        <h3 className="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-4 border-b border-slate-200 dark:border-slate-700 pb-2"><i className="fa-solid fa-tag mr-2 text-brand-light"></i> Identificação Básica</h3>
+                        <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Nomenclatura do Exercício *</label><input type="text" value={formData.title} onChange={e=>setFormData({...formData, title: e.target.value})} required className={inputClass} placeholder="Ex: Extensão de Joelho" /></div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                          <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Categoria *</label><select value={formCat} onChange={e=>{setFormCat(e.target.value); setFormMuscleSelect('');}} required className={inputClass}><option value="">A selecionar...</option>{Object.keys(CATEGORIES).map(k => <option key={k} value={k}>{CATEGORIES[k].title}</option>)}</select></div>
+                          <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Foco Específico *</label><select value={formMuscleSelect} onChange={e=>setFormMuscleSelect(e.target.value)} required disabled={!formCat} className={inputClass + " disabled:opacity-50"}><option value="">A selecionar...</option>{formCat && CATEGORIES[formCat].subgroups.map(sub => <option key={sub} value={sub}>{sub}</option>)}<option value="Outro">Inserção manual</option></select></div>
+                        </div>
+                        {formMuscleSelect === 'Outro' && <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Descrever Foco Específico</label><input type="text" value={formCustomMuscle} onChange={e=>setFormCustomMuscle(e.target.value)} required className={inputClass} /></div>}
+                      </div>
+
+                      {/* Bloco 2 */}
+                      <div className="bg-surface-50 dark:bg-surface-900/30 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-5">
+                        <h3 className="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-4 border-b border-slate-200 dark:border-slate-700 pb-2"><i className="fa-solid fa-sliders mr-2 text-brand-light"></i> Parâmetros Clínicos</h3>
+                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                            <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Intensidade</label><select value={formData.difficulty} onChange={e=>setFormData({...formData, difficulty: e.target.value})} className={inputClass}><option>Iniciante / Leve</option><option>Intermediário / Moderado</option><option>Avançado / Intenso</option></select></div>
+                            <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Materiais Necessários</label><input type="text" value={formData.equipment} onChange={e=>setFormData({...formData, equipment: e.target.value})} className={inputClass} placeholder="Ex: Halter 1kg, Faixa..." /></div>
+                            <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Prescrição Típica</label><input type="text" value={formData.dosage} onChange={e=>setFormData({...formData, dosage: e.target.value})} className={inputClass} placeholder="Ex: 3x10 repetições" /></div>
+                         </div>
+                         <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Diretrizes de Execução (Passo a Passo) *</label><textarea required rows="4" value={formData.instructions} onChange={e=>setFormData({...formData, instructions: e.target.value})} className={inputClass} placeholder="Descreva os passos claros para o idoso..."></textarea></div>
+                         <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Contraindicações / Cuidados</label><textarea rows="2" value={formData.precautions} onChange={e=>setFormData({...formData, precautions: e.target.value})} className={inputClass}></textarea></div>
+                      </div>
+
+                      {/* Bloco 3 */}
+                      <div className="bg-surface-50 dark:bg-surface-900/30 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-5">
+                        <h3 className="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-4 border-b border-slate-200 dark:border-slate-700 pb-2"><i className="fa-solid fa-photo-film mr-2 text-brand-light"></i> Mídia e Referências</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                           <div>
+                             <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">URL do Vídeo (YouTube Shorts)</label>
+                             <div className="relative"><i className="fa-brands fa-youtube absolute left-4 top-3.5 text-slate-400"></i><input type="url" value={formData.videoUrl} onChange={e=>setFormData({...formData, videoUrl: e.target.value})} className={inputClass + " pl-10"} placeholder="https://youtube.com/shorts/..." /></div>
+                           </div>
+                           <div>
+                             <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Ou Enviar Arquivo Local</label>
+                             <input type="file" accept="image/*,video/mp4" onChange={e=>setMediaFile(e.target.files[0])} className="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-400 file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brand-blue/10 file:text-brand-blue dark:file:bg-brand-light/20 dark:file:text-brand-light cursor-pointer bg-white dark:bg-surface-800 hover:bg-surface-50 transition-colors" />
+                           </div>
+                        </div>
+                      </div>
+                      <div className="pt-4 flex justify-end"><button type="submit" disabled={formStatus.loading} className={btnPrimaryClass + " w-full sm:w-auto min-w-[200px]"}>{formStatus.loading ? <i className="fa-solid fa-circle-notch fa-spin"></i> : "Enviar para Homologação"}</button></div>
+                    </form>
+                  </div>
+                </div>
+              )}
+
+              {/* ==========================================
+                  TELA: DETALHES DO EXERCÍCIO
+              ========================================== */}
+              {currentView === 'detail' && selectedExercise && (
+                <div className="max-w-4xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className="flex items-center justify-between mb-4">
+                    <button onClick={() => setCurrentView('library')} className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-brand-blue dark:hover:text-brand-light text-sm font-bold uppercase tracking-wider transition-colors"><i className="fa-solid fa-arrow-left-long"></i> Voltar ao Acervo</button>
+                    {isAdmin && <button onClick={() => handleDeleteExercise(selectedExercise.id)} className="flex items-center gap-2 text-red-500 hover:text-red-700 text-sm font-bold uppercase tracking-wider transition-colors"><i className="fa-solid fa-trash"></i> Excluir</button>}
+                  </div>
+                  
+                  <div className={cardClass + " overflow-hidden flex flex-col md:flex-row"}>
+                    <div className="w-full md:w-5/12 bg-slate-900 border-b md:border-b-0 md:border-r border-slate-800 relative flex justify-center items-center min-h-[400px]">
+                      {getYouTubeId(selectedExercise.videoUrl) ? ( 
+                        <iframe className="w-full h-full aspect-[9/16] md:absolute md:inset-0" src={`https://www.youtube.com/embed/${getYouTubeId(selectedExercise.videoUrl)}`} title="YouTube Shorts" frameBorder="0" allowFullScreen></iframe> 
+                      ) : selectedExercise.mediaUrl ? ( 
+                        selectedExercise.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i) ? <video src={selectedExercise.mediaUrl} controls className="w-full h-full object-contain"></video> : <img src={selectedExercise.mediaUrl} className="w-full h-full object-cover" /> 
+                      ) : ( 
+                        <div className="w-full h-full flex flex-col items-center justify-center text-slate-600 space-y-3"><i className="fa-solid fa-video-slash text-4xl"></i><p className="text-sm font-medium">Sem mídia visual.</p></div> 
+                      )}
+                    </div>
+                    <div className="w-full md:w-7/12 p-8 sm:p-10 flex flex-col bg-white dark:bg-surface-800">
+                      <div className="flex gap-2 mb-4 flex-wrap"><span className="text-[10px] font-bold bg-brand-light/10 text-brand-blue dark:bg-brand-light/20 dark:text-brand-light px-3 py-1 rounded-full uppercase tracking-wider border border-brand-light/20">{CATEGORIES[selectedExercise.category]?.title || selectedExercise.category}</span><span className="text-[10px] font-bold bg-surface-100 dark:bg-surface-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full uppercase tracking-wider border border-slate-200 dark:border-slate-600">{selectedExercise.muscleGroup}</span></div>
+                      <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 mb-8 tracking-tight leading-tight">{selectedExercise.title}</h1>
+                      <div className="grid grid-cols-3 gap-4 mb-8">
+                        <div className="bg-surface-50 dark:bg-surface-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-center"><p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1"><i className="fa-solid fa-gauge-high block mb-1 text-base text-slate-300 dark:text-slate-600"></i> Dificuldade</p><p className="font-bold text-sm text-slate-700 dark:text-slate-200">{selectedExercise.difficulty.split('/')[0].trim()}</p></div>
+                        <div className="bg-surface-50 dark:bg-surface-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-center"><p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1"><i className="fa-solid fa-cubes block mb-1 text-base text-slate-300 dark:text-slate-600"></i> Material</p><p className="font-bold text-sm text-slate-700 dark:text-slate-200 truncate" title={selectedExercise.equipment}>{selectedExercise.equipment}</p></div>
+                        <div className="bg-surface-50 dark:bg-surface-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-center"><p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1"><i className="fa-solid fa-prescription block mb-1 text-base text-slate-300 dark:text-slate-600"></i> Dose</p><p className="font-bold text-sm text-slate-700 dark:text-slate-200">{selectedExercise.dosage}</p></div>
+                      </div>
+                      <div className="space-y-8 text-sm flex-1">
+                        <div><h3 className="font-extrabold text-slate-800 dark:text-slate-100 mb-3 text-base flex items-center gap-2"><i className="fa-solid fa-list-ol text-brand-light"></i> Guia Prático</h3><div className="text-slate-600 dark:text-slate-300 whitespace-pre-line leading-relaxed font-medium pl-6 relative before:content-[''] before:absolute before:left-2 before:top-1 before:bottom-1 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-700 rounded-lg">{selectedExercise.instructions}</div></div>
+                        {selectedExercise.precautions && ( <div><h3 className="font-extrabold text-slate-800 dark:text-slate-100 mb-3 text-base flex items-center gap-2"><i className="fa-solid fa-triangle-exclamation text-amber-500"></i> Contraindicações</h3><div className="bg-amber-50 dark:bg-amber-900/10 p-4 rounded-xl border border-amber-100 dark:border-amber-900/30 text-amber-800 dark:text-amber-400 font-medium leading-relaxed">{selectedExercise.precautions}</div></div> )}
+                      </div>
+                      <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3 text-xs font-bold text-slate-400 uppercase tracking-wider"><i className="fa-solid fa-cloud-arrow-up"></i> Cadastrado por: <span className="text-slate-600 dark:text-slate-300">{selectedExercise.author || 'Membro da Equipe'}</span></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ==========================================
+                  TELA: APROVAÇÕES (ADMIN)
+              ========================================== */}
+              {currentView === 'aprovacoes' && isAdmin && (
+                <div className="max-w-6xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className={cardClass + " p-6 sm:p-8 flex items-center justify-between mb-8"}>
+                    <div>
+                      <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Central de Análise</h2>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Homologação de exercícios cadastrados.</p>
+                    </div>
+                    <div className="text-right flex items-center gap-4">
+                      <div className="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl font-bold shadow-inner">
+                        {pendingCount}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {pendingCount === 0 ? ( 
+                    <div className={cardClass + " py-20 text-center flex flex-col items-center justify-center"}>
+                      <div className="w-20 h-20 rounded-full bg-surface-50 dark:bg-surface-900 flex items-center justify-center mb-4 text-emerald-500 text-3xl"><i className="fa-solid fa-check"></i></div>
+                      <p className="text-base font-bold text-slate-700 dark:text-slate-200">Fila limpa!</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Não há exercícios pendentes de avaliação no momento.</p>
+                    </div> 
+                  ) : ( 
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {exercises.filter(ex => ex.status === 'pending').map(ex => { 
+                        const ytId = getYouTubeId(ex.videoUrl); const ytThumb = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : null; const isImage = ex.mediaUrl && ex.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)/i); const isVideo = ex.mediaUrl && ex.mediaUrl.match(/\.(mp4|webm|ogg|mov)/i); 
+                        return ( 
+                          <div key={ex.id} className={cardClass + " overflow-hidden flex flex-col hover:shadow-float transition-all duration-300 hover:-translate-y-1"}>
+                            <div className="h-48 bg-slate-900 relative">
+                              {ytThumb ? ( <img src={ytThumb} className="w-full h-full object-cover opacity-80" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} /> ) : isImage ? ( <img src={ex.mediaUrl} className="w-full h-full object-cover opacity-80" /> ) : isVideo ? ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-video text-4xl text-slate-600"></i></div> ) : ( <div className="w-full h-full flex items-center justify-center"><i className="fa-solid fa-image text-4xl text-slate-700"></i></div> )}
+                              <div className="absolute top-3 right-3 bg-amber-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md uppercase tracking-wider">Pendente</div>
+                            </div>
+                            <div className="p-6 flex-1 flex flex-col">
+                              <p className="text-[10px] font-bold text-brand-light uppercase tracking-wider mb-2"><i className="fa-solid fa-user-pen mr-1"></i> {ex.author || 'Monitor'}</p>
+                              <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg leading-tight mb-3">{ex.title}</h3>
+                              <div className="flex gap-2 mb-6"><span className="text-[10px] font-bold bg-surface-100 dark:bg-surface-900 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-lg uppercase tracking-wider">{ex.category}</span><span className="text-[10px] font-bold bg-surface-100 dark:bg-surface-900 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-lg uppercase tracking-wider">{ex.muscleGroup}</span></div>
+                              <div className="mt-auto grid grid-cols-2 gap-3">
+                                <button onClick={() => handleApprove(ex.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition-all shadow-sm active:scale-95 flex justify-center items-center gap-2"><i className="fa-solid fa-check"></i> Aprovar</button>
+                                <button onClick={() => handleReject(ex.id)} className="bg-white dark:bg-surface-800 border border-slate-200 dark:border-slate-700 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 font-bold py-2.5 rounded-xl text-sm transition-all active:scale-95 flex justify-center items-center gap-2"><i className="fa-solid fa-xmark"></i> Recusar</button>
+                              </div>
+                            </div>
+                          </div> 
+                        ) 
+                      })}
+                    </div> 
                   )}
                 </div>
               )}
+
+              {/* ==========================================
+                  TELA: EQUIPE E ACESSOS (ADMIN)
+              ========================================== */}
+              {currentView === 'equipe' && isAdmin && (
+                <div className="max-w-5xl mx-auto space-y-6 animate-fade-in pb-12">
+                  <div className={cardClass + " overflow-hidden"}>
+                    <div className="p-6 sm:p-8 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-surface-800 flex justify-between items-center">
+                      <div>
+                        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Controle de Permissões</h2>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gerenciamento de acessos e equipes ({teamMembers.length} ativos).</p>
+                      </div>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm text-left">
+                        <thead className="bg-surface-50 dark:bg-surface-900/50 text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                          <tr><th className="px-6 py-4">Usuário</th><th className="px-6 py-4">Agrupamento</th><th className="px-6 py-4">Nível de Acesso</th><th className="px-6 py-4 text-center">Ações</th></tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                          {teamMembers.map(member => ( 
+                            <tr key={member.id} className="hover:bg-surface-50 dark:hover:bg-surface-800/80 transition-colors">
+                              <td className="px-6 py-4"><div className="flex items-center gap-4">{member.avatar_url ? ( <img src={member.avatar_url} className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 shadow-sm" /> ) : ( <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-surface-200 to-surface-300 dark:from-surface-700 dark:to-surface-800 text-slate-700 dark:text-slate-200 flex items-center justify-center font-bold text-sm shadow-inner">{member.full_name.charAt(0)}</div> )}<p className="font-bold text-slate-800 dark:text-slate-200">{member.full_name}</p></div></td>
+                              <td className="px-6 py-4"><span className="font-medium text-slate-700 dark:text-slate-300 bg-surface-100 dark:bg-surface-900 px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700">{member.team_group || 'Não designado'}</span></td>
+                              <td className="px-6 py-4"><span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${member.role.includes('Admin') ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'}`}>{member.role}</span></td>
+                              <td className="px-6 py-4 text-center"><button onClick={() => setEditingMember(member)} className="text-brand-blue dark:text-brand-light hover:underline text-xs font-bold">Modificar</button></td>
+                            </tr> 
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {editingMember && (
+                    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4 transition-opacity animate-fade-in">
+                      <div className="bg-white dark:bg-surface-800 w-full max-w-sm rounded-[2rem] shadow-float ring-1 ring-slate-900/5 dark:ring-white/10 overflow-hidden scale-100 transition-transform">
+                        <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center"><h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Alterar Usuário</h3><button onClick={() => setEditingMember(null)} className="w-8 h-8 rounded-full bg-surface-100 dark:bg-surface-700 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"><i className="fa-solid fa-xmark"></i></button></div>
+                        <form onSubmit={handleUpdateMember} className="p-6 space-y-5">
+                          <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Nome Completo</label><input type="text" value={editingMember.full_name} onChange={e=>setEditingMember({...editingMember, full_name: e.target.value})} required className={inputClass} /></div>
+                          <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Agrupamento</label><select value={editingMember.team_group} onChange={e=>setEditingMember({...editingMember, team_group: e.target.value})} className={inputClass}><option value="Nenhum">Não designado</option><option value="E1">Grupo E1</option><option value="E2">Grupo E2</option><option value="E3">Grupo E3</option><option value="E4">Grupo E4</option></select></div>
+                          <div><label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Nível de Acesso</label><select value={editingMember.role} onChange={e=>setEditingMember({...editingMember, role: e.target.value})} className={inputClass}><option value="Monitor">Monitor</option><option value="Coordenador / Admin">Administrador</option></select></div>
+                          <div className="pt-4 flex justify-end gap-3"><button type="button" onClick={() => setEditingMember(null)} className={btnSecondaryClass}>Cancelar</button><button type="submit" className={btnPrimaryClass}>Salvar</button></div>
+                        </form>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
             </div>
           </main>
         </div>
@@ -2586,26 +2962,15 @@
       const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
 
       useEffect(() => {
-        if (darkMode) { 
-          document.documentElement.classList.add('dark'); 
-          localStorage.setItem('theme', 'dark'); 
-        } else { 
-          document.documentElement.classList.remove('dark'); 
-          localStorage.setItem('theme', 'light'); 
-        }
+        if (darkMode) { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); } 
+        else { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); }
       }, [darkMode]);
 
       useEffect(() => {
         supabaseClient.auth.getSession().then(async ({ data: { session } }) => {
           if (session) {
             const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
-            setUser({ 
-              ...session.user, 
-              full_name: profile?.full_name || 'Monitor', 
-              role: profile?.role || 'Monitor', 
-              avatar_url: profile?.avatar_url, 
-              team_group: profile?.team_group 
-            });
+            setUser({ ...session.user, full_name: profile?.full_name || 'Monitor', role: profile?.role || 'Monitor', avatar_url: profile?.avatar_url, team_group: profile?.team_group });
           }
           setLoadingAuth(false);
         });
@@ -2616,24 +2981,14 @@
             <div className="min-h-screen flex flex-col items-center justify-center bg-surface-50 dark:bg-surface-900 relative overflow-hidden transition-colors duration-300">
                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-light/10 blur-[100px] rounded-full pointer-events-none"></div>
                <div className="relative z-10 flex flex-col items-center">
-                  <div className="w-24 h-24 bg-white dark:bg-surface-800 rounded-3xl shadow-float flex items-center justify-center mb-8 border border-slate-100 dark:border-slate-800 animate-fade-in">
-                    <img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" className="w-16 drop-shadow-sm" onerror="this.style.display='none'" />
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="w-2.5 h-2.5 rounded-full bg-brand-light animate-bounce"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-brand-light animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-brand-light animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                  </div>
+                  <div className="w-24 h-24 bg-white dark:bg-surface-800 rounded-3xl shadow-float flex items-center justify-center mb-8 border border-slate-100 dark:border-slate-800 animate-fade-in"><img src="Logo_ATV_2024_Colorido_v2.png" alt="Logo ATIVIDOSO" className="w-16 drop-shadow-sm" onerror="this.style.display='none'" /></div>
+                  <div className="flex gap-2"><div className="w-2.5 h-2.5 rounded-full bg-brand-light animate-bounce"></div><div className="w-2.5 h-2.5 rounded-full bg-brand-light animate-bounce" style={{animationDelay: '0.1s'}}></div><div className="w-2.5 h-2.5 rounded-full bg-brand-light animate-bounce" style={{animationDelay: '0.2s'}}></div></div>
                </div>
             </div>
          );
       }
 
-      return user ? (
-        <Dashboard session={user} onLogout={async () => { await supabaseClient.auth.signOut(); setUser(null); }} updateSessionData={setUser} darkMode={darkMode} setDarkMode={setDarkMode} />
-      ) : (
-        <LoginPage onLogin={setUser} />
-      );
+      return user ? <Dashboard session={user} onLogout={async () => { await supabaseClient.auth.signOut(); setUser(null); }} updateSessionData={setUser} darkMode={darkMode} setDarkMode={setDarkMode} /> : <LoginPage onLogin={setUser} />;
     };
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
